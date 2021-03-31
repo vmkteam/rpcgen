@@ -1,4 +1,4 @@
-package golang
+package typescript
 
 import (
 	"bytes"
@@ -9,18 +9,18 @@ import (
 	"github.com/vmkteam/zenrpc/v2/testdata"
 )
 
-func TestGenerateGoClient(t *testing.T) {
+func TestGenerateTypeScriptClient(t *testing.T) {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
 	rpc.Register("catalogue", testdata.CatalogueService{})
 
-	cl := NewClient(rpc.SMD())
+	cl := NewClient(rpc.SMD(), nil)
 
 	generated, err := cl.Generate()
 	if err != nil {
-		t.Fatalf("generate go client: %v", err)
+		t.Fatalf("generate typescript client: %v", err)
 	}
 
-	testData, err := ioutil.ReadFile("./testdata/catalogue_client.go")
+	testData, err := ioutil.ReadFile("./testdata/catalogue_client.ts")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}

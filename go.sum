@@ -68,10 +68,6 @@ github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d/go.mod h1:c3At6R
 github.com/prometheus/procfs v0.0.2/go.mod h1:TjEm7ze935MbeOT/UhFTIMYKhuLP4wbCsTZCD3I8kEA=
 github.com/prometheus/procfs v0.1.3 h1:F0+tqvhOksq22sc6iCHF5WGlWjdwj92p0udFh1VFBS8=
 github.com/prometheus/procfs v0.1.3/go.mod h1:lV6e/gmhEcM9IjHGsFOCxxuZ+z1YqCvr4OA4YeYWdaU=
-github.com/semrush/zenrpc v1.1.1 h1:McE4BFoXP95NnDU+tQHhfzVpmODS4p55JKXxHR64nx4=
-github.com/semrush/zenrpc v1.1.1/go.mod h1:DUljRIQQJL9gBAYcwuZHsIK/GTIFUImy8UqhioyJvKQ=
-github.com/semrush/zenrpc/v2 v2.1.0 h1:a6jKcimSTS2u/FkAg8qXkAcplBC9vEAInl7aQY47u7g=
-github.com/semrush/zenrpc/v2 v2.1.0/go.mod h1:+o94fyVC+TvYuT5ULLyBmql+ezicEFKtsieIXSeWBqg=
 github.com/sirupsen/logrus v1.2.0/go.mod h1:LxeOpSwHxABJmUn/MG1IvRgCAasNZTLOkJPxbbu5VWo=
 github.com/sirupsen/logrus v1.4.2/go.mod h1:tLMulIdttU9McNUspp0xgXVQah82FyeX6MwdIuYE2rE=
 github.com/smartystreets/assertions v0.0.0-20180927180507-b2de0cb4f26d/go.mod h1:OnSkiWE9lh6wB0YB77sQom3nweQdgAjqCqsofrRNTgc=
@@ -82,6 +78,10 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/thoas/go-funk v0.6.0/go.mod h1:+IWnUfUmFO1+WVYQWQtIJHeRRdaIyyYglZN7xzUPe4Q=
+github.com/vmkteam/zenrpc v1.1.1 h1:WmModRVCwgs7XEkeJcVvmDOwEtAQk0TuYV91wdpAaCw=
+github.com/vmkteam/zenrpc v1.1.1/go.mod h1:x3fCkb9HHOpqwqC7TKXf8pyXWdPxEt2Zrndl50YxexM=
+github.com/vmkteam/zenrpc/v2 v2.2.1 h1:VRMcgkQb2zY06Xq2RjFtATjyW14vqwSHbdbqdYvyLLQ=
+github.com/vmkteam/zenrpc/v2 v2.2.1/go.mod h1:DUVyDLOKkQ0GelOkw5OcNbOi43QWhXdDM9XimWoeVSI=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=

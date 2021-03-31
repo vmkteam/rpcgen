@@ -12,7 +12,7 @@ import (
 	"strconv"
 	"sync/atomic"
 
-	"github.com/semrush/zenrpc"
+	"github.com/vmkteam/zenrpc/v2"
 )
 
 type Client struct {
@@ -36,13 +36,13 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 }
 
 type Campaign struct {
-	Group []Group `json:"group,omitempty"`
-	ID    int     `json:"id,omitempty"`
+	Group []Group `json:"group"`
+	ID    int     `json:"id"`
 }
 
 type CatalogueThirdResponse struct {
-	Group []Group `json:"group,omitempty"`
-	ID    int     `json:"id,omitempty"`
+	Group []Group `json:"group"`
+	ID    int     `json:"id"`
 }
 
 type Group struct {

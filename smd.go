@@ -1,8 +1,8 @@
 package rpcgen
 
 import (
-	smd1 "github.com/semrush/zenrpc/smd"
-	"github.com/semrush/zenrpc/v2/smd"
+	smd1 "github.com/vmkteam/zenrpc/smd"
+	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 // smdv1ToSMD convert smd v1 to smd v2
@@ -62,18 +62,19 @@ func newJSONSchemas(schemas []smd1.JSONSchema) (res []smd.JSONSchema) {
 }
 
 // newPropertiesMap convert smd1 to smd2 properties map
-func newPropertiesMap(propertiesMap map[string]smd1.Property) map[string]smd.Property {
-	m := map[string]smd.Property{}
+func newPropertiesMap(propertiesMap map[string]smd1.Property) smd.PropertyList {
+	var m smd.PropertyList
 	for k, prop := range propertiesMap {
-		m[k] = newSmdProperty(prop)
+		m = append(m, newSmdProperty(k, prop))
 	}
 
 	return m
 }
 
 // newSmdProperty convert smd1 property to smd2
-func newSmdProperty(prop smd1.Property) smd.Property {
+func newSmdProperty(key string, prop smd1.Property) smd.Property {
 	return smd.Property{
+		Name:        key,
 		Type:        prop.Type,
 		Description: prop.Description,
 		Items:       prop.Items,

@@ -15,7 +15,7 @@ import (
 	"sync/atomic"
 	"strconv"
 
-	"github.com/semrush/zenrpc"
+	"github.com/vmkteam/zenrpc/v2"
 )
 
 type Client struct {
@@ -40,7 +40,7 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 
 {{ range .Models }}
 type {{ .Name }} struct {
-	{{ range .Fields }}{{ title .Name }} {{ .GoType }} ` + "`json:\"{{ .Name }},omitempty\"`" + `
+	{{ range .Fields }}{{ title .Name }} {{ .GoType }} ` + "`json:\"{{ .Name }}{{if .Optional}},omitempty{{end}}\"`" + `
 {{ end }}
 }
 {{ end }} 

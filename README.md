@@ -2,7 +2,7 @@
 
 [![Go Report Card](https://goreportcard.com/badge/github.com/vmkteam/rpcgen)](https://goreportcard.com/report/github.com/vmkteam/rpcgen) [![Go Reference](https://pkg.go.dev/badge/github.com/vmkteam/rpcgen.svg)](https://pkg.go.dev/github.com/vmkteam/rpcgen)
 
-`rpcgen` is a JSON-RPC 2.0 client library generator for [zenrpc](https://github.com/semrush/zenrpc). It supports client generation for following languages:
+`rpcgen` is a JSON-RPC 2.0 client library generator for [zenrpc](https://github.com/vmkteam/zenrpc). It supports client generation for following languages:
 - Golang
 - TypeScript
 
@@ -16,10 +16,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"net/http"
 
-	"github.com/semrush/zenrpc/v2"
 	"github.com/vmkteam/rpcgen"
+	"github.com/vmkteam/zenrpc/v2"
 )
 
 func main() {
@@ -42,8 +41,8 @@ package main
 import (
 	"net/http"
 	
-	"github.com/semrush/zenrpc/v2"
 	"github.com/vmkteam/rpcgen"
+	"github.com/vmkteam/zenrpc/v2"
 )
 
 func main () {
@@ -64,10 +63,10 @@ package main
 import (
 	"net/http"
 
-	"github.com/semrush/zenrpc/v2"
-	"github.com/semrush/zenrpc/v2/smd"
 	"github.com/vmkteam/rpcgen"
 	"github.com/vmkteam/rpcgen/typescript"
+	"github.com/vmkteam/zenrpc/v2"
+	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 func main() {

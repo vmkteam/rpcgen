@@ -1,8 +1,8 @@
-module github.com/vmkteam/rpcgen
+module github.com/vmkteam/rpcgen/v2
 
 go 1.15
 
 require (
-	github.com/semrush/zenrpc v1.1.1
-	github.com/semrush/zenrpc/v2 v2.1.0
+	github.com/vmkteam/zenrpc v1.1.1
+	github.com/vmkteam/zenrpc/v2 v2.2.1
 )

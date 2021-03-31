@@ -8,7 +8,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/semrush/zenrpc/v2/smd"
+	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 const (
@@ -232,7 +232,8 @@ func addModel(allModels []goModel, parentName, modelName string, smdModel smd.JS
 		smdModel.Description = modelName
 		allModels = append(allModels, objectToModel(smdModel))
 		// add recursive fields
-		for name, field := range smdModel.Properties {
+		for _, field := range smdModel.Properties {
+			name := field.Name
 			if isModelProperty(field) {
 				if field.Ref != "" {
 					name = strings.TrimPrefix(field.Ref, definitionsPrefix)
@@ -249,7 +250,8 @@ func addModel(allModels []goModel, parentName, modelName string, smdModel smd.JS
 		def := smdModel.Definitions[modelName]
 		allModels = append(allModels, definitionToModel(modelName, def))
 		// add recursive fields
-		for name, field := range def.Properties {
+		for _, field := range def.Properties {
+			name := field.Name
 			if isModelProperty(field) {
 				if field.Ref != "" {
 					name = strings.TrimPrefix(field.Ref, definitionsPrefix)
@@ -273,8 +275,8 @@ func objectToModel(smdModel smd.JSONSchema) (res goModel) {
 		res.Name = strings.Title(smdModel.Name)
 	}
 
-	for fieldName, fieldData := range smdModel.Properties {
-		res.Fields = append(res.Fields, newGoParamFromProperty(res.Name, fieldName, fieldData))
+	for _, fieldData := range smdModel.Properties {
+		res.Fields = append(res.Fields, newGoParamFromProperty(res.Name, fieldData.Name, fieldData))
 	}
 
 	sort.Slice(res.Fields, func(i, j int) bool { return res.Fields[i].Name < res.Fields[j].Name })
@@ -285,8 +287,8 @@ func objectToModel(smdModel smd.JSONSchema) (res goModel) {
 // definitionToModel convert smdDefinition to goModel
 func definitionToModel(name string, smdDefinition smd.Definition) (res goModel) {
 	res.Name = name
-	for fieldName, fieldData := range smdDefinition.Properties {
-		res.Fields = append(res.Fields, newGoParamFromProperty(name, fieldName, fieldData))
+	for _, fieldData := range smdDefinition.Properties {
+		res.Fields = append(res.Fields, newGoParamFromProperty(name, fieldData.Name, fieldData))
 	}
 
 	return res
@@ -318,6 +320,7 @@ func newGoParamFromProperty(parentName, name string, prop smd.Property) goValue 
 	p := smd.JSONSchema{
 		Name:        name,
 		Type:        prop.Type,
+		Optional:    prop.Optional,
 		Definitions: prop.Definitions,
 		Items:       prop.Items,
 	}
@@ -333,11 +336,13 @@ func newGoParam(smdValue smd.JSONSchema) goValue {
 	)
 
 	res.Name = smdValue.Name
+	res.Optional = smdValue.Optional
 
 	if smdValue.Type == typeObject && smdValue.Description != "" {
 		t = smdValue.Description
 
-		for fieldName, property := range smdValue.Properties {
+		for _, property := range smdValue.Properties {
+			fieldName := property.Name
 			if property.Type == typeObject && property.Ref == "" {
 				fieldName = fmt.Sprintf("%s%s", smdValue.Name, strings.Title(fieldName))
 			}

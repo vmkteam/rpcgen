@@ -4,11 +4,11 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/vmkteam/rpcgen/golang"
-	"github.com/vmkteam/rpcgen/typescript"
+	"github.com/vmkteam/rpcgen/v2/golang"
+	"github.com/vmkteam/rpcgen/v2/typescript"
 
-	smd1 "github.com/semrush/zenrpc/smd"
-	"github.com/semrush/zenrpc/v2/smd"
+	smd1 "github.com/vmkteam/zenrpc/smd"
+	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 type RPCGen struct {

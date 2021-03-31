@@ -9,7 +9,7 @@ import (
 	"text/template"
 	"unicode"
 
-	"github.com/semrush/zenrpc/v2/smd"
+	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 const (
@@ -261,9 +261,10 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 func addTSComplexInterface(models *tsModels, interfacesCache map[string]interface{}, in smd.JSONSchema, typeMapper func(in smd.JSONSchema, tsType Type) Type) {
 	var tsTypes []Type
 
-	for name, p := range in.Properties {
+	for _, p := range in.Properties {
 		tsTypes = append(tsTypes, convertTSType(models, interfacesCache, smd.JSONSchema{
-			Name:        name,
+			Name:        p.Name,
+			Optional:    p.Optional,
 			Description: strings.TrimPrefix(p.Ref, definitionsPrefix),
 			Type:        p.Type,
 			Items:       p.Items,

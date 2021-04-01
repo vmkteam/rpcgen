@@ -90,24 +90,31 @@ type goValue struct {
 
 // GoType convert schema type to Go type and return their literal
 func (p goValue) GoType() string {
+	var result string
 	switch p.Type {
 	case typeInteger:
-		return typeInt
+		result = typeInt
 	case typeNumber:
-		return "float64"
+		result = "float64"
 	case typeObject:
 		if p.ModelName != "" {
-			return p.ModelName
+			result = p.ModelName
+		} else {
+			result = strings.Title(p.Name)
 		}
-
-		return strings.Title(p.Name)
 	case typeArray:
-		return "[]" + goValue{Type: p.ItemType}.GoType()
+		result = "[]" + goValue{Type: p.ItemType}.GoType()
 	case "boolean":
-		return "bool"
+		result = "bool"
+	default:
+		result = p.Type
 	}
 
-	return p.Type
+	if p.Optional {
+		result = "*" + result
+	}
+
+	return result
 }
 
 // GoItemType

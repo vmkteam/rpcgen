@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/vmkteam/rpcgen/v2/golang"
+	"github.com/vmkteam/rpcgen/v2/php"
 	"github.com/vmkteam/rpcgen/v2/typescript"
 
 	smd1 "github.com/vmkteam/zenrpc/smd"
@@ -21,6 +22,10 @@ type Generator interface {
 
 func (g RPCGen) GoClient() Generator {
 	return golang.NewClient(g.schema)
+}
+
+func (g RPCGen) PHPClient(phpNamespace string) Generator {
+	return php.NewClient(g.schema, phpNamespace)
 }
 
 func (g RPCGen) TSClient(typeMapper typescript.TypeMapper) Generator {

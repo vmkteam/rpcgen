@@ -41,7 +41,7 @@ func NewClient(schema smd.Schema, phpNamespace string) *Generator {
 
 // Generate returns generate TypeScript client
 func (g *Generator) Generate() ([]byte, error) {
-	m := g.PhpModels()
+	m := g.PHPModels()
 	funcMap := template.FuncMap{
 		"now": time.Now,
 	}
@@ -90,8 +90,8 @@ type phpModels struct {
 	Classes   []phpClass
 }
 
-// PhpModels return converted schema to PHP.
-func (g *Generator) PhpModels() phpModels {
+// PHPModels return converted schema to PHP.
+func (g *Generator) PHPModels() phpModels {
 	var pModels phpModels
 
 	classesMap := make(map[string]phpClass, 0)

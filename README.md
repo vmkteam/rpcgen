@@ -52,7 +52,7 @@ func main () {
 
 	http.HandleFunc("/client.go", rpcgen.Handler(gen.GoClient()))
 	http.HandleFunc("/client.ts", rpcgen.Handler(gen.TSClient(nil)))
-	http.HandleFunc("/RpcClient.php", rpcgen.Handler(gen.PhpClient("")))
+	http.HandleFunc("/RpcClient.php", rpcgen.Handler(gen.PHPClient("")))
 }
 ```
 

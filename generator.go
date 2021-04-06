@@ -24,7 +24,7 @@ func (g RPCGen) GoClient() Generator {
 	return golang.NewClient(g.schema)
 }
 
-func (g RPCGen) PhpClient(phpNamespace string) Generator {
+func (g RPCGen) PHPClient(phpNamespace string) Generator {
 	return php.NewClient(g.schema, phpNamespace)
 }
 

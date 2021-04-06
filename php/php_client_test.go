@@ -9,7 +9,7 @@ import (
 	"github.com/vmkteam/zenrpc/v2/testdata"
 )
 
-func TestGeneratePhpClient(t *testing.T) {
+func TestGeneratePHPClient(t *testing.T) {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
 	rpc.Register("catalogue", testdata.CatalogueService{})
 

@@ -11,8 +11,14 @@ import (
 	"net/http"
 	"strconv"
 	"sync/atomic"
+	"time"
 
 	"github.com/vmkteam/zenrpc/v2"
+)
+
+var (
+	// Always import time package. Generated models can contain time.Time fields.
+	_ time.Time
 )
 
 type Client struct {
@@ -46,7 +52,7 @@ type CatalogueThirdResponse struct {
 }
 
 type Group struct {
-	Child  Group    `json:"child,omitempty"`
+	Child  *Group   `json:"child,omitempty"`
 	Groups []Group  `json:"groups"`
 	ID     int      `json:"id"`
 	Nodes  []Group  `json:"nodes"`
@@ -55,7 +61,7 @@ type Group struct {
 }
 
 type Groups struct {
-	Child  Group    `json:"child,omitempty"`
+	Child  *Group   `json:"child,omitempty"`
 	Groups []Group  `json:"groups"`
 	ID     int      `json:"id"`
 	Nodes  []Group  `json:"nodes"`
@@ -103,7 +109,7 @@ func (c *Catalogue) Second(ctx context.Context, campaigns []Campaign) (res bool,
 	return
 }
 
-func (c *Catalogue) Third(ctx context.Context) (res CatalogueThirdResponse, err error) {
+func (c *Catalogue) Third(ctx context.Context) (res Param, err error) {
 	_req := struct {
 	}{}
 

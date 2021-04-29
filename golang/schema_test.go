@@ -146,6 +146,8 @@ func TestConvertJSONSchema(t *testing.T) {
 												Type: "string",
 											},
 										},
+										IsParamModel: true,
+										ParamName:    "test",
 									},
 								},
 							},
@@ -221,6 +223,8 @@ func TestConvertJSONSchema(t *testing.T) {
 												ModelName: "ApiComplexType",
 											},
 										},
+										IsParamModel: true,
+										ParamName:    "test",
 									},
 								},
 							},
@@ -289,13 +293,99 @@ func TestConvertJSONSchema(t *testing.T) {
 				},
 			},
 		},
+		// object param with array items
+		{
+			in: smd.Schema{
+				Services: map[string]smd.Service{
+					"complex.objectParamWithArray": {
+						Parameters: []smd.JSONSchema{
+							{
+								Name: "test",
+								Type: "object",
+								Properties: smd.PropertyList{
+									{
+										Name: "items",
+										Type: "array",
+										Items: map[string]string{
+											"$ref": "#/definitions/CartItem",
+										},
+									},
+								},
+								Definitions: map[string]smd.Definition{
+									"CartItem": {
+										Type: "object",
+										Properties: smd.PropertyList{
+											{
+												Name: "count",
+												Type: "integer",
+											},
+											{
+												Name: "productId",
+												Type: "integer",
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			out: Schema{
+				Namespaces: []Namespace{
+					{
+						Name: "complex",
+						Methods: []Method{
+							{
+								Name: "objectParamWithArray",
+								Params: []Value{
+									{
+										Name:      "test",
+										Type:      "object",
+										ModelName: "ComplexObjectParamWithArrayTestParam",
+									},
+								},
+								Models: []Model{
+									{
+										Name: "CartItem",
+										Fields: []Value{
+											{
+												Name: "count",
+												Type: "integer",
+											},
+											{
+												Name: "productId",
+												Type: "integer",
+											},
+										},
+									},
+									{
+										Name: "ComplexObjectParamWithArrayTestParam",
+										Fields: []Value{
+											{
+												Name:          "items",
+												Type:          "array",
+												ArrayItemType: "object",
+												ModelName:     "CartItem",
+											},
+										},
+										IsParamModel: true,
+										ParamName:    "test",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for _, tt := range tc {
 		schema := NewSchema(tt.in)
 
 		if !reflect.DeepEqual(schema, tt.out) {
-			t.Errorf("bad conversion need=%+v, got: %+v", tt.out, schema)
+			t.Errorf("bad conversion need=\n%+v\n%+v", tt.out, schema)
 		}
 	}
 }

@@ -14,8 +14,14 @@ import (
 	"io/ioutil"
 	"sync/atomic"
 	"strconv"
+	"time"
 
 	"github.com/vmkteam/zenrpc/v2"
+)
+
+var (
+	// Always import time package. Generated models can contain time.Time fields.
+	_ time.Time
 )
 
 type Client struct {
@@ -62,7 +68,7 @@ func NewClient{{ title . }} (client *rpcClient) *{{ title . }}  {
 {{ range $.NamespaceMethodNames .}} {{ $method := $.MethodByName $namespace . }}
 
 {{ $method.CommentDescription }}
-func (c *{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Returns.GoType }},  {{ else }}/* end  */ {{end}} err error) {
+func (c *{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Returns.GoType }},  {{ else }} {{end}} err error) {
 	_req := struct {
 		{{ range $method.Params }}{{ title .Name }} {{ .GoType }}
 {{ end }}

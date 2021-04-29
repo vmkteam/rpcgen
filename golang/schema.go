@@ -146,6 +146,13 @@ type Model struct {
 	Name        string
 	Description string
 
+	// IsParamModel indicate model is top-level method model
+	IsParamModel bool
+	// ParamName from smd method param name
+	ParamName string
+	// IsReturnModel indicate is return model
+	IsReturnModel bool
+
 	Fields []Value
 }
 
@@ -179,6 +186,7 @@ func (v *Value) GoType() string {
 	return simpleGoType(v.Type)
 }
 
+// simpleGoType convert js type to go type
 func simpleGoType(jsType string) string {
 	switch jsType {
 	case "boolean":
@@ -232,7 +240,7 @@ func getNamespace(methodName string) string {
 func newMethod(service smd.Service, namespace, methodName string) Method {
 	var args []Value
 	for _, arg := range service.Parameters {
-		args = append(args, newValue(arg))
+		args = append(args, newValue(arg, namespace, methodName))
 	}
 
 	var methodErrors []Error
@@ -269,13 +277,12 @@ func newMethod(service smd.Service, namespace, methodName string) Method {
 }
 
 // newValue convert smd.JSONSchema to value
-func newValue(in smd.JSONSchema) Value {
+func newValue(in smd.JSONSchema, namespace, methodName string) Value {
 	value := Value{
 		Name:     in.Name,
 		Type:     in.Type,
 		Optional: in.Optional,
 	}
-	// in is simple builtin type
 
 	// in is array
 	if in.Type == smd.Array {
@@ -289,7 +296,11 @@ func newValue(in smd.JSONSchema) Value {
 
 	// in is object
 	if in.Type == smd.Object {
-		value.ModelName = in.Description
+		if in.Description != "" {
+			value.ModelName = in.Description
+		} else {
+			value.ModelName = fmt.Sprintf("%s%s%sParam", titleFirstLetter(namespace), titleFirstLetter(methodName), titleFirstLetter(in.Name))
+		}
 	} else {
 		value.Description = in.Description
 	}
@@ -298,27 +309,22 @@ func newValue(in smd.JSONSchema) Value {
 }
 
 func newValuePointer(in smd.JSONSchema) *Value {
-	v := newValue(in)
+	v := newValue(in, "", "")
 
 	return &v
 }
 
 func newValueFromProp(in smd.Property) Value {
 	value := Value{
-		Name:     in.Name,
-		Type:     in.Type,
-		Optional: in.Optional,
+		Name:        in.Name,
+		Type:        in.Type,
+		Optional:    in.Optional,
+		Description: in.Description,
 	}
 
 	// in is an object
-	if in.Type == smd.Object {
-		value.ModelName = in.Description
-
-		if in.Ref != "" {
-			value.ModelName = strings.TrimPrefix(in.Ref, definitionsPrefix)
-		}
-	} else {
-		value.Description = in.Description
+	if in.Type == smd.Object && in.Ref != "" {
+		value.ModelName = strings.TrimPrefix(in.Ref, definitionsPrefix)
 	}
 
 	// in is an array
@@ -347,11 +353,11 @@ func newValueFromProp(in smd.Property) Value {
 func newMethodModels(method smd.Service, namespace, methodName string) (res []Model) {
 	// get models from params
 	for _, arg := range method.Parameters {
-		res = append(res, newModels(arg)...)
+		res = append(res, newParamModels(arg)...)
 	}
 
 	// get models from return
-	res = append(res, newModels(method.Returns)...)
+	res = append(res, newReturnsModels(method.Returns)...)
 
 	return cleanModelList(res, namespace, methodName)
 }
@@ -361,14 +367,22 @@ func cleanModelList(models []Model, namespace, methodName string) (res []Model) 
 	var dup = map[string]struct{}{}
 
 	for _, model := range models {
-		// fix empty model name
-		// is always response because argument required named params.
+		// fix empty model names
 		if model.Name == "" {
-			model.Name = fmt.Sprintf("%s%sResponse", titleFirstLetter(namespace), titleFirstLetter(methodName))
+			if model.IsParamModel {
+				model.Name = fmt.Sprintf("%s%s%sParam", titleFirstLetter(namespace), titleFirstLetter(methodName), titleFirstLetter(model.ParamName))
+			} else if model.IsReturnModel {
+				model.Name = fmt.Sprintf("%s%sResponse", titleFirstLetter(namespace), titleFirstLetter(methodName))
+			}
 		}
 
 		// filter out duplicates
 		if _, has := dup[model.Name]; has {
+			continue
+		}
+
+		// filter out time.Time model - is not model
+		if model.Name == "time.Time" {
 			continue
 		}
 
@@ -379,8 +393,18 @@ func cleanModelList(models []Model, namespace, methodName string) (res []Model) 
 	return res
 }
 
+// newParamModels wrapper set isParam flag for top-level model
+func newParamModels(in smd.JSONSchema) (res []Model) {
+	return newModels(in, true, false)
+}
+
+// newReturnsModels wrapper set isReturn flag for top-level model
+func newReturnsModels(in smd.JSONSchema) (res []Model) {
+	return newModels(in, false, true)
+}
+
 // newModels convert
-func newModels(in smd.JSONSchema) (res []Model) {
+func newModels(in smd.JSONSchema, isParam, isReturn bool) (res []Model) {
 	// definitions
 	for name, def := range in.Definitions {
 		res = append(res, convertDefinitionToModel(def, name))
@@ -394,15 +418,18 @@ func newModels(in smd.JSONSchema) (res []Model) {
 			values = append(values, newValueFromProp(prop))
 		}
 
-		name := in.Name
-		if in.Description != "" {
-			name = in.Description
+		model := Model{
+			Name:          in.Description,
+			Fields:        values,
+			IsParamModel:  isParam,
+			IsReturnModel: isReturn,
 		}
 
-		res = append(res, Model{
-			Name:   name,
-			Fields: values,
-		})
+		if isParam {
+			model.ParamName = in.Name
+		}
+
+		res = append(res, model)
 	}
 
 	return res

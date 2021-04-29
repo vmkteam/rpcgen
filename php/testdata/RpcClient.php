@@ -14,9 +14,9 @@ namespace JsonRpcClient;
 	/** Campaign **/
 	class Campaign { 
 	    /**
-	    * @var Group[]
+	    * @var Groups[]
 	    */
-	    public $group;
+	    public $groups;
 	    /**
 	    * @var int
 	    */
@@ -32,7 +32,35 @@ namespace JsonRpcClient;
 	    /**
 	    * @var Group[]
 	    */
-	    public $group;
+	    public $groups;
+	    /**
+	    * @var int
+	    */
+	    public $id;
+	    /**
+	    * @var Group[]
+	    */
+	    public $nodes;
+	    /**
+	    * @var SubGroup
+	    */
+	    public $sub;
+	    /**
+	    * @var string
+	    */
+	    public $title;
+	}
+	
+	/** Groups **/
+	class Groups { 
+	    /**
+	    * @var Group|null
+	    */
+	    public $child;
+	    /**
+	    * @var Group[]
+	    */
+	    public $groups;
 	    /**
 	    * @var int
 	    */
@@ -58,6 +86,10 @@ namespace JsonRpcClient;
 	    */
 	    public $id;
 	    /**
+	    * @var Group[]
+	    */
+	    public $nodes;
+	    /**
 	    * @var string
 	    */
 	    public $title;
@@ -73,7 +105,7 @@ namespace JsonRpcClient;
 		/**
 		* <catalogue.First> RPC method
 		* 
-		* @param Group[] $groups
+		* @param Groups[] $groups
 		* @param bool $isNotification [optional] set to true if call is notification
 		* @return bool
 		* @throws BaseJsonRpcException

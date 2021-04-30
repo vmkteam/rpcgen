@@ -11,8 +11,14 @@ import (
 	"net/http"
 	"strconv"
 	"sync/atomic"
+	"time"
 
 	"github.com/vmkteam/zenrpc/v2"
+)
+
+var (
+	// Always import time package. Generated models can contain time.Time fields.
+	_ time.Time
 )
 
 type Client struct {
@@ -36,19 +42,28 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 }
 
 type Campaign struct {
-	Group []Group `json:"group"`
-	ID    int     `json:"id"`
+	Groups []Group `json:"groups"`
+	ID     int     `json:"id"`
 }
 
 type CatalogueThirdResponse struct {
-	Group []Group `json:"group"`
-	ID    int     `json:"id"`
+	Groups []Group `json:"groups"`
+	ID     int     `json:"id"`
 }
 
 type Group struct {
+	Child  *Group   `json:"child,omitempty"`
+	Groups []Group  `json:"groups"`
+	ID     int      `json:"id"`
+	Nodes  []Group  `json:"nodes"`
+	Sub    SubGroup `json:"sub"`
+	Title  string   `json:"title"`
 }
 
 type SubGroup struct {
+	ID    int     `json:"id"`
+	Nodes []Group `json:"nodes"`
+	Title string  `json:"title"`
 }
 
 type Catalogue struct {
@@ -67,7 +82,9 @@ func (c *Catalogue) First(ctx context.Context, groups []Group) (res bool, err er
 	}{
 		Groups: groups,
 	}
+
 	err = c.client.call(ctx, "catalogue.First", _req, &res)
+
 	return
 }
 
@@ -77,14 +94,18 @@ func (c *Catalogue) Second(ctx context.Context, campaigns []Campaign) (res bool,
 	}{
 		Campaigns: campaigns,
 	}
+
 	err = c.client.call(ctx, "catalogue.Second", _req, &res)
+
 	return
 }
 
-func (c *Catalogue) Third(ctx context.Context) (res CatalogueThirdResponse, err error) {
+func (c *Catalogue) Third(ctx context.Context) (res Param, err error) {
 	_req := struct {
 	}{}
+
 	err = c.client.call(ctx, "catalogue.Third", _req, &res)
+
 	return
 }
 

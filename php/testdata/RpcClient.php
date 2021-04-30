@@ -16,7 +16,7 @@ namespace JsonRpcClient;
 	    /**
 	    * @var Group[]
 	    */
-	    public $group;
+	    public $groups;
 	    /**
 	    * @var int
 	    */
@@ -32,7 +32,7 @@ namespace JsonRpcClient;
 	    /**
 	    * @var Group[]
 	    */
-	    public $group;
+	    public $groups;
 	    /**
 	    * @var int
 	    */
@@ -57,6 +57,10 @@ namespace JsonRpcClient;
 	    * @var int
 	    */
 	    public $id;
+	    /**
+	    * @var Group[]
+	    */
+	    public $nodes;
 	    /**
 	    * @var string
 	    */

@@ -14,8 +14,14 @@ import (
 	"io/ioutil"
 	"sync/atomic"
 	"strconv"
+	"time"
 
 	"github.com/vmkteam/zenrpc/v2"
+)
+
+var (
+	// Always import time package. Generated models can contain time.Time fields.
+	_ time.Time
 )
 
 type Client struct {
@@ -40,7 +46,8 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 
 {{ range .Models }}
 type {{ .Name }} struct {
-	{{ range .Fields }}{{ title .Name }} {{ .GoType }} ` + "`json:\"{{ .Name }}{{if .Optional}},omitempty{{end}}\"`" + `
+	{{ range .Fields }}{{ if ne .Description "" }}// {{ .Description }}
+	{{ end }}{{ title .Name }} {{ .GoType }} ` + "`json:\"{{ .Name }}{{if .Optional}},omitempty{{end}}\"`" + `
 {{ end }}
 }
 {{ end }} 
@@ -58,16 +65,19 @@ func NewClient{{ title . }} (client *rpcClient) *{{ title . }}  {
 	}
 }
 
-{{ range $.NamespaceMethodNames .}} {{ $method := $.Method $namespace . }}
+{{ range $.NamespaceMethodNames .}} {{ $method := $.MethodByName $namespace . }}
 
-func (c *{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Result.GoType }},  {{ else }}/*tak-tak*/ {{end}} err error) {
+{{ $method.CommentDescription }}
+func (c *{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Returns.GoType }},  {{ else }} {{end}} err error) {
 	_req := struct {
 		{{ range $method.Params }}{{ title .Name }} {{ .GoType }}
 {{ end }}
 	} {
 		{{ range $method.Params }}{{ title .Name }}: {{ .Name }}, {{ end }}
 	}
+	
 	err = c.client.call(ctx, "{{ $namespace }}.{{ . }}", _req, {{ if $method.HasResult }} &res {{ else }} nil {{ end }})
+	
 	return
 }
 {{ end }}

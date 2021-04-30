@@ -1,7 +1,7 @@
 /* eslint-disable */
 export interface ICampaign {
   id: number,
-  group: Array<IGroup>
+  groups: Array<IGroup>
 }
 
 export interface ICatalogueFirstParams {
@@ -16,14 +16,15 @@ export interface IGroup {
   id: number,
   title: string,
   nodes: Array<IGroup>,
-  group: Array<IGroup>,
+  groups: Array<IGroup>,
   child?: IGroup,
   sub: ISubGroup
 }
 
 export interface ISubGroup {
   id: number,
-  title: string
+  title: string,
+  nodes: Array<IGroup>
 }
 
 export const factory = (send) => ({

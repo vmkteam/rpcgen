@@ -42,25 +42,16 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 }
 
 type Campaign struct {
-	Groups []Groups `json:"groups"`
-	ID     int      `json:"id"`
+	Groups []Group `json:"groups"`
+	ID     int     `json:"id"`
 }
 
 type CatalogueThirdResponse struct {
-	Groups []Groups `json:"groups"`
-	ID     int      `json:"id"`
+	Groups []Group `json:"groups"`
+	ID     int     `json:"id"`
 }
 
 type Group struct {
-	Child  *Group   `json:"child,omitempty"`
-	Groups []Group  `json:"groups"`
-	ID     int      `json:"id"`
-	Nodes  []Group  `json:"nodes"`
-	Sub    SubGroup `json:"sub"`
-	Title  string   `json:"title"`
-}
-
-type Groups struct {
 	Child  *Group   `json:"child,omitempty"`
 	Groups []Group  `json:"groups"`
 	ID     int      `json:"id"`
@@ -85,9 +76,9 @@ func NewClientCatalogue(client *rpcClient) *Catalogue {
 	}
 }
 
-func (c *Catalogue) First(ctx context.Context, groups []Groups) (res bool, err error) {
+func (c *Catalogue) First(ctx context.Context, groups []Group) (res bool, err error) {
 	_req := struct {
-		Groups []Groups
+		Groups []Group
 	}{
 		Groups: groups,
 	}

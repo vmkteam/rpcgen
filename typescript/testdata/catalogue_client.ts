@@ -1,11 +1,11 @@
 /* eslint-disable */
 export interface ICampaign {
   id: number,
-  groups: Array<IGroups>
+  groups: Array<IGroup>
 }
 
 export interface ICatalogueFirstParams {
-  groups: Array<IGroups>
+  groups: Array<IGroup>
 }
 
 export interface ICatalogueSecondParams {
@@ -13,15 +13,6 @@ export interface ICatalogueSecondParams {
 }
 
 export interface IGroup {
-  id: number,
-  title: string,
-  nodes: Array<IGroup>,
-  groups: Array<IGroup>,
-  child?: IGroup,
-  sub: ISubGroup
-}
-
-export interface IGroups {
   id: number,
   title: string,
   nodes: Array<IGroup>,

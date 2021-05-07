@@ -24,7 +24,7 @@ var (
 type Client struct {
 	rpcClient *rpcClient
 
-	Catalogue *Catalogue
+	Catalogue *svcCatalogue
 }
 
 func NewDefaultClient(endpoint string) *Client {
@@ -36,7 +36,7 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 		rpcClient: newRPCClient(endpoint, header, httpClient),
 	}
 
-	c.Catalogue = NewClientCatalogue(c.rpcClient)
+	c.Catalogue = newClientCatalogue(c.rpcClient)
 
 	return c
 }
@@ -66,17 +66,17 @@ type SubGroup struct {
 	Title string  `json:"title"`
 }
 
-type Catalogue struct {
+type svcCatalogue struct {
 	client *rpcClient
 }
 
-func NewClientCatalogue(client *rpcClient) *Catalogue {
+func newClientCatalogue(client *rpcClient) *svcCatalogue {
 	return &Catalogue{
 		client: client,
 	}
 }
 
-func (c *Catalogue) First(ctx context.Context, groups []Group) (res bool, err error) {
+func (c *svcCatalogue) First(ctx context.Context, groups []Group) (res bool, err error) {
 	_req := struct {
 		Groups []Group
 	}{
@@ -88,7 +88,7 @@ func (c *Catalogue) First(ctx context.Context, groups []Group) (res bool, err er
 	return
 }
 
-func (c *Catalogue) Second(ctx context.Context, campaigns []Campaign) (res bool, err error) {
+func (c *svcCatalogue) Second(ctx context.Context, campaigns []Campaign) (res bool, err error) {
 	_req := struct {
 		Campaigns []Campaign
 	}{
@@ -100,7 +100,7 @@ func (c *Catalogue) Second(ctx context.Context, campaigns []Campaign) (res bool,
 	return
 }
 
-func (c *Catalogue) Third(ctx context.Context) (res Param, err error) {
+func (c *svcCatalogue) Third(ctx context.Context) (res CatalogueThirdResponse, err error) {
 	_req := struct {
 	}{}
 
@@ -147,11 +147,19 @@ func (c *rpcClient) call(ctx context.Context, methodName string, request, result
 		return err
 	}
 
+	if res == nil {
+		return nil
+	}
+
 	if res.Error != nil {
 		return res.Error
 	}
 
-	if res == nil || res.Result == nil {
+	if res.Result == nil {
+		return nil
+	}
+
+	if result == nil {
 		return nil
 	}
 
@@ -171,7 +179,7 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("create request failed: %w", err)
 	}
 
-	req.Header = rc.header
+	req.Header = rc.header.Clone()
 	req.Header.Add("Content-Type", "application/json")
 
 	// Do request

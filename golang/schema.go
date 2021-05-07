@@ -243,11 +243,13 @@ func getNamespace(methodName string) string {
 // newMethod convert smd.Service method to Method
 func newMethod(service smd.Service, namespace, methodName string) Method {
 	var args []Value
+
 	for _, arg := range service.Parameters {
-		args = append(args, newValue(arg, namespace, methodName))
+		args = append(args, newValue(arg, namespace, methodName, true, false))
 	}
 
 	var methodErrors []Error
+
 	for code, message := range service.Errors {
 		methodErrors = append(methodErrors, Error{
 			Code:    code,
@@ -269,7 +271,7 @@ func newMethod(service smd.Service, namespace, methodName string) Method {
 	}
 
 	if service.Returns.Type != "" {
-		method.Returns = newValuePointer(service.Returns)
+		method.Returns = newValuePointer(service.Returns, namespace, methodName)
 
 		// fix return model name
 		if method.Returns.Type == smd.Object && method.Returns.ModelName == "" {
@@ -281,7 +283,7 @@ func newMethod(service smd.Service, namespace, methodName string) Method {
 }
 
 // newValue convert smd.JSONSchema to value
-func newValue(in smd.JSONSchema, namespace, methodName string) Value {
+func newValue(in smd.JSONSchema, namespace, methodName string, isParam, isReturn bool) Value {
 	value := Value{
 		Name:     in.Name,
 		Type:     in.Type,
@@ -300,10 +302,12 @@ func newValue(in smd.JSONSchema, namespace, methodName string) Value {
 
 	// in is object
 	if in.Type == smd.Object {
-		if in.Description != "" {
+		if in.Description != "" && !strings.Contains(in.Description, " ") {
 			value.ModelName = in.Description
-		} else {
+		} else if isParam {
 			value.ModelName = fmt.Sprintf("%s%s%sParam", titleFirstLetter(namespace), titleFirstLetter(methodName), titleFirstLetter(in.Name))
+		} else if isReturn {
+			value.ModelName = fmt.Sprintf("%s%s%sResponse", titleFirstLetter(namespace), titleFirstLetter(methodName), titleFirstLetter(in.Name))
 		}
 	} else {
 		value.Description = in.Description
@@ -312,8 +316,8 @@ func newValue(in smd.JSONSchema, namespace, methodName string) Value {
 	return value
 }
 
-func newValuePointer(in smd.JSONSchema) *Value {
-	v := newValue(in, "", "")
+func newValuePointer(in smd.JSONSchema, namespace, methodName string) *Value {
+	v := newValue(in, namespace, methodName, false, true)
 
 	return &v
 }
@@ -357,7 +361,7 @@ func newValueFromProp(in smd.Property) Value {
 func newMethodModels(method smd.Service, namespace, methodName string) (res []Model) {
 	// get models from params
 	for _, arg := range method.Parameters {
-		res = append(res, newParamModels(arg)...)
+		res = append(res, newParamModels(arg, fmt.Sprintf("%s%s", titleFirstLetter(namespace), titleFirstLetter(methodName)))...)
 	}
 
 	// get models from return
@@ -398,17 +402,17 @@ func cleanModelList(models []Model, namespace, methodName string) (res []Model) 
 }
 
 // newParamModels wrapper set isParam flag for top-level model
-func newParamModels(in smd.JSONSchema) (res []Model) {
-	return newModels(in, true, false)
+func newParamModels(in smd.JSONSchema, modelNamePrefix string) (res []Model) {
+	return newModels(in, true, false, modelNamePrefix)
 }
 
 // newReturnsModels wrapper set isReturn flag for top-level model
 func newReturnsModels(in smd.JSONSchema) (res []Model) {
-	return newModels(in, false, true)
+	return newModels(in, false, true, "")
 }
 
 // newModels convert
-func newModels(in smd.JSONSchema, isParam, isReturn bool) (res []Model) {
+func newModels(in smd.JSONSchema, isParam, isReturn bool, modelNamePrefix string) (res []Model) {
 	// definitions
 	for name, def := range in.Definitions {
 		res = append(res, convertDefinitionToModel(def, name))
@@ -422,8 +426,19 @@ func newModels(in smd.JSONSchema, isParam, isReturn bool) (res []Model) {
 			values = append(values, newValueFromProp(prop))
 		}
 
+		var name string
+		if isParam {
+			name = modelNamePrefix + titleFirstLetter(in.Name) + "Param"
+		} else if isReturn {
+			name = modelNamePrefix + titleFirstLetter(in.Name) + "Response"
+		}
+
+		if !strings.Contains(in.Description, " ") {
+			name = in.Description
+		}
+
 		model := Model{
-			Name:          in.Description,
+			Name:          name,
 			Fields:        values,
 			IsParamModel:  isParam,
 			IsReturnModel: isReturn,

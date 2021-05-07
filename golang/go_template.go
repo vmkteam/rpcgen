@@ -28,7 +28,7 @@ type Client struct {
 	rpcClient *rpcClient
 
 {{ range .NamespaceNames }}
-	{{ title . }} *{{ title .}}{{ end }}}
+	{{ title . }} *svc{{ title .}}{{ end }}}
 
 func NewDefaultClient(endpoint string) *Client {
 	return NewClient(endpoint, http.Header{}, &http.Client{})
@@ -39,7 +39,7 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 		rpcClient: newRPCClient(endpoint, header, httpClient),
 	}
 {{ range .NamespaceNames }}
-	c.{{ title . }} = NewClient{{ title .}}(c.rpcClient){{ end }}
+	c.{{ title . }} = newClient{{ title .}}(c.rpcClient){{ end }}
 
 	return c
 }
@@ -55,11 +55,11 @@ type {{ .Name }} struct {
 
 {{ range .NamespaceNames }}
  {{ $lTitle := . }}{{ $namespace := . }}
-type {{ title . }} struct {
+type svc{{ title . }} struct {
 	client *rpcClient
 }
 
-func NewClient{{ title . }} (client *rpcClient) *{{ title . }}  {
+func newClient{{ title . }} (client *rpcClient) *svc{{ title . }}  {
 	return &{{ title . }}{
 		client: client,
 	}
@@ -68,7 +68,7 @@ func NewClient{{ title . }} (client *rpcClient) *{{ title . }}  {
 {{ range $.NamespaceMethodNames .}} {{ $method := $.MethodByName $namespace . }}
 
 {{ $method.CommentDescription }}
-func (c *{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Returns.GoType }},  {{ else }} {{end}} err error) {
+func (c *svc{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Returns.GoType }},  {{ else }} {{end}} err error) {
 	_req := struct {
 		{{ range $method.Params }}{{ title .Name }} {{ .GoType }}
 {{ end }}
@@ -121,11 +121,19 @@ func (c *rpcClient) call(ctx context.Context, methodName string, request, result
 		return err
 	}
 
+	if res == nil {
+		return nil
+	}
+
 	if res.Error != nil {
 		return res.Error
 	}
 
-	if res == nil || res.Result == nil {
+	if res.Result == nil {
+		return nil
+	}
+
+	if result == nil {
 		return nil
 	}
 
@@ -145,7 +153,7 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("create request failed: %w", err)
 	}
 
-	req.Header = rc.header
+	req.Header = rc.header.Clone()
 	req.Header.Add("Content-Type", "application/json")
 
 	// Do request

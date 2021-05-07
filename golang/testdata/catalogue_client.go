@@ -71,7 +71,7 @@ type svcCatalogue struct {
 }
 
 func newClientCatalogue(client *rpcClient) *svcCatalogue {
-	return &Catalogue{
+	return &svcCatalogue{
 		client: client,
 	}
 }

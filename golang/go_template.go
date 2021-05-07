@@ -60,7 +60,7 @@ type svc{{ title . }} struct {
 }
 
 func newClient{{ title . }} (client *rpcClient) *svc{{ title . }}  {
-	return &{{ title . }}{
+	return &svc{{ title . }}{
 		client: client,
 	}
 }

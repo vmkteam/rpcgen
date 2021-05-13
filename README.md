@@ -4,6 +4,7 @@
 
 `rpcgen` is a JSON-RPC 2.0 client library generator for [zenrpc](https://github.com/vmkteam/zenrpc). It supports client generation for following languages:
 - Golang
+- PHP
 - TypeScript
 
 ## Examples

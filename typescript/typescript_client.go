@@ -44,11 +44,18 @@ func (g *Generator) Generate() ([]byte, error) {
 	tmpl, err := template.New("test").Funcs(fns).Parse(
 		`/* eslint-disable */{{range .Interfaces}}
 export interface {{.Name}} {
-{{$len := len .Parameters}}{{range $i,$e := .Parameters}}  {{.Name}}{{if .Optional}}?{{end}}: {{.Type}}{{if ne $i $len}},{{end}}{{if ne .Comment ""}} // {{.Comment}}{{end}}{{if ne $i $len}}
+{{$len := len .Parameters}}{{range $i,$e := .Parameters}}  {{.Name}}{{if .Optional}}?{{end}}: {{.Type}}{{if not .HasDefault}} | null{{end}}{{if ne $i $len}},{{end}}{{if ne .Comment ""}} // {{.Comment}}{{end}}{{if ne $i $len}}
+{{end}}{{end}}
+}
+
+export class {{.ModelName}} implements {{.Name}} {
+  static entityName = "{{.EntityNameTmpl}}";
+
+{{$len := len .Parameters}}{{range $i,$e := .Parameters}}  {{.Name}}{{if .Optional}}?{{end}}: {{.Type}}{{if not .HasDefault}} | null{{end}} = {{.DefaultTmpl}};{{if ne $i $len}}
 {{end}}{{end}}
 }
 {{end}}
-export const factory = (send) => ({
+export const factory = (send: any) => ({
 {{$lenN := len .Namespaces}}{{range $i,$e := .Namespaces}}  {{.Name}}: {
 {{$lenS := len .Services}}{{range $i,$e := .Services}}    {{.NameLCF}}({{if .HasParams}}params: {{.Params}}{{end}}): Promise<{{.Response}}> {
       return send('{{.Namespace}}.{{.Name}}'{{if .HasParams}}, params{{end}})
@@ -56,7 +63,7 @@ export const factory = (send) => ({
 {{end}}{{end}}
   }{{if ne $i $lenN}},
 {{end}}{{end}}
-})
+});
 `)
 	if err != nil {
 		return nil, err
@@ -76,11 +83,51 @@ type tsInterface struct {
 	Parameters []Type
 }
 
+func (ts tsInterface) ModelName() string {
+	return strings.TrimPrefix(ts.Name, interfacePrefix)
+}
+
+func (ts tsInterface) EntityName() string {
+	return strings.TrimSuffix(lcfirst(ts.ModelName()), "Summary")
+}
+
+func (ts tsInterface) EntityNameTmpl() string {
+	return strings.ToLower(ts.EntityName())
+}
+
 type Type struct {
-	Name     string
-	Comment  string
-	Type     string
-	Optional bool
+	Name       string
+	Comment    string
+	Type       string
+	Optional   bool
+	HasDefault bool
+	Default    *string
+}
+
+func (ts Type) DefaultTmpl() string {
+	result := "null"
+	if ts.Default != nil {
+		result = *ts.Default
+	}
+
+	if ts.HasDefault && result == "null" {
+		switch ts.Type {
+		case "number":
+			result = "0"
+		case "string":
+			result = `""`
+		case "boolean":
+			result = "false"
+		case "Array<number>":
+			result = "[0]"
+		case "Array<string>":
+			result = `[""]`
+		case "Array<boolean>":
+			result = "[false]"
+		}
+	}
+
+	return result
 }
 
 type tsServiceNamespace struct {
@@ -283,6 +330,14 @@ func nameLCF(str string) string {
 		return str
 	}
 
+	for _, v := range str {
+		u := string(unicode.ToLower(v))
+		return u + str[len(u):]
+	}
+	return ""
+}
+
+func lcfirst(str string) string {
 	for _, v := range str {
 		u := string(unicode.ToLower(v))
 		return u + str[len(u):]

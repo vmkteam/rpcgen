@@ -1,71 +1,33 @@
 /* eslint-disable */
 export interface ICampaign {
-  id: number | null,
-  groups: Array<IGroup> | null
-}
-
-export class Campaign implements ICampaign {
-  static entityName = "campaign";
-
-  id: number | null = null;
-  groups: Array<IGroup> | null = null;
+  id: number,
+  groups: Array<IGroup>
 }
 
 export interface ICatalogueFirstParams {
-  groups: Array<IGroup> | null
-}
-
-export class CatalogueFirstParams implements ICatalogueFirstParams {
-  static entityName = "cataloguefirstparams";
-
-  groups: Array<IGroup> | null = null;
+  groups: Array<IGroup>
 }
 
 export interface ICatalogueSecondParams {
-  campaigns: Array<ICampaign> | null
-}
-
-export class CatalogueSecondParams implements ICatalogueSecondParams {
-  static entityName = "cataloguesecondparams";
-
-  campaigns: Array<ICampaign> | null = null;
+  campaigns: Array<ICampaign>
 }
 
 export interface IGroup {
-  id: number | null,
-  title: string | null,
-  nodes: Array<IGroup> | null,
-  groups: Array<IGroup> | null,
-  child?: IGroup | null,
-  sub: ISubGroup | null
-}
-
-export class Group implements IGroup {
-  static entityName = "group";
-
-  id: number | null = null;
-  title: string | null = null;
-  nodes: Array<IGroup> | null = null;
-  groups: Array<IGroup> | null = null;
-  child?: IGroup | null = null;
-  sub: ISubGroup | null = null;
+  id: number,
+  title: string,
+  nodes: Array<IGroup>,
+  groups: Array<IGroup>,
+  child?: IGroup,
+  sub: ISubGroup
 }
 
 export interface ISubGroup {
-  id: number | null,
-  title: string | null,
-  nodes: Array<IGroup> | null
+  id: number,
+  title: string,
+  nodes: Array<IGroup>
 }
 
-export class SubGroup implements ISubGroup {
-  static entityName = "subgroup";
-
-  id: number | null = null;
-  title: string | null = null;
-  nodes: Array<IGroup> | null = null;
-}
-
-export const factory = (send: any) => ({
+export const factory = (send) => ({
   catalogue: {
     first(params: ICatalogueFirstParams): Promise<boolean> {
       return send('catalogue.First', params)
@@ -77,4 +39,4 @@ export const factory = (send: any) => ({
       return send('catalogue.Third')
     }
   }
-});
+})

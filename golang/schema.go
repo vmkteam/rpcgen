@@ -167,6 +167,15 @@ type Value struct {
 	ModelName string
 }
 
+// LocalModelName rename external packages model names: pkg.Model -> PkgModel
+func (v Value) LocalModelName() string {
+	return localModelName(v.ModelName)
+}
+
+func localModelName(name string) string {
+	return strings.ReplaceAll(titleFirstLetter(name), ".", "")
+}
+
 // GoType convert Value jsType to golang type
 func (v *Value) GoType() string {
 	if v == nil {
@@ -175,16 +184,16 @@ func (v *Value) GoType() string {
 
 	if v.Type == smd.Array {
 		if v.ModelName != "" {
-			return fmt.Sprintf("[]%s", v.ModelName)
+			return fmt.Sprintf("[]%s", v.LocalModelName())
 		}
 
 		return fmt.Sprintf("[]%s", simpleGoType(v.ArrayItemType))
 	} else if v.Type == smd.Object {
 		if v.Optional {
-			return fmt.Sprintf("*%s", v.ModelName)
+			return fmt.Sprintf("*%s", v.LocalModelName())
 		}
 
-		return v.ModelName
+		return v.LocalModelName()
 	}
 
 	return simpleGoType(v.Type)
@@ -438,7 +447,7 @@ func newModels(in smd.JSONSchema, isParam, isReturn bool, modelNamePrefix string
 		}
 
 		model := Model{
-			Name:          name,
+			Name:          localModelName(name),
 			Fields:        values,
 			IsParamModel:  isParam,
 			IsReturnModel: isReturn,
@@ -458,7 +467,7 @@ func newModels(in smd.JSONSchema, isParam, isReturn bool, modelNamePrefix string
 // Definition is always an object.
 func convertDefinitionToModel(def smd.Definition, name string) Model {
 	model := Model{
-		Name: name,
+		Name: localModelName(name),
 	}
 
 	for _, property := range def.Properties {

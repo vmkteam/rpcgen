@@ -12,6 +12,8 @@ import (
 func TestGenerateGoClient(t *testing.T) {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
 	rpc.Register("catalogue", testdata.CatalogueService{})
+	rpc.Register("phonebook", testdata.PhoneBook{})
+	rpc.Register("arith", testdata.ArithService{})
 
 	cl := NewClient(rpc.SMD())
 

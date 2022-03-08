@@ -13,8 +13,8 @@ type Generator struct {
 }
 
 // NewClient create Generator from zenrpc/v2 SMD.
-func NewClient(schema smd.Schema) *Generator {
-	return &Generator{schema: NewSchema(schema)}
+func NewClient(schema smd.Schema, title string) *Generator {
+	return &Generator{schema: NewSchema(schema, title)}
 }
 
 // Generate returns generated openrpc schema.

@@ -15,7 +15,7 @@ func TestGenerateOpenRPCClient(t *testing.T) {
 	rpc.Register("phonebook", testdata.PhoneBook{})
 	rpc.Register("arith", testdata.ArithService{})
 
-	cl := NewClient(rpc.SMD())
+	cl := NewClient(rpc.SMD(), "test")
 
 	generated, err := cl.Generate()
 	if err != nil {

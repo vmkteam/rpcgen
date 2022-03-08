@@ -33,8 +33,8 @@ func (g RPCGen) TSClient(typeMapper typescript.TypeMapper) Generator {
 	return typescript.NewClient(g.schema, typeMapper)
 }
 
-func (g RPCGen) OpenRPC() Generator {
-	return openrpc.NewClient(g.schema)
+func (g RPCGen) OpenRPC(title string) Generator {
+	return openrpc.NewClient(g.schema, title)
 }
 
 // FromSMD create Generator from smd schema

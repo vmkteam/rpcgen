@@ -1,6 +1,6 @@
 # rpcgen: JSON-RPC 2.0 Client Generator Implementation for zenrpc
 
-[![Go Report Card](https://goreportcard.com/badge/github.com/vmkteam/rpcgen)](https://goreportcard.com/report/github.com/vmkteam/rpcgen) [![Go Reference](https://pkg.go.dev/badge/github.com/vmkteam/rpcgen.svg)](https://pkg.go.dev/github.com/vmkteam/rpcgen)
+[![Go Report Card](https://goreportcard.com/badge/github.com/dizzyfool/rpcgen)](https://goreportcard.com/report/github.com/dizzyfool/rpcgen) [![Go Reference](https://pkg.go.dev/badge/github.com/dizzyfool/rpcgen.svg)](https://pkg.go.dev/github.com/dizzyfool/rpcgen)
 
 `rpcgen` is a JSON-RPC 2.0 client library generator for [zenrpc](https://github.com/vmkteam/zenrpc). It supports client generation for following languages:
 - Golang
@@ -18,7 +18,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/vmkteam/rpcgen"
+	"github.com/dizzyfool/rpcgen"
 	"github.com/vmkteam/zenrpc/v2"
 )
 
@@ -42,7 +42,7 @@ package main
 import (
 	"net/http"
 	
-	"github.com/vmkteam/rpcgen"
+	"github.com/dizzyfool/rpcgen"
 	"github.com/vmkteam/zenrpc/v2"
 )
 
@@ -65,8 +65,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/vmkteam/rpcgen"
-	"github.com/vmkteam/rpcgen/typescript"
+	"github.com/dizzyfool/rpcgen"
+	"github.com/dizzyfool/rpcgen/typescript"
 	"github.com/vmkteam/zenrpc/v2"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )

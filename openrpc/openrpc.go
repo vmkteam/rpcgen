@@ -19,5 +19,5 @@ func NewClient(schema smd.Schema, title string) *Generator {
 
 // Generate returns generated openrpc schema.
 func (g Generator) Generate() ([]byte, error) {
-	return json.Marshal(g.schema)
+	return json.MarshalIndent(g.schema, "", "	")
 }

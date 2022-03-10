@@ -4,9 +4,12 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"path"
+	"regexp"
+	"strings"
+
 	openrpc "github.com/open-rpc/meta-schema"
 	"github.com/vmkteam/zenrpc/v2/smd"
-	"strings"
 )
 
 func NewSchema(schema smd.Schema, title string) openrpc.OpenrpcDocument {
@@ -50,8 +53,13 @@ func newMethods(schema smd.Schema) *openrpc.Methods {
 			Tags:           &openrpc.MethodObjectTags{{TagObject: &openrpc.TagObject{Name: &tag}}},
 			ParamStructure: newParamStruct(service),
 			Params:         newParams(n, service),
-			Result:         newResult(n, service),
 			Errors:         newErrors(service),
+		}
+
+		if service.Returns.Type != "" {
+			method.Result = newResult(n, service)
+		} else {
+			method.Result = newNullResult()
 		}
 
 		if service.Description != "" {
@@ -89,7 +97,7 @@ func newParams(serviceName string, service smd.Service) *openrpc.MethodObjectPar
 
 		cont := openrpc.ContentDescriptorObject{
 			Name:   &name,
-			Schema: newJSONSchema(param, false),
+			Schema: newJSONSchema(serviceName, param),
 		}
 
 		if param.Description != "" {
@@ -109,10 +117,24 @@ func newParams(serviceName string, service smd.Service) *openrpc.MethodObjectPar
 }
 
 func newResult(serviceName string, service smd.Service) *openrpc.MethodObjectResult {
-	name := openrpc.ContentDescriptorObjectName(fmt.Sprintf("%sResult", serviceName))
+	name := openrpc.ContentDescriptorObjectName(varName(serviceName, "Result"))
 	return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
 		Name:   &name,
-		Schema: newJSONSchema(service.Returns, false),
+		Schema: newJSONSchema(serviceName+"Result", service.Returns),
+	}}
+}
+
+func newNullResult() *openrpc.MethodObjectResult {
+	name := openrpc.ContentDescriptorObjectName("null")
+	desc := openrpc.ContentDescriptorObjectDescription("empty result")
+	typ := openrpc.SimpleTypes("null")
+
+	return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
+		Name:        &name,
+		Description: &desc,
+		Schema: &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			Type: &openrpc.Type{SimpleTypes: &typ},
+		}},
 	}}
 }
 
@@ -121,25 +143,110 @@ func newErrors(service smd.Service) *openrpc.MethodObjectErrors {
 }
 
 func newComponents(schema smd.Schema) *openrpc.Components {
-	return nil
+	components := openrpc.SchemaComponents{}
+
+	for n, service := range schema.Services {
+		for _, param := range service.Parameters {
+			newPropertiesFromSchema(n, param, components)
+		}
+
+		newPropertiesFromSchema(n, service.Returns, components)
+	}
+
+	return &openrpc.Components{Schemas: &components}
 }
 
-func newJSONSchema(schema smd.JSONSchema, withProps bool) *openrpc.JSONSchema {
-	switch schema.Type {
-	case "object":
-		if withProps {
+// recursive hell
+func newPropertiesFromSchema(serviceName string, schema smd.JSONSchema, components openrpc.SchemaComponents) {
+	sch := newJSONSchema(serviceName, schema)
+	if sch.JSONSchemaObject.Ref != nil && len(schema.Properties) > 0 {
+		base := refBase(sch.JSONSchemaObject.Ref)
 
-		} else {
-			return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-				Ref: refName(schema.Description),
+		if _, ok := components[base]; !ok {
+			components[base] = newPropertiesFromList(schema.Properties, components)
+		}
+
+		newPropertiesFromDefinitions(schema.Definitions, components)
+	}
+}
+
+func newPropertiesFromDefinitions(definitions map[string]smd.Definition, components openrpc.SchemaComponents) {
+	for name, definition := range definitions {
+		if _, ok := components[name]; !ok {
+			components[name] = newPropertiesFromList(definition.Properties, components)
+		}
+	}
+}
+
+func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComponents) *openrpc.JSONSchema {
+	required := openrpc.StringArray{}
+	result := openrpc.Properties{}
+
+	for _, prop := range props {
+		if len(prop.Definitions) > 0 {
+			newPropertiesFromDefinitions(prop.Definitions, components)
+		}
+
+		if !prop.Optional {
+			required = append(required, openrpc.StringDoaGddGA(prop.Name))
+		}
+
+		switch prop.Type {
+		case "object":
+			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+				Ref: refName(prop.Ref),
+			}}
+		case "array":
+			items := &openrpc.JSONSchemaObject{}
+			if prop.Items["$ref"] != "" {
+				items = &openrpc.JSONSchemaObject{
+					Ref: refName(prop.Items["$ref"]),
+				}
+			} else {
+				itemsType := openrpc.SimpleTypes(prop.Items["type"])
+				items = &openrpc.JSONSchemaObject{
+					Type: &openrpc.Type{SimpleTypes: &itemsType},
+				}
+			}
+
+			typ := openrpc.SimpleTypes(prop.Type)
+			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+				Type:  &openrpc.Type{SimpleTypes: &typ},
+				Items: &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: items}},
+			}}
+
+		default:
+			typ := openrpc.SimpleTypes(prop.Type)
+			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+				Type: &openrpc.Type{SimpleTypes: &typ},
 			}}
 		}
+	}
+
+	return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+		Properties: &result,
+		Required:   &required,
+	}}
+}
+
+func newJSONSchema(serviceName string, schema smd.JSONSchema) *openrpc.JSONSchema {
+	switch schema.Type {
+	case "object":
+		var ref *openrpc.Ref
+		if isObjName(schema.Description) {
+			ref = refName(schema.Description)
+		} else {
+			ref = refName(objName(serviceName, schema.Name))
+		}
+
+		return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			Ref: ref,
+		}}
 	case "array":
 		items := &openrpc.JSONSchemaObject{}
 		if schema.Items["$ref"] != "" {
-			ref := openrpc.Ref(schema.Items["$ref"])
 			items = &openrpc.JSONSchemaObject{
-				Ref: &ref,
+				Ref: refName(schema.Items["$ref"]),
 			}
 		} else {
 			itemsType := openrpc.SimpleTypes(schema.Items["type"])
@@ -160,11 +267,38 @@ func newJSONSchema(schema smd.JSONSchema, withProps bool) *openrpc.JSONSchema {
 			Type: &openrpc.Type{SimpleTypes: &typ},
 		}}
 	}
-
-	return nil
 }
 
 func refName(name string) *openrpc.Ref {
-	ref := openrpc.Ref(fmt.Sprintf("#/components/schemas/%s", name))
+	if strings.HasPrefix(name, "#/definitions/") {
+		name = strings.Replace(name, "#/definitions/", "", 1)
+	}
+
+	ref := openrpc.Ref(fmt.Sprintf("#/components/schemas/%s", objName(name)))
 	return &ref
+}
+
+func refBase(ref *openrpc.Ref) string {
+	return path.Base(string(*ref))
+}
+
+func isObjName(name string) bool {
+	return name != "" && objName(name) == name
+}
+
+func varName(names ...string) string {
+	buf := strings.Builder{}
+	for i, name := range names {
+		if i == 0 {
+			buf.WriteString(name)
+		} else {
+			buf.WriteString(strings.Title(name))
+		}
+	}
+
+	return regexp.MustCompile(`[^a-zA-z1-9_]`).ReplaceAllString(buf.String(), "")
+}
+
+func objName(names ...string) string {
+	return strings.Title(varName(names...))
 }

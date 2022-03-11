@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"path"
 	"regexp"
+	"sort"
 	"strings"
 
 	openrpc "github.com/open-rpc/meta-schema"
@@ -69,6 +70,10 @@ func newMethods(schema smd.Schema) *openrpc.Methods {
 
 		methods = append(methods, openrpc.MethodOrReference{MethodObject: &method})
 	}
+
+	sort.Slice(methods, func(i, j int) bool {
+		return string(*methods[i].MethodObject.Name) < string(*methods[j].MethodObject.Name)
+	})
 
 	return &methods
 }
@@ -139,7 +144,24 @@ func newNullResult() *openrpc.MethodObjectResult {
 }
 
 func newErrors(service smd.Service) *openrpc.MethodObjectErrors {
-	return nil
+	var errors openrpc.MethodObjectErrors
+	for c, m := range service.Errors {
+		code := openrpc.ErrorObjectCode(int64(c))
+		mess := openrpc.ErrorObjectMessage(m)
+
+		errors = append(errors, openrpc.ErrorOrReference{
+			ErrorObject: &openrpc.ErrorObject{
+				Code:    &code,
+				Message: &mess,
+			},
+		})
+	}
+
+	if len(errors) == 0 {
+		return nil
+	}
+
+	return &errors
 }
 
 func newComponents(schema smd.Schema) *openrpc.Components {
@@ -150,7 +172,7 @@ func newComponents(schema smd.Schema) *openrpc.Components {
 			newPropertiesFromSchema(n, param, components)
 		}
 
-		newPropertiesFromSchema(n, service.Returns, components)
+		newPropertiesFromSchema(n+"Result", service.Returns, components)
 	}
 
 	return &openrpc.Components{Schemas: &components}
@@ -165,13 +187,16 @@ func newPropertiesFromSchema(serviceName string, schema smd.JSONSchema, componen
 		if _, ok := components[base]; !ok {
 			components[base] = newPropertiesFromList(schema.Properties, components)
 		}
+	}
 
+	if len(schema.Definitions) > 0 {
 		newPropertiesFromDefinitions(schema.Definitions, components)
 	}
 }
 
 func newPropertiesFromDefinitions(definitions map[string]smd.Definition, components openrpc.SchemaComponents) {
-	for name, definition := range definitions {
+	for n, definition := range definitions {
+		name := objName(n)
 		if _, ok := components[name]; !ok {
 			components[name] = newPropertiesFromList(definition.Properties, components)
 		}

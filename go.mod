@@ -1,4 +1,4 @@
-module github.com/dizzyfool/rpcgen/v2
+module github.com/vmkteam/rpcgen/v2
 
 go 1.15
 

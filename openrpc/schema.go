@@ -13,7 +13,7 @@ import (
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
-func NewSchema(schema smd.Schema, title string) openrpc.OpenrpcDocument {
+func NewSchema(schema smd.Schema, title, host string) openrpc.OpenrpcDocument {
 	orpc := openrpc.OpenrpcEnum0
 
 	bs, _ := json.Marshal(schema)
@@ -21,7 +21,7 @@ func NewSchema(schema smd.Schema, title string) openrpc.OpenrpcDocument {
 
 	name := openrpc.InfoObjectProperties(title)
 	desc := openrpc.InfoObjectDescription(schema.Description)
-	surl := openrpc.ServerObjectUrl(schema.Target)
+	surl := openrpc.ServerObjectUrl(fmt.Sprintf("%s%s", host, schema.Target))
 
 	doc := openrpc.OpenrpcDocument{
 		Openrpc: &orpc,

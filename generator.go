@@ -2,12 +2,12 @@ package rpcgen
 
 import (
 	"fmt"
-	"github.com/dizzyfool/rpcgen/v2/openrpc"
 	"net/http"
 
-	"github.com/dizzyfool/rpcgen/v2/golang"
-	"github.com/dizzyfool/rpcgen/v2/php"
-	"github.com/dizzyfool/rpcgen/v2/typescript"
+	"github.com/vmkteam/rpcgen/v2/golang"
+	"github.com/vmkteam/rpcgen/v2/openrpc"
+	"github.com/vmkteam/rpcgen/v2/php"
+	"github.com/vmkteam/rpcgen/v2/typescript"
 
 	smd1 "github.com/vmkteam/zenrpc/smd"
 	"github.com/vmkteam/zenrpc/v2/smd"
@@ -33,8 +33,8 @@ func (g RPCGen) TSClient(typeMapper typescript.TypeMapper) Generator {
 	return typescript.NewClient(g.schema, typeMapper)
 }
 
-func (g RPCGen) OpenRPC(title string) Generator {
-	return openrpc.NewClient(g.schema, title)
+func (g RPCGen) OpenRPC(title, host string) Generator {
+	return openrpc.NewClient(g.schema, title, host)
 }
 
 // FromSMD create Generator from smd schema

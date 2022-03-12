@@ -1,8 +1,8 @@
 package openrpc
 
 import (
+	"bytes"
 	"io/ioutil"
-	"os"
 	"testing"
 
 	"github.com/vmkteam/zenrpc/v2"
@@ -15,21 +15,19 @@ func TestGenerateOpenRPCClient(t *testing.T) {
 	rpc.Register("phonebook", testdata.PhoneBook{})
 	rpc.Register("arith", testdata.ArithService{})
 
-	cl := NewClient(rpc.SMD(), "test")
+	cl := NewClient(rpc.SMD(), "test", "")
 
 	generated, err := cl.Generate()
 	if err != nil {
 		t.Fatalf("generate go client: %v", err)
 	}
 
-	ioutil.WriteFile("./testdata/openrpc.json", generated, os.ModePerm)
+	testData, err := ioutil.ReadFile("./testdata/openrpc.json")
+	if err != nil {
+		t.Fatalf("open test data file: %v", err)
+	}
 
-	//testData, err := ioutil.ReadFile("./testdata/catalogue_client.go")
-	//if err != nil {
-	//	t.Fatalf("open test data file: %v", err)
-	//}
-	//
-	//if !bytes.Equal(generated, testData) {
-	//	t.Fatalf("bad generator output")
-	//}
+	if !bytes.Equal(generated, testData) {
+		t.Fatalf("bad generator output")
+	}
 }

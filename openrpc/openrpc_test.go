@@ -9,7 +9,7 @@ import (
 	"github.com/vmkteam/zenrpc/v2/testdata"
 )
 
-func TestGenerateOpenRPCClient(t *testing.T) {
+func TestGenerateOpenRPCSchema(t *testing.T) {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
 	rpc.Register("catalogue", testdata.CatalogueService{})
 	rpc.Register("phonebook", testdata.PhoneBook{})

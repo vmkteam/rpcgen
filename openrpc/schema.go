@@ -217,11 +217,11 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 		}
 
 		switch prop.Type {
-		case "object":
+		case smd.Object:
 			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 				Ref: refName(prop.Ref),
 			}}
-		case "array":
+		case smd.Array:
 			items := &openrpc.JSONSchemaObject{}
 			if prop.Items["$ref"] != "" {
 				items = &openrpc.JSONSchemaObject{
@@ -256,7 +256,7 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 
 func newJSONSchema(serviceName string, schema smd.JSONSchema) *openrpc.JSONSchema {
 	switch schema.Type {
-	case "object":
+	case smd.Object:
 		var ref *openrpc.Ref
 		if isObjName(schema.Description) {
 			ref = refName(schema.Description)
@@ -267,7 +267,7 @@ func newJSONSchema(serviceName string, schema smd.JSONSchema) *openrpc.JSONSchem
 		return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 			Ref: ref,
 		}}
-	case "array":
+	case smd.Array:
 		items := &openrpc.JSONSchemaObject{}
 		if schema.Items["$ref"] != "" {
 			items = &openrpc.JSONSchemaObject{

@@ -13,7 +13,7 @@
 	"methods": [
 		{
 			"name": "arith.CheckError",
-			"description": "CheckError throws error is isErr true.",
+			"summary": "CheckError throws error is isErr true.",
 			"tags": [
 				{
 					"name": "arith"
@@ -33,7 +33,7 @@
 			],
 			"result": {
 				"name": "null",
-				"description": "empty result",
+				"summary": "empty result",
 				"schema": {
 					"type": [
 						"null"
@@ -49,7 +49,7 @@
 		},
 		{
 			"name": "arith.CheckZenRPCError",
-			"description": "CheckError throws zenrpc error is isErr true.",
+			"summary": "CheckError throws zenrpc error is isErr true.",
 			"tags": [
 				{
 					"name": "arith"
@@ -69,7 +69,7 @@
 			],
 			"result": {
 				"name": "null",
-				"description": "empty result",
+				"summary": "empty result",
 				"schema": {
 					"type": [
 						"null"
@@ -85,7 +85,7 @@
 		},
 		{
 			"name": "arith.Divide",
-			"description": "Divide divides two numbers.",
+			"summary": "Divide divides two numbers.",
 			"tags": [
 				{
 					"name": "arith"
@@ -95,8 +95,9 @@
 			"params": [
 				{
 					"name": "a",
-					"description": "the a",
+					"summary": "the a",
 					"schema": {
+						"description": "the a",
 						"type": [
 							"integer"
 						]
@@ -105,8 +106,9 @@
 				},
 				{
 					"name": "b",
-					"description": "the b",
+					"summary": "the b",
 					"schema": {
+						"description": "the b",
 						"type": [
 							"integer"
 						]
@@ -141,7 +143,7 @@
 			"params": [],
 			"result": {
 				"name": "null",
-				"description": "empty result",
+				"summary": "empty result",
 				"schema": {
 					"type": [
 						"null"
@@ -197,7 +199,7 @@
 		},
 		{
 			"name": "arith.Multiply",
-			"description": "Multiply multiples two digits and returns result.",
+			"summary": "Multiply multiples two digits and returns result.",
 			"tags": [
 				{
 					"name": "arith"
@@ -235,7 +237,7 @@
 		},
 		{
 			"name": "arith.Pi",
-			"description": "PI returns math.Pi.",
+			"summary": "PI returns math.Pi.",
 			"tags": [
 				{
 					"name": "arith"
@@ -270,7 +272,7 @@
 		},
 		{
 			"name": "arith.Pow",
-			"description": "Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.",
+			"summary": "Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.",
 			"tags": [
 				{
 					"name": "arith"
@@ -289,8 +291,9 @@
 				},
 				{
 					"name": "exp",
-					"description": "exponent could be empty",
+					"summary": "exponent could be empty",
 					"schema": {
+						"description": "exponent could be empty",
 						"type": [
 							"number"
 						]
@@ -308,7 +311,7 @@
 		},
 		{
 			"name": "arith.Sum",
-			"description": "Sum sums two digits and returns error with error code as result and IP from context.",
+			"summary": "Sum sums two digits and returns error with error code as result and IP from context.",
 			"tags": [
 				{
 					"name": "arith"
@@ -346,7 +349,7 @@
 		},
 		{
 			"name": "arith.SumArray",
-			"description": "SumArray returns sum all items from array",
+			"summary": "SumArray returns sum all items from array",
 			"tags": [
 				{
 					"name": "arith"
@@ -462,7 +465,7 @@
 		},
 		{
 			"name": "phonebook.ById",
-			"description": "ById returns Person from DB.",
+			"summary": "ById returns Person from DB.",
 			"tags": [
 				{
 					"name": "phonebook"
@@ -472,8 +475,9 @@
 			"params": [
 				{
 					"name": "id",
-					"description": "person id",
+					"summary": "person id",
 					"schema": {
+						"description": "person id",
 						"type": [
 							"integer"
 						]
@@ -496,7 +500,7 @@
 		},
 		{
 			"name": "phonebook.Delete",
-			"description": "Delete marks person as deleted.",
+			"summary": "Delete marks person as deleted.",
 			"tags": [
 				{
 					"name": "phonebook"
@@ -506,8 +510,9 @@
 			"params": [
 				{
 					"name": "id",
-					"description": "person id",
+					"summary": "person id",
 					"schema": {
+						"description": "person id",
 						"type": [
 							"integer"
 						]
@@ -526,7 +531,7 @@
 		},
 		{
 			"name": "phonebook.Get",
-			"description": "Get returns all people from DB.",
+			"summary": "Get returns all people from DB.",
 			"tags": [
 				{
 					"name": "phonebook"
@@ -543,8 +548,9 @@
 				},
 				{
 					"name": "page",
-					"description": "current page",
+					"summary": "current page",
 					"schema": {
+						"description": "current page",
 						"type": [
 							"integer"
 						]
@@ -552,8 +558,9 @@
 				},
 				{
 					"name": "count",
-					"description": "page size",
+					"summary": "page size",
 					"schema": {
+						"description": "page size",
 						"type": [
 							"integer"
 						]
@@ -576,7 +583,7 @@
 		},
 		{
 			"name": "phonebook.Remove",
-			"description": "Removes deletes person from DB.",
+			"summary": "Removes deletes person from DB.",
 			"tags": [
 				{
 					"name": "phonebook"
@@ -586,8 +593,9 @@
 			"params": [
 				{
 					"name": "id",
-					"description": "person id",
+					"summary": "person id",
 					"schema": {
+						"description": "person id",
 						"type": [
 							"integer"
 						]
@@ -597,7 +605,9 @@
 			],
 			"result": {
 				"name": "phonebookRemoveResult",
+				"summary": "operation result",
 				"schema": {
+					"description": "operation result",
 					"type": [
 						"boolean"
 					]
@@ -606,7 +616,7 @@
 		},
 		{
 			"name": "phonebook.Save",
-			"description": "Save saves person to DB.",
+			"summary": "Save saves person to DB.",
 			"tags": [
 				{
 					"name": "phonebook"
@@ -623,8 +633,9 @@
 				},
 				{
 					"name": "replace",
-					"description": "update person if exist",
+					"summary": "update person if exist",
 					"schema": {
+						"description": "update person if exist",
 						"type": [
 							"boolean"
 						]
@@ -652,7 +663,7 @@
 		},
 		{
 			"name": "phonebook.ValidateSearch",
-			"description": "ValidateSearch returns given search as result.",
+			"summary": "ValidateSearch returns given search as result.",
 			"tags": [
 				{
 					"name": "phonebook"
@@ -662,9 +673,10 @@
 			"params": [
 				{
 					"name": "search",
-					"description": "search object",
+					"summary": "search object",
 					"schema": {
-						"$ref": "#/components/schemas/PhonebookValidateSearchSearch"
+						"$ref": "#/components/schemas/PhonebookValidateSearchSearch",
+						"description": "search object"
 					}
 				}
 			],
@@ -703,11 +715,13 @@
 				],
 				"properties": {
 					"Quo": {
+						"description": "Quo docs",
 						"type": [
 							"integer"
 						]
 					},
 					"rem": {
+						"description": "Rem docs",
 						"type": [
 							"integer"
 						]
@@ -725,11 +739,13 @@
 						"$ref": "#/components/schemas/ObjectsAbstractObject"
 					},
 					"X": {
+						"description": "coordinate",
 						"type": [
 							"integer"
 						]
 					},
 					"Y": {
+						"description": "coordinate",
 						"type": [
 							"integer"
 						]
@@ -747,11 +763,13 @@
 						"$ref": "#/components/schemas/ObjectsAbstractObject"
 					},
 					"X": {
+						"description": "coordinate",
 						"type": [
 							"integer"
 						]
 					},
 					"Y": {
+						"description": "coordinate",
 						"type": [
 							"integer"
 						]
@@ -862,11 +880,13 @@
 						"$ref": "#/components/schemas/ObjectsAbstractObject"
 					},
 					"X": {
+						"description": "coordinate",
 						"type": [
 							"integer"
 						]
 					},
 					"Y": {
+						"description": "coordinate",
 						"type": [
 							"integer"
 						]
@@ -889,6 +909,7 @@
 				],
 				"properties": {
 					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
 						"items": [
 							{
 								"$ref": "#/components/schemas/Address"
@@ -899,6 +920,7 @@
 						]
 					},
 					"Deleted": {
+						"description": "Deleted is flag for",
 						"type": [
 							"boolean"
 						]
@@ -909,6 +931,7 @@
 						]
 					},
 					"ID": {
+						"description": "ID is Unique Identifier for person",
 						"type": [
 							"integer"
 						]
@@ -931,6 +954,7 @@
 						]
 					},
 					"Phone": {
+						"description": "Phone is main phone",
 						"type": [
 							"string"
 						]
@@ -957,6 +981,7 @@
 				],
 				"properties": {
 					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
 						"items": [
 							{
 								"$ref": "#/components/schemas/Address"
@@ -967,6 +992,7 @@
 						]
 					},
 					"Deleted": {
+						"description": "Deleted is flag for",
 						"type": [
 							"boolean"
 						]
@@ -977,6 +1003,7 @@
 						]
 					},
 					"ID": {
+						"description": "ID is Unique Identifier for person",
 						"type": [
 							"integer"
 						]
@@ -999,6 +1026,7 @@
 						]
 					},
 					"Phone": {
+						"description": "Phone is main phone",
 						"type": [
 							"string"
 						]
@@ -1022,6 +1050,7 @@
 						"$ref": "#/components/schemas/Address"
 					},
 					"ByName": {
+						"description": "ByName is filter for searching person by first name or last name.",
 						"type": [
 							"string"
 						]
@@ -1050,6 +1079,7 @@
 				],
 				"properties": {
 					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
 						"items": [
 							{
 								"$ref": "#/components/schemas/Address"
@@ -1060,6 +1090,7 @@
 						]
 					},
 					"Deleted": {
+						"description": "Deleted is flag for",
 						"type": [
 							"boolean"
 						]
@@ -1070,6 +1101,7 @@
 						]
 					},
 					"ID": {
+						"description": "ID is Unique Identifier for person",
 						"type": [
 							"integer"
 						]
@@ -1092,6 +1124,7 @@
 						]
 					},
 					"Phone": {
+						"description": "Phone is main phone",
 						"type": [
 							"string"
 						]
@@ -1115,6 +1148,7 @@
 						"$ref": "#/components/schemas/Address"
 					},
 					"ByName": {
+						"description": "ByName is filter for searching person by first name or last name.",
 						"type": [
 							"string"
 						]
@@ -1140,6 +1174,7 @@
 						"$ref": "#/components/schemas/Address"
 					},
 					"ByName": {
+						"description": "ByName is filter for searching person by first name or last name.",
 						"type": [
 							"string"
 						]

@@ -64,8 +64,8 @@ func newMethods(schema smd.Schema) *openrpc.Methods {
 		}
 
 		if service.Description != "" {
-			desc := openrpc.MethodObjectDescription(service.Description)
-			method.Description = &desc
+			desc := openrpc.MethodObjectSummary(service.Description)
+			method.Summary = &desc
 		}
 
 		methods = append(methods, openrpc.MethodOrReference{MethodObject: &method})
@@ -106,8 +106,8 @@ func newParams(serviceName string, service smd.Service) *openrpc.MethodObjectPar
 		}
 
 		if param.Description != "" {
-			desc := openrpc.ContentDescriptorObjectDescription(param.Description)
-			cont.Description = &desc
+			desc := openrpc.ContentDescriptorObjectSummary(param.Description)
+			cont.Summary = &desc
 		}
 
 		if !param.Optional {
@@ -123,20 +123,27 @@ func newParams(serviceName string, service smd.Service) *openrpc.MethodObjectPar
 
 func newResult(serviceName string, service smd.Service) *openrpc.MethodObjectResult {
 	name := openrpc.ContentDescriptorObjectName(varName(serviceName, "Result"))
+	var desc *openrpc.ContentDescriptorObjectSummary
+	if service.Returns.Description != "" {
+		d := openrpc.ContentDescriptorObjectSummary(service.Returns.Description)
+		desc = &d
+	}
+
 	return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
-		Name:   &name,
-		Schema: newJSONSchema(serviceName+"Result", service.Returns),
+		Name:    &name,
+		Summary: desc,
+		Schema:  newJSONSchema(serviceName+"Result", service.Returns),
 	}}
 }
 
 func newNullResult() *openrpc.MethodObjectResult {
 	name := openrpc.ContentDescriptorObjectName("null")
-	desc := openrpc.ContentDescriptorObjectDescription("empty result")
+	desc := openrpc.ContentDescriptorObjectSummary("empty result")
 	typ := openrpc.SimpleTypes("null")
 
 	return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
-		Name:        &name,
-		Description: &desc,
+		Name:    &name,
+		Summary: &desc,
 		Schema: &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 			Type: &openrpc.Type{SimpleTypes: &typ},
 		}},
@@ -216,10 +223,17 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 			required = append(required, openrpc.StringDoaGddGA(prop.Name))
 		}
 
+		var desc *openrpc.Description
+		if prop.Description != "" {
+			d := openrpc.Description(prop.Description)
+			desc = &d
+		}
+
 		switch prop.Type {
 		case smd.Object:
 			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-				Ref: refName(prop.Ref),
+				Ref:         refName(prop.Ref),
+				Description: desc,
 			}}
 		case smd.Array:
 			items := &openrpc.JSONSchemaObject{}
@@ -236,14 +250,16 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 
 			typ := openrpc.SimpleTypes(prop.Type)
 			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-				Type:  &openrpc.Type{SimpleTypes: &typ},
-				Items: &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: items}},
+				Description: desc,
+				Type:        &openrpc.Type{SimpleTypes: &typ},
+				Items:       &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: items}},
 			}}
 
 		default:
 			typ := openrpc.SimpleTypes(prop.Type)
 			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-				Type: &openrpc.Type{SimpleTypes: &typ},
+				Description: desc,
+				Type:        &openrpc.Type{SimpleTypes: &typ},
 			}}
 		}
 	}
@@ -255,17 +271,25 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 }
 
 func newJSONSchema(serviceName string, schema smd.JSONSchema) *openrpc.JSONSchema {
+	var desc *openrpc.Description
+	if schema.Description != "" {
+		d := openrpc.Description(schema.Description)
+		desc = &d
+	}
+
 	switch schema.Type {
 	case smd.Object:
 		var ref *openrpc.Ref
 		if isObjName(schema.Description) {
 			ref = refName(schema.Description)
+			desc = nil
 		} else {
 			ref = refName(objName(serviceName, schema.Name))
 		}
 
 		return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-			Ref: ref,
+			Ref:         ref,
+			Description: desc,
 		}}
 	case smd.Array:
 		items := &openrpc.JSONSchemaObject{}
@@ -282,14 +306,16 @@ func newJSONSchema(serviceName string, schema smd.JSONSchema) *openrpc.JSONSchem
 
 		typ := openrpc.SimpleTypes(schema.Type)
 		return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-			Type:  &openrpc.Type{SimpleTypes: &typ},
-			Items: &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: items}},
+			Type:        &openrpc.Type{SimpleTypes: &typ},
+			Items:       &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: items}},
+			Description: desc,
 		}}
 
 	default:
 		typ := openrpc.SimpleTypes(schema.Type)
 		return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-			Type: &openrpc.Type{SimpleTypes: &typ},
+			Type:        &openrpc.Type{SimpleTypes: &typ},
+			Description: desc,
 		}}
 	}
 }

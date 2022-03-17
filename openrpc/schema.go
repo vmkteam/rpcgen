@@ -132,6 +132,19 @@ func newResult(serviceName string, service smd.Service) *openrpc.MethodObjectRes
 		desc = &d
 	}
 
+	if service.Returns.Type == "object" {
+		var ref *openrpc.Ref
+		if isObjName(service.Returns.Description) {
+			ref = cdRefName(service.Returns.Description)
+		} else {
+			ref = cdRefName(varName(serviceName, "Result"))
+		}
+
+		return &openrpc.MethodObjectResult{ReferenceObject: &openrpc.ReferenceObject{
+			Ref: ref,
+		}}
+	}
+
 	return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
 		Name:    &name,
 		Summary: desc,
@@ -180,20 +193,21 @@ func newErrors(service smd.Service) *openrpc.MethodObjectErrors {
 
 func newComponents(schema smd.Schema) *openrpc.Components {
 	components := openrpc.SchemaComponents{}
+	descriptors := openrpc.ContentDescriptorComponents{}
 
 	for n, service := range schema.Services {
 		for _, param := range service.Parameters {
-			newPropertiesFromSchema(n, param, components)
+			parseComponentsFromSchema(n, param, components)
 		}
 
-		newPropertiesFromSchema(n+"Result", service.Returns, components)
+		parseDescriptorsFromSchema(n+"Result", service.Returns, components, descriptors)
 	}
 
-	return &openrpc.Components{Schemas: &components}
+	return &openrpc.Components{Schemas: &components, ContentDescriptors: &descriptors}
 }
 
 // recursive hell
-func newPropertiesFromSchema(serviceName string, schema smd.JSONSchema, components openrpc.SchemaComponents) {
+func parseComponentsFromSchema(serviceName string, schema smd.JSONSchema, components openrpc.SchemaComponents) {
 	sch := newJSONSchema(serviceName, schema)
 	if sch.JSONSchemaObject.Ref != nil && len(schema.Properties) > 0 {
 		base := refBase(sch.JSONSchemaObject.Ref)
@@ -204,11 +218,32 @@ func newPropertiesFromSchema(serviceName string, schema smd.JSONSchema, componen
 	}
 
 	if len(schema.Definitions) > 0 {
-		newPropertiesFromDefinitions(schema.Definitions, components)
+		parseComponentsFromDefinitions(schema.Definitions, components)
 	}
 }
 
-func newPropertiesFromDefinitions(definitions map[string]smd.Definition, components openrpc.SchemaComponents) {
+func parseDescriptorsFromSchema(serviceName string, schema smd.JSONSchema, components openrpc.SchemaComponents, descriptors openrpc.ContentDescriptorComponents) {
+	sch := newJSONSchema(serviceName, schema)
+	if sch.JSONSchemaObject.Ref != nil && len(schema.Properties) > 0 {
+		base := refBase(sch.JSONSchemaObject.Ref)
+
+		if _, ok := descriptors[base]; !ok {
+			name := openrpc.ContentDescriptorObjectName(base)
+			descriptors[base] = openrpc.ContentDescriptorObject{
+				Name:        &name,
+				Description: nil,
+				Summary:     nil,
+				Schema:      newPropertiesFromList(schema.Properties, components),
+			}
+		}
+	}
+
+	if len(schema.Definitions) > 0 {
+		parseComponentsFromDefinitions(schema.Definitions, components)
+	}
+}
+
+func parseComponentsFromDefinitions(definitions map[string]smd.Definition, components openrpc.SchemaComponents) {
 	for n, definition := range definitions {
 		name := objName(n)
 		if _, ok := components[name]; !ok {
@@ -223,7 +258,7 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 
 	for _, prop := range props {
 		if len(prop.Definitions) > 0 {
-			newPropertiesFromDefinitions(prop.Definitions, components)
+			parseComponentsFromDefinitions(prop.Definitions, components)
 		}
 
 		if !prop.Optional {
@@ -333,6 +368,11 @@ func refName(name string) *openrpc.Ref {
 	}
 
 	ref := openrpc.Ref(fmt.Sprintf("#/components/schemas/%s", objName(name)))
+	return &ref
+}
+
+func cdRefName(name string) *openrpc.Ref {
+	ref := openrpc.Ref(fmt.Sprintf("#/components/contentDescriptors/%s", objName(name)))
 	return &ref
 }
 

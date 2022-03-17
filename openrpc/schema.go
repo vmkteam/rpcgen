@@ -46,24 +46,19 @@ func NewSchema(schema smd.Schema, title, baseurl string) openrpc.OpenrpcDocument
 func newMethods(schema smd.Schema) *openrpc.Methods {
 	methods := openrpc.Methods{}
 
-	for n, service := range schema.Services {
-		parts := strings.Split(n, ".")
+	for serviceName, service := range schema.Services {
+		parts := strings.Split(serviceName, ".")
 
-		name := openrpc.MethodObjectName(n)
+		name := openrpc.MethodObjectName(serviceName)
 		tag := openrpc.TagObjectName(parts[0])
 
 		method := openrpc.MethodObject{
 			Name:           &name,
 			Tags:           &openrpc.MethodObjectTags{{TagObject: &openrpc.TagObject{Name: &tag}}},
 			ParamStructure: newParamStruct(service),
-			Params:         newParams(n, service),
+			Params:         newParams(serviceName, service),
+			Result:         newResult(serviceName, service),
 			Errors:         newErrors(service),
-		}
-
-		if service.Returns.Type != "" {
-			method.Result = newResult(n, service)
-		} else {
-			method.Result = newNullResult()
 		}
 
 		if service.Description != "" {
@@ -125,45 +120,30 @@ func newParams(serviceName string, service smd.Service) *openrpc.MethodObjectPar
 }
 
 func newResult(serviceName string, service smd.Service) *openrpc.MethodObjectResult {
-	name := openrpc.ContentDescriptorObjectName(varName(serviceName, "Result"))
-	var desc *openrpc.ContentDescriptorObjectSummary
-	if service.Returns.Description != "" {
-		d := openrpc.ContentDescriptorObjectSummary(service.Returns.Description)
-		desc = &d
-	}
-
-	if service.Returns.Type == "object" {
-		var ref *openrpc.Ref
-		if isObjName(service.Returns.Description) {
-			ref = cdRefName(service.Returns.Description)
-		} else {
-			ref = cdRefName(varName(serviceName, "Result"))
+	switch service.Returns.Type {
+	case "":
+		return &openrpc.MethodObjectResult{ReferenceObject: &openrpc.ReferenceObject{Ref: cdRefName(respName("null"))}}
+	case smd.Array:
+		if itemType, ok := service.Returns.Items["type"]; ok {
+			return &openrpc.MethodObjectResult{ReferenceObject: &openrpc.ReferenceObject{Ref: cdRefName(arrayRespName(itemType))}}
+		}
+		fallthrough
+	case smd.Object:
+		name := openrpc.ContentDescriptorObjectName(objName(respName(serviceName)))
+		var desc *openrpc.ContentDescriptorObjectSummary
+		if service.Returns.Description != "" {
+			d := openrpc.ContentDescriptorObjectSummary(service.Returns.Description)
+			desc = &d
 		}
 
-		return &openrpc.MethodObjectResult{ReferenceObject: &openrpc.ReferenceObject{
-			Ref: ref,
+		return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
+			Name:    &name,
+			Summary: desc,
+			Schema:  newJSONSchema(respName(serviceName), service.Returns),
 		}}
+	default:
+		return &openrpc.MethodObjectResult{ReferenceObject: &openrpc.ReferenceObject{Ref: cdRefName(respName(service.Returns.Type))}}
 	}
-
-	return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
-		Name:    &name,
-		Summary: desc,
-		Schema:  newJSONSchema(serviceName+"Result", service.Returns),
-	}}
-}
-
-func newNullResult() *openrpc.MethodObjectResult {
-	name := openrpc.ContentDescriptorObjectName("null")
-	desc := openrpc.ContentDescriptorObjectSummary("empty result")
-	typ := openrpc.SimpleTypes("null")
-
-	return &openrpc.MethodObjectResult{ContentDescriptorObject: &openrpc.ContentDescriptorObject{
-		Name:    &name,
-		Summary: &desc,
-		Schema: &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-			Type: &openrpc.Type{SimpleTypes: &typ},
-		}},
-	}}
 }
 
 func newErrors(service smd.Service) *openrpc.MethodObjectErrors {
@@ -195,12 +175,12 @@ func newComponents(schema smd.Schema) *openrpc.Components {
 	components := openrpc.SchemaComponents{}
 	descriptors := openrpc.ContentDescriptorComponents{}
 
-	for n, service := range schema.Services {
+	for serviceName, service := range schema.Services {
 		for _, param := range service.Parameters {
-			parseComponentsFromSchema(n, param, components)
+			parseComponentsFromSchema(serviceName, param, components)
 		}
 
-		parseDescriptorsFromSchema(n+"Result", service.Returns, components, descriptors)
+		parseDescriptorsFromSchema(respName(serviceName), service.Returns, components, descriptors)
 	}
 
 	return &openrpc.Components{Schemas: &components, ContentDescriptors: &descriptors}
@@ -224,17 +204,41 @@ func parseComponentsFromSchema(serviceName string, schema smd.JSONSchema, compon
 
 func parseDescriptorsFromSchema(serviceName string, schema smd.JSONSchema, components openrpc.SchemaComponents, descriptors openrpc.ContentDescriptorComponents) {
 	sch := newJSONSchema(serviceName, schema)
-	if sch.JSONSchemaObject.Ref != nil && len(schema.Properties) > 0 {
-		base := refBase(sch.JSONSchemaObject.Ref)
 
+	var (
+		descriptor *openrpc.ContentDescriptorObject
+		component  *openrpc.JSONSchema
+		base       string
+	)
+
+	switch schema.Type {
+	case "":
+		descriptor = newSimpleResponse("null")
+		base = string(*descriptor.Name)
+	case smd.Array:
+		if itemType, ok := schema.Items["type"]; ok {
+			descriptor = newSimpleArrayResponse(itemType)
+			base = string(*descriptor.Name)
+		}
+	case smd.Object:
+		if sch.JSONSchemaObject.Ref != nil && len(schema.Properties) > 0 {
+			component = newPropertiesFromList(schema.Properties, components)
+			base = refBase(sch.JSONSchemaObject.Ref)
+		}
+	default:
+		descriptor = newSimpleResponse(schema.Type)
+		base = string(*descriptor.Name)
+	}
+
+	if descriptor != nil {
 		if _, ok := descriptors[base]; !ok {
-			name := openrpc.ContentDescriptorObjectName(base)
-			descriptors[base] = openrpc.ContentDescriptorObject{
-				Name:        &name,
-				Description: nil,
-				Summary:     nil,
-				Schema:      newPropertiesFromList(schema.Properties, components),
-			}
+			descriptors[base] = descriptor
+		}
+	}
+
+	if component != nil {
+		if _, ok := components[base]; !ok {
+			components[base] = component
 		}
 	}
 
@@ -384,7 +388,7 @@ func isObjName(name string) bool {
 	return name != "" && objName(name) == name
 }
 
-func varName(names ...string) string {
+func objName(names ...string) string {
 	buf := strings.Builder{}
 	for i, name := range names {
 		if i == 0 {
@@ -394,17 +398,51 @@ func varName(names ...string) string {
 		}
 	}
 
-	return regexp.MustCompile(`[^a-zA-z1-9_]`).ReplaceAllString(buf.String(), "")
+	return strings.Title(regexp.MustCompile(`[^a-zA-z1-9_]`).ReplaceAllString(buf.String(), ""))
 }
 
-func objName(names ...string) string {
-	return strings.Title(varName(names...))
+func respName(name string) string {
+	return strings.Title(fmt.Sprintf("%sResponse", name))
+}
+
+func arrayRespName(name string) string {
+	return strings.Title(fmt.Sprintf("%sArrayResponse", name))
+}
+
+func newSimpleArrayResponse(typeName string) *openrpc.ContentDescriptorObject {
+	name := openrpc.ContentDescriptorObjectName(arrayRespName(typeName))
+	desc := openrpc.ContentDescriptorObjectSummary(fmt.Sprintf("%s array response", typeName))
+	typ := openrpc.SimpleTypes(typeName)
+
+	return &openrpc.ContentDescriptorObject{
+		Name:    &name,
+		Summary: &desc,
+		Schema: &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			Items: &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+				Type: &openrpc.Type{SimpleTypes: &typ},
+			}}},
+		}},
+	}
+}
+
+func newSimpleResponse(typeName string) *openrpc.ContentDescriptorObject {
+	name := openrpc.ContentDescriptorObjectName(respName(typeName))
+	desc := openrpc.ContentDescriptorObjectSummary(fmt.Sprintf("%s response", typeName))
+	typ := openrpc.SimpleTypes(typeName)
+
+	return &openrpc.ContentDescriptorObject{
+		Name:    &name,
+		Summary: &desc,
+		Schema: &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			Type: &openrpc.Type{SimpleTypes: &typ},
+		}},
+	}
 }
 
 func sanitizeHost(baseurl string) string {
 	u, err := url.Parse(baseurl)
 	if err != nil {
-		return varName(baseurl)
+		return objName(baseurl)
 	}
 
 	return u.Host

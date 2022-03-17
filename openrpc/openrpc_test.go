@@ -22,7 +22,7 @@ func TestGenerateOpenRPCSchema(t *testing.T) {
 
 	generated, err := cl.Generate()
 	if err != nil {
-		t.Fatalf("generate go client: %v", err)
+		t.Fatalf("generate openrpc client: %v", err)
 	}
 
 	testData, err := ioutil.ReadFile("./testdata/openrpc.json")
@@ -37,6 +37,9 @@ func TestGenerateOpenRPCSchema(t *testing.T) {
 
 func TestGenerateOpenRPCClientAPISRV(t *testing.T) {
 	bs, err := ioutil.ReadFile("./testdata/api.json")
+	if err != nil {
+		t.Fatalf("read json: %v", err)
+	}
 
 	schema := smd.Schema{}
 	if err := json.Unmarshal(bs, &schema); err != nil {

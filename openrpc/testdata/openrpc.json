@@ -33,13 +33,7 @@
 				}
 			],
 			"result": {
-				"name": "null",
-				"summary": "empty result",
-				"schema": {
-					"type": [
-						"null"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/NullResponse"
 			},
 			"errors": [
 				{
@@ -69,13 +63,7 @@
 				}
 			],
 			"result": {
-				"name": "null",
-				"summary": "empty result",
-				"schema": {
-					"type": [
-						"null"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/NullResponse"
 			},
 			"errors": [
 				{
@@ -118,9 +106,9 @@
 				}
 			],
 			"result": {
-				"name": "arithDivideResult",
+				"name": "ArithDivideResponse",
 				"schema": {
-					"$ref": "#/components/schemas/ArithDivideResult"
+					"$ref": "#/components/schemas/ArithDivideResponse"
 				}
 			},
 			"errors": [
@@ -143,13 +131,7 @@
 			],
 			"params": [],
 			"result": {
-				"name": "null",
-				"summary": "empty result",
-				"schema": {
-					"type": [
-						"null"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/NullResponse"
 			}
 		},
 		{
@@ -170,9 +152,9 @@
 				}
 			],
 			"result": {
-				"name": "arithDoSomethingWithPointResult",
+				"name": "ArithDoSomethingWithPointResponse",
 				"schema": {
-					"$ref": "#/components/schemas/ArithDoSomethingWithPointResult"
+					"$ref": "#/components/schemas/ArithDoSomethingWithPointResponse"
 				}
 			}
 		},
@@ -185,7 +167,7 @@
 			],
 			"params": [],
 			"result": {
-				"name": "arithGetPointsResult",
+				"name": "ArithGetPointsResponse",
 				"schema": {
 					"items": [
 						{
@@ -228,12 +210,7 @@
 				}
 			],
 			"result": {
-				"name": "arithMultiplyResult",
-				"schema": {
-					"type": [
-						"integer"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/IntegerResponse"
 			}
 		},
 		{
@@ -246,12 +223,7 @@
 			],
 			"params": [],
 			"result": {
-				"name": "arithPiResult",
-				"schema": {
-					"type": [
-						"number"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/NumberResponse"
 			}
 		},
 		{
@@ -263,12 +235,7 @@
 			],
 			"params": [],
 			"result": {
-				"name": "arithPositiveResult",
-				"schema": {
-					"type": [
-						"boolean"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
 			}
 		},
 		{
@@ -302,12 +269,7 @@
 				}
 			],
 			"result": {
-				"name": "arithPowResult",
-				"schema": {
-					"type": [
-						"number"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/NumberResponse"
 			}
 		},
 		{
@@ -340,12 +302,7 @@
 				}
 			],
 			"result": {
-				"name": "arithSumResult",
-				"schema": {
-					"type": [
-						"boolean"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
 			}
 		},
 		{
@@ -375,12 +332,7 @@
 				}
 			],
 			"result": {
-				"name": "arithSumArrayResult",
-				"schema": {
-					"type": [
-						"number"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/NumberResponse"
 			}
 		},
 		{
@@ -408,12 +360,7 @@
 				}
 			],
 			"result": {
-				"name": "catalogueFirstResult",
-				"schema": {
-					"type": [
-						"boolean"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
 			}
 		},
 		{
@@ -441,12 +388,7 @@
 				}
 			],
 			"result": {
-				"name": "catalogueSecondResult",
-				"schema": {
-					"type": [
-						"boolean"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
 			}
 		},
 		{
@@ -458,9 +400,9 @@
 			],
 			"params": [],
 			"result": {
-				"name": "catalogueThirdResult",
+				"name": "CatalogueThirdResponse",
 				"schema": {
-					"$ref": "#/components/schemas/CatalogueThirdResult"
+					"$ref": "#/components/schemas/CatalogueThirdResponse"
 				}
 			}
 		},
@@ -487,9 +429,9 @@
 				}
 			],
 			"result": {
-				"name": "phonebookByIdResult",
+				"name": "PhonebookByIdResponse",
 				"schema": {
-					"$ref": "#/components/schemas/PhonebookByIdResult"
+					"$ref": "#/components/schemas/PhonebookByIdResponse"
 				}
 			},
 			"errors": [
@@ -522,12 +464,7 @@
 				}
 			],
 			"result": {
-				"name": "phonebookDeleteResult",
-				"schema": {
-					"type": [
-						"boolean"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
 			}
 		},
 		{
@@ -569,7 +506,7 @@
 				}
 			],
 			"result": {
-				"name": "phonebookGetResult",
+				"name": "PhonebookGetResponse",
 				"schema": {
 					"items": [
 						{
@@ -605,14 +542,7 @@
 				}
 			],
 			"result": {
-				"name": "phonebookRemoveResult",
-				"summary": "operation result",
-				"schema": {
-					"description": "operation result",
-					"type": [
-						"boolean"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
 			}
 		},
 		{
@@ -644,12 +574,7 @@
 				}
 			],
 			"result": {
-				"name": "phonebookSaveResult",
-				"schema": {
-					"type": [
-						"integer"
-					]
-				}
+				"$ref": "#/components/contentDescriptors/IntegerResponse"
 			},
 			"errors": [
 				{
@@ -682,9 +607,9 @@
 				}
 			],
 			"result": {
-				"name": "phonebookValidateSearchResult",
+				"name": "PhonebookValidateSearchResponse",
 				"schema": {
-					"$ref": "#/components/schemas/PhonebookValidateSearchResult"
+					"$ref": "#/components/schemas/PhonebookValidateSearchResponse"
 				}
 			}
 		}
@@ -709,7 +634,7 @@
 					}
 				}
 			},
-			"ArithDivideResult": {
+			"ArithDivideResponse": {
 				"required": [
 					"Quo",
 					"rem"
@@ -753,7 +678,7 @@
 					}
 				}
 			},
-			"ArithDoSomethingWithPointResult": {
+			"ArithDoSomethingWithPointResponse": {
 				"required": [
 					"X",
 					"Y",
@@ -800,7 +725,7 @@
 					}
 				}
 			},
-			"CatalogueThirdResult": {
+			"CatalogueThirdResponse": {
 				"required": [
 					"id",
 					"groups"
@@ -970,7 +895,7 @@
 					}
 				}
 			},
-			"PhonebookByIdResult": {
+			"PhonebookByIdResponse": {
 				"required": [
 					"ID",
 					"FirstName",
@@ -1140,7 +1065,7 @@
 					}
 				}
 			},
-			"PhonebookValidateSearchResult": {
+			"PhonebookValidateSearchResponse": {
 				"required": [
 					"ByPhone"
 				],
@@ -1219,6 +1144,44 @@
 							"string"
 						]
 					}
+				}
+			}
+		},
+		"contentDescriptors": {
+			"BooleanResponse": {
+				"name": "BooleanResponse",
+				"summary": "boolean response",
+				"schema": {
+					"type": [
+						"boolean"
+					]
+				}
+			},
+			"IntegerResponse": {
+				"name": "IntegerResponse",
+				"summary": "integer response",
+				"schema": {
+					"type": [
+						"integer"
+					]
+				}
+			},
+			"NullResponse": {
+				"name": "NullResponse",
+				"summary": "null response",
+				"schema": {
+					"type": [
+						"null"
+					]
+				}
+			},
+			"NumberResponse": {
+				"name": "NumberResponse",
+				"summary": "number response",
+				"schema": {
+					"type": [
+						"number"
+					]
 				}
 			}
 		}

@@ -7,7 +7,8 @@
 	},
 	"servers": [
 		{
-			"url": "http://localhost/"
+			"url": "http://localhost/",
+			"name": "localhost"
 		}
 	],
 	"methods": [
@@ -652,12 +653,12 @@
 			},
 			"errors": [
 				{
-					"code": 400,
-					"message": "invalid request"
-				},
-				{
 					"code": 401,
 					"message": "use replace=true"
+				},
+				{
+					"code": 400,
+					"message": "invalid request"
 				}
 			]
 		},

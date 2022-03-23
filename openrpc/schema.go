@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"path"
 	"regexp"
 	"sort"
@@ -13,7 +14,7 @@ import (
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
-func NewSchema(schema smd.Schema, title, host string) openrpc.OpenrpcDocument {
+func NewSchema(schema smd.Schema, title, baseurl string) openrpc.OpenrpcDocument {
 	orpc := openrpc.OpenrpcEnum0
 
 	bs, _ := json.Marshal(schema)
@@ -21,7 +22,8 @@ func NewSchema(schema smd.Schema, title, host string) openrpc.OpenrpcDocument {
 
 	name := openrpc.InfoObjectProperties(title)
 	desc := openrpc.InfoObjectDescription(schema.Description)
-	surl := openrpc.ServerObjectUrl(fmt.Sprintf("%s%s", host, schema.Target))
+	surl := openrpc.ServerObjectUrl(fmt.Sprintf("%s%s", baseurl, schema.Target))
+	sname := openrpc.ServerObjectName(sanitizeHost(baseurl))
 
 	doc := openrpc.OpenrpcDocument{
 		Openrpc: &orpc,
@@ -31,7 +33,8 @@ func NewSchema(schema smd.Schema, title, host string) openrpc.OpenrpcDocument {
 			Version:     &ver,
 		},
 		Servers: &openrpc.Servers{{
-			Url: &surl,
+			Name: &sname,
+			Url:  &surl,
 		}},
 		Methods:    newMethods(schema),
 		Components: newComponents(schema),
@@ -163,6 +166,10 @@ func newErrors(service smd.Service) *openrpc.MethodObjectErrors {
 			},
 		})
 	}
+
+	sort.Slice(errors, func(i, j int) bool {
+		return int64(*errors[i].ErrorObject.Code) > int64(*errors[i].ErrorObject.Code)
+	})
 
 	if len(errors) == 0 {
 		return nil
@@ -352,4 +359,13 @@ func varName(names ...string) string {
 
 func objName(names ...string) string {
 	return strings.Title(varName(names...))
+}
+
+func sanitizeHost(baseurl string) string {
+	u, err := url.Parse(baseurl)
+	if err != nil {
+		return varName(baseurl)
+	}
+
+	return u.Host
 }

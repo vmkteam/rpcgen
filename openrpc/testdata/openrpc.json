@@ -113,12 +113,12 @@
 			},
 			"errors": [
 				{
-					"code": 401,
-					"message": "we do not serve 1"
-				},
-				{
 					"code": -32603,
 					"message": "divide by zero"
+				},
+				{
+					"code": 401,
+					"message": "we do not serve 1"
 				}
 			]
 		},
@@ -578,12 +578,12 @@
 			},
 			"errors": [
 				{
-					"code": 401,
-					"message": "use replace=true"
-				},
-				{
 					"code": 400,
 					"message": "invalid request"
+				},
+				{
+					"code": 401,
+					"message": "use replace=true"
 				}
 			]
 		},
@@ -622,12 +622,12 @@
 					"City"
 				],
 				"properties": {
-					"City": {
+					"Street": {
 						"type": [
 							"string"
 						]
 					},
-					"Street": {
+					"City": {
 						"type": [
 							"string"
 						]
@@ -661,9 +661,6 @@
 					"ConnectedObject"
 				],
 				"properties": {
-					"ConnectedObject": {
-						"$ref": "#/components/schemas/ObjectsAbstractObject"
-					},
 					"X": {
 						"description": "coordinate",
 						"type": [
@@ -675,6 +672,9 @@
 						"type": [
 							"integer"
 						]
+					},
+					"ConnectedObject": {
+						"$ref": "#/components/schemas/ObjectsAbstractObject"
 					}
 				}
 			},
@@ -685,9 +685,6 @@
 					"ConnectedObject"
 				],
 				"properties": {
-					"ConnectedObject": {
-						"$ref": "#/components/schemas/ObjectsAbstractObject"
-					},
 					"X": {
 						"description": "coordinate",
 						"type": [
@@ -699,6 +696,9 @@
 						"type": [
 							"integer"
 						]
+					},
+					"ConnectedObject": {
+						"$ref": "#/components/schemas/ObjectsAbstractObject"
 					}
 				}
 			},
@@ -708,6 +708,11 @@
 					"groups"
 				],
 				"properties": {
+					"id": {
+						"type": [
+							"integer"
+						]
+					},
 					"groups": {
 						"items": [
 							{
@@ -716,11 +721,6 @@
 						],
 						"type": [
 							"array"
-						]
-					},
-					"id": {
-						"type": [
-							"integer"
 						]
 					}
 				}
@@ -731,6 +731,11 @@
 					"groups"
 				],
 				"properties": {
+					"id": {
+						"type": [
+							"integer"
+						]
+					},
 					"groups": {
 						"items": [
 							{
@@ -739,11 +744,6 @@
 						],
 						"type": [
 							"array"
-						]
-					},
-					"id": {
-						"type": [
-							"integer"
 						]
 					}
 				}
@@ -757,22 +757,14 @@
 					"sub"
 				],
 				"properties": {
-					"child": {
-						"$ref": "#/components/schemas/Group"
-					},
-					"groups": {
-						"items": [
-							{
-								"$ref": "#/components/schemas/Group"
-							}
-						],
-						"type": [
-							"array"
-						]
-					},
 					"id": {
 						"type": [
 							"integer"
+						]
+					},
+					"title": {
+						"type": [
+							"string"
 						]
 					},
 					"nodes": {
@@ -785,13 +777,21 @@
 							"array"
 						]
 					},
+					"groups": {
+						"items": [
+							{
+								"$ref": "#/components/schemas/Group"
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"child": {
+						"$ref": "#/components/schemas/Group"
+					},
 					"sub": {
 						"$ref": "#/components/schemas/SubGroup"
-					},
-					"title": {
-						"type": [
-							"string"
-						]
 					}
 				}
 			},
@@ -802,9 +802,6 @@
 					"ConnectedObject"
 				],
 				"properties": {
-					"ConnectedObject": {
-						"$ref": "#/components/schemas/ObjectsAbstractObject"
-					},
 					"X": {
 						"description": "coordinate",
 						"type": [
@@ -816,6 +813,9 @@
 						"type": [
 							"integer"
 						]
+					},
+					"ConnectedObject": {
+						"$ref": "#/components/schemas/ObjectsAbstractObject"
 					}
 				}
 			},
@@ -834,21 +834,10 @@
 					"Addresses"
 				],
 				"properties": {
-					"Addresses": {
-						"description": "Addresses Could be nil or len() == 0.",
-						"items": [
-							{
-								"$ref": "#/components/schemas/Address"
-							}
-						],
+					"ID": {
+						"description": "ID is Unique Identifier for person",
 						"type": [
-							"array"
-						]
-					},
-					"Deleted": {
-						"description": "Deleted is flag for",
-						"type": [
-							"boolean"
+							"integer"
 						]
 					},
 					"FirstName": {
@@ -856,13 +845,18 @@
 							"string"
 						]
 					},
-					"ID": {
-						"description": "ID is Unique Identifier for person",
+					"LastName": {
 						"type": [
-							"integer"
+							"string"
 						]
 					},
-					"LastName": {
+					"Phone": {
+						"description": "Phone is main phone",
+						"type": [
+							"string"
+						]
+					},
+					"WorkPhone": {
 						"type": [
 							"string"
 						]
@@ -879,15 +873,21 @@
 							"array"
 						]
 					},
-					"Phone": {
-						"description": "Phone is main phone",
+					"Deleted": {
+						"description": "Deleted is flag for",
 						"type": [
-							"string"
+							"boolean"
 						]
 					},
-					"WorkPhone": {
+					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
+						"items": [
+							{
+								"$ref": "#/components/schemas/Address"
+							}
+						],
 						"type": [
-							"string"
+							"array"
 						]
 					},
 					"address": {
@@ -906,21 +906,10 @@
 					"Addresses"
 				],
 				"properties": {
-					"Addresses": {
-						"description": "Addresses Could be nil or len() == 0.",
-						"items": [
-							{
-								"$ref": "#/components/schemas/Address"
-							}
-						],
+					"ID": {
+						"description": "ID is Unique Identifier for person",
 						"type": [
-							"array"
-						]
-					},
-					"Deleted": {
-						"description": "Deleted is flag for",
-						"type": [
-							"boolean"
+							"integer"
 						]
 					},
 					"FirstName": {
@@ -928,13 +917,18 @@
 							"string"
 						]
 					},
-					"ID": {
-						"description": "ID is Unique Identifier for person",
+					"LastName": {
 						"type": [
-							"integer"
+							"string"
 						]
 					},
-					"LastName": {
+					"Phone": {
+						"description": "Phone is main phone",
+						"type": [
+							"string"
+						]
+					},
+					"WorkPhone": {
 						"type": [
 							"string"
 						]
@@ -951,15 +945,21 @@
 							"array"
 						]
 					},
-					"Phone": {
-						"description": "Phone is main phone",
+					"Deleted": {
+						"description": "Deleted is flag for",
 						"type": [
-							"string"
+							"boolean"
 						]
 					},
-					"WorkPhone": {
+					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
+						"items": [
+							{
+								"$ref": "#/components/schemas/Address"
+							}
+						],
 						"type": [
-							"string"
+							"array"
 						]
 					},
 					"address": {
@@ -972,11 +972,13 @@
 					"ByPhone"
 				],
 				"properties": {
-					"ByAddress": {
-						"$ref": "#/components/schemas/Address"
-					},
 					"ByName": {
 						"description": "ByName is filter for searching person by first name or last name.",
+						"type": [
+							"string"
+						]
+					},
+					"ByType": {
 						"type": [
 							"string"
 						]
@@ -986,10 +988,8 @@
 							"string"
 						]
 					},
-					"ByType": {
-						"type": [
-							"string"
-						]
+					"ByAddress": {
+						"$ref": "#/components/schemas/Address"
 					}
 				}
 			},
@@ -1004,21 +1004,10 @@
 					"Addresses"
 				],
 				"properties": {
-					"Addresses": {
-						"description": "Addresses Could be nil or len() == 0.",
-						"items": [
-							{
-								"$ref": "#/components/schemas/Address"
-							}
-						],
+					"ID": {
+						"description": "ID is Unique Identifier for person",
 						"type": [
-							"array"
-						]
-					},
-					"Deleted": {
-						"description": "Deleted is flag for",
-						"type": [
-							"boolean"
+							"integer"
 						]
 					},
 					"FirstName": {
@@ -1026,13 +1015,18 @@
 							"string"
 						]
 					},
-					"ID": {
-						"description": "ID is Unique Identifier for person",
+					"LastName": {
 						"type": [
-							"integer"
+							"string"
 						]
 					},
-					"LastName": {
+					"Phone": {
+						"description": "Phone is main phone",
+						"type": [
+							"string"
+						]
+					},
+					"WorkPhone": {
 						"type": [
 							"string"
 						]
@@ -1049,15 +1043,21 @@
 							"array"
 						]
 					},
-					"Phone": {
-						"description": "Phone is main phone",
+					"Deleted": {
+						"description": "Deleted is flag for",
 						"type": [
-							"string"
+							"boolean"
 						]
 					},
-					"WorkPhone": {
+					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
+						"items": [
+							{
+								"$ref": "#/components/schemas/Address"
+							}
+						],
 						"type": [
-							"string"
+							"array"
 						]
 					},
 					"address": {
@@ -1070,11 +1070,13 @@
 					"ByPhone"
 				],
 				"properties": {
-					"ByAddress": {
-						"$ref": "#/components/schemas/Address"
-					},
 					"ByName": {
 						"description": "ByName is filter for searching person by first name or last name.",
+						"type": [
+							"string"
+						]
+					},
+					"ByType": {
 						"type": [
 							"string"
 						]
@@ -1084,10 +1086,8 @@
 							"string"
 						]
 					},
-					"ByType": {
-						"type": [
-							"string"
-						]
+					"ByAddress": {
+						"$ref": "#/components/schemas/Address"
 					}
 				}
 			},
@@ -1096,11 +1096,13 @@
 					"ByPhone"
 				],
 				"properties": {
-					"ByAddress": {
-						"$ref": "#/components/schemas/Address"
-					},
 					"ByName": {
 						"description": "ByName is filter for searching person by first name or last name.",
+						"type": [
+							"string"
+						]
+					},
+					"ByType": {
 						"type": [
 							"string"
 						]
@@ -1110,10 +1112,8 @@
 							"string"
 						]
 					},
-					"ByType": {
-						"type": [
-							"string"
-						]
+					"ByAddress": {
+						"$ref": "#/components/schemas/Address"
 					}
 				}
 			},
@@ -1129,6 +1129,11 @@
 							"integer"
 						]
 					},
+					"title": {
+						"type": [
+							"string"
+						]
+					},
 					"nodes": {
 						"items": [
 							{
@@ -1137,11 +1142,6 @@
 						],
 						"type": [
 							"array"
-						]
-					},
-					"title": {
-						"type": [
-							"string"
 						]
 					}
 				}

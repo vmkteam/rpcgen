@@ -10,7 +10,8 @@ import (
 	"sort"
 	"strings"
 
-	openrpc "github.com/open-rpc/meta-schema"
+	"github.com/iancoleman/orderedmap"
+	openrpc "github.com/vmkteam/meta-schema"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
@@ -258,7 +259,7 @@ func parseComponentsFromDefinitions(definitions map[string]smd.Definition, compo
 
 func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComponents) *openrpc.JSONSchema {
 	required := openrpc.StringArray{}
-	result := openrpc.Properties{}
+	result := orderedmap.New()
 
 	for _, prop := range props {
 		if len(prop.Definitions) > 0 {
@@ -277,10 +278,10 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 
 		switch prop.Type {
 		case smd.Object:
-			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			result.Set(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 				Ref:         refName(prop.Ref),
 				Description: desc,
-			}}
+			}})
 		case smd.Array:
 			items := &openrpc.JSONSchemaObject{}
 			if prop.Items["$ref"] != "" {
@@ -295,23 +296,23 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 			}
 
 			typ := openrpc.SimpleTypes(prop.Type)
-			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			result.Set(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 				Description: desc,
 				Type:        &openrpc.Type{SimpleTypes: &typ},
 				Items:       &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: items}},
-			}}
+			}})
 
 		default:
 			typ := openrpc.SimpleTypes(prop.Type)
-			result[prop.Name] = openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			result.Set(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 				Description: desc,
 				Type:        &openrpc.Type{SimpleTypes: &typ},
-			}}
+			}})
 		}
 	}
 
 	return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-		Properties: &result,
+		Properties: result,
 		Required:   &required,
 	}}
 }

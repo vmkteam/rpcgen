@@ -3,7 +3,6 @@ package openrpc
 import (
 	"bytes"
 	"io/ioutil"
-	"os"
 	"testing"
 
 	"github.com/vmkteam/zenrpc/v2"
@@ -26,11 +25,6 @@ func TestGenerateOpenRPCSchema(t *testing.T) {
 	testData, err := ioutil.ReadFile("./testdata/openrpc.json")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
-	}
-
-	err = ioutil.WriteFile("./testdata/openrpc.json", generated, os.ModePerm)
-	if err != nil {
-		t.Fatalf("save openrpc: %v", err)
 	}
 
 	if !bytes.Equal(generated, testData) {

@@ -3,7 +3,7 @@
 	"info": {
 		"title": "test",
 		"description": "",
-		"version": "v0.0.0-f82a2f6c1e3d6ababeaf02dfc7a7065b"
+		"version": "v0.0.0-b35e0598ad2f7ebd89ac036e29113f0f"
 	},
 	"servers": [
 		{
@@ -108,7 +108,7 @@
 			"result": {
 				"name": "ArithDivideResponse",
 				"schema": {
-					"$ref": "#/components/schemas/ArithDivideResponse"
+					"$ref": "#/components/schemas/Quotient"
 				}
 			},
 			"errors": [
@@ -154,7 +154,7 @@
 			"result": {
 				"name": "ArithDoSomethingWithPointResponse",
 				"schema": {
-					"$ref": "#/components/schemas/ArithDoSomethingWithPointResponse"
+					"$ref": "#/components/schemas/ModelPoint"
 				}
 			}
 		},
@@ -402,7 +402,7 @@
 			"result": {
 				"name": "CatalogueThirdResponse",
 				"schema": {
-					"$ref": "#/components/schemas/CatalogueThirdResponse"
+					"$ref": "#/components/schemas/Campaign"
 				}
 			}
 		},
@@ -431,7 +431,7 @@
 			"result": {
 				"name": "PhonebookByIdResponse",
 				"schema": {
-					"$ref": "#/components/schemas/PhonebookByIdResponse"
+					"$ref": "#/components/schemas/Person"
 				}
 			},
 			"errors": [
@@ -609,7 +609,7 @@
 			"result": {
 				"name": "PhonebookValidateSearchResponse",
 				"schema": {
-					"$ref": "#/components/schemas/PhonebookValidateSearchResponse"
+					"$ref": "#/components/schemas/PersonSearch"
 				}
 			}
 		}
@@ -630,26 +630,6 @@
 					"City": {
 						"type": [
 							"string"
-						]
-					}
-				}
-			},
-			"ArithDivideResponse": {
-				"required": [
-					"Quo",
-					"rem"
-				],
-				"properties": {
-					"Quo": {
-						"description": "Quo docs",
-						"type": [
-							"integer"
-						]
-					},
-					"rem": {
-						"description": "Rem docs",
-						"type": [
-							"integer"
 						]
 					}
 				}
@@ -678,54 +658,7 @@
 					}
 				}
 			},
-			"ArithDoSomethingWithPointResponse": {
-				"required": [
-					"X",
-					"Y",
-					"ConnectedObject"
-				],
-				"properties": {
-					"X": {
-						"description": "coordinate",
-						"type": [
-							"integer"
-						]
-					},
-					"Y": {
-						"description": "coordinate",
-						"type": [
-							"integer"
-						]
-					},
-					"ConnectedObject": {
-						"$ref": "#/components/schemas/ObjectsAbstractObject"
-					}
-				}
-			},
 			"Campaign": {
-				"required": [
-					"id",
-					"groups"
-				],
-				"properties": {
-					"id": {
-						"type": [
-							"integer"
-						]
-					},
-					"groups": {
-						"items": [
-							{
-								"$ref": "#/components/schemas/Group"
-							}
-						],
-						"type": [
-							"array"
-						]
-					}
-				}
-			},
-			"CatalogueThirdResponse": {
 				"required": [
 					"id",
 					"groups"
@@ -895,74 +828,28 @@
 					}
 				}
 			},
-			"PhonebookByIdResponse": {
+			"PersonSearch": {
 				"required": [
-					"ID",
-					"FirstName",
-					"LastName",
-					"Phone",
-					"Mobile",
-					"Deleted",
-					"Addresses"
+					"ByPhone"
 				],
 				"properties": {
-					"ID": {
-						"description": "ID is Unique Identifier for person",
-						"type": [
-							"integer"
-						]
-					},
-					"FirstName": {
+					"ByName": {
+						"description": "ByName is filter for searching person by first name or last name.",
 						"type": [
 							"string"
 						]
 					},
-					"LastName": {
+					"ByType": {
 						"type": [
 							"string"
 						]
 					},
-					"Phone": {
-						"description": "Phone is main phone",
+					"ByPhone": {
 						"type": [
 							"string"
 						]
 					},
-					"WorkPhone": {
-						"type": [
-							"string"
-						]
-					},
-					"Mobile": {
-						"items": [
-							{
-								"type": [
-									"string"
-								]
-							}
-						],
-						"type": [
-							"array"
-						]
-					},
-					"Deleted": {
-						"description": "Deleted is flag for",
-						"type": [
-							"boolean"
-						]
-					},
-					"Addresses": {
-						"description": "Addresses Could be nil or len() == 0.",
-						"items": [
-							{
-								"$ref": "#/components/schemas/Address"
-							}
-						],
-						"type": [
-							"array"
-						]
-					},
-					"address": {
+					"ByAddress": {
 						"$ref": "#/components/schemas/Address"
 					}
 				}
@@ -1065,7 +952,7 @@
 					}
 				}
 			},
-			"PhonebookValidateSearchResponse": {
+			"PhonebookValidateSearchSearch": {
 				"required": [
 					"ByPhone"
 				],
@@ -1091,29 +978,23 @@
 					}
 				}
 			},
-			"PhonebookValidateSearchSearch": {
+			"Quotient": {
 				"required": [
-					"ByPhone"
+					"Quo",
+					"rem"
 				],
 				"properties": {
-					"ByName": {
-						"description": "ByName is filter for searching person by first name or last name.",
+					"Quo": {
+						"description": "Quo docs",
 						"type": [
-							"string"
+							"integer"
 						]
 					},
-					"ByType": {
+					"rem": {
+						"description": "Rem docs",
 						"type": [
-							"string"
+							"integer"
 						]
-					},
-					"ByPhone": {
-						"type": [
-							"string"
-						]
-					},
-					"ByAddress": {
-						"$ref": "#/components/schemas/Address"
 					}
 				}
 			},

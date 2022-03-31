@@ -162,7 +162,7 @@ func newErrors(service smd.Service) *openrpc.MethodObjectErrors {
 	}
 
 	sort.Slice(errors, func(i, j int) bool {
-		return int64(*errors[i].ErrorObject.Code) > int64(*errors[i].ErrorObject.Code)
+		return int64(*errors[i].ErrorObject.Code) < int64(*errors[j].ErrorObject.Code)
 	})
 
 	if len(errors) == 0 {
@@ -327,7 +327,9 @@ func newJSONSchema(serviceName string, schema smd.JSONSchema) *openrpc.JSONSchem
 	switch schema.Type {
 	case smd.Object:
 		var ref *openrpc.Ref
-		if isObjName(schema.Description) {
+		if schema.TypeName != "" {
+			ref = refName(schema.TypeName)
+		} else if isObjName(schema.Description) {
 			ref = refName(schema.Description)
 			desc = nil
 		} else {

@@ -311,7 +311,9 @@ func newValue(in smd.JSONSchema, namespace, methodName string, isParam, isReturn
 
 	// in is object
 	if in.Type == smd.Object {
-		if in.Description != "" && !strings.Contains(in.Description, " ") {
+		if in.TypeName != "" {
+			value.ModelName = in.TypeName
+		} else if in.Description != "" && smd.IsSMDTypeName(in.Description, in.Type) {
 			value.ModelName = in.Description
 		} else if isParam {
 			value.ModelName = fmt.Sprintf("%s%s%sParam", titleFirstLetter(namespace), titleFirstLetter(methodName), titleFirstLetter(in.Name))

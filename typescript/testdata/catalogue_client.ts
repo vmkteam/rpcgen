@@ -35,7 +35,7 @@ export const factory = (send) => ({
     second(params: ICatalogueSecondParams): Promise<boolean> {
       return send('catalogue.Second', params)
     },
-    third(): Promise<object> {
+    third(): Promise<ICampaign> {
       return send('catalogue.Third')
     }
   }

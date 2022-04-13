@@ -106,13 +106,13 @@ namespace JsonRpcClient;
 		* <catalogue.Third> RPC method
 		* 
 		* @param bool $isNotification [optional] set to true if call is notification
-		* @return object
+		* @return Campaign
 		* @throws BaseJsonRpcException
 		* @throws GuzzleException
 		* @throws JsonMapper_Exception
 		**/
-		public function catalogue_Third( $isNotification = false ): object {
-			return $this->call( __FUNCTION__, 'object', [ ], $this->getRequestId( $isNotification ) );
+		public function catalogue_Third( $isNotification = false ): Campaign {
+			return $this->call( __FUNCTION__,  __NAMESPACE__ . '\\'. 'Campaign', [ ], $this->getRequestId( $isNotification ) );
 		}
 		
 

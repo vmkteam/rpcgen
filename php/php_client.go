@@ -166,7 +166,7 @@ func prepareParameter(param smd.JSONSchema) Parameter {
 		}
 
 		if typeName != "" {
-			pType = param.Description
+			pType = typeName
 			p.ReturnType = pType
 		}
 	}

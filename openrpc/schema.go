@@ -10,7 +10,6 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/iancoleman/orderedmap"
 	openrpc "github.com/vmkteam/meta-schema"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
@@ -173,28 +172,47 @@ func newErrors(service smd.Service) *openrpc.MethodObjectErrors {
 }
 
 func newComponents(schema smd.Schema) *openrpc.Components {
-	components := openrpc.SchemaComponents{}
-	descriptors := openrpc.ContentDescriptorComponents{}
+	components := openrpc.SchemaMap{}
+	descriptors := openrpc.DescriptorsMap{}
 
 	for serviceName, service := range schema.Services {
 		for _, param := range service.Parameters {
-			parseComponentsFromSchema(serviceName, param, components)
+			parseComponentsFromSchema(serviceName, param, &components)
 		}
 
-		parseDescriptorsFromSchema(respName(serviceName), service.Returns, components, descriptors)
+		parseDescriptorsFromSchema(respName(serviceName), service.Returns, &components, &descriptors)
 	}
+
+	sort.Slice(components, func(i, j int) bool {
+		if components[i].JSONSchemaObject == nil || components[i].JSONSchemaObject.Id == nil {
+			return false
+		}
+		if components[j].JSONSchemaObject == nil || components[j].JSONSchemaObject.Id == nil {
+			return false
+		}
+
+		return string(*components[i].JSONSchemaObject.Id) < string(*components[j].JSONSchemaObject.Id)
+	})
+
+	sort.Slice(descriptors, func(i, j int) bool {
+		if descriptors[i].Name == nil || descriptors[j].Name == nil {
+			return false
+		}
+
+		return string(*descriptors[i].Name) < string(*descriptors[j].Name)
+	})
 
 	return &openrpc.Components{Schemas: &components, ContentDescriptors: &descriptors}
 }
 
 // recursive hell
-func parseComponentsFromSchema(serviceName string, schema smd.JSONSchema, components openrpc.SchemaComponents) {
+func parseComponentsFromSchema(serviceName string, schema smd.JSONSchema, components *openrpc.SchemaMap) {
 	sch := newJSONSchema(serviceName, schema)
 	if sch.JSONSchemaObject.Ref != nil && len(schema.Properties) > 0 {
 		base := refBase(sch.JSONSchemaObject.Ref)
 
-		if _, ok := components[base]; !ok {
-			components[base] = newPropertiesFromList(schema.Properties, components)
+		if _, ok := components.Get(base); !ok {
+			components.Add(base, *newPropertiesFromList(schema.Properties, components))
 		}
 	}
 
@@ -203,7 +221,7 @@ func parseComponentsFromSchema(serviceName string, schema smd.JSONSchema, compon
 	}
 }
 
-func parseDescriptorsFromSchema(serviceName string, schema smd.JSONSchema, components openrpc.SchemaComponents, descriptors openrpc.ContentDescriptorComponents) {
+func parseDescriptorsFromSchema(serviceName string, schema smd.JSONSchema, components *openrpc.SchemaMap, descriptors *openrpc.DescriptorsMap) {
 	sch := newJSONSchema(serviceName, schema)
 
 	var (
@@ -232,14 +250,14 @@ func parseDescriptorsFromSchema(serviceName string, schema smd.JSONSchema, compo
 	}
 
 	if descriptor != nil {
-		if _, ok := descriptors[base]; !ok {
-			descriptors[base] = descriptor
+		if _, ok := descriptors.Get(base); !ok {
+			descriptors.Add(base, *descriptor)
 		}
 	}
 
 	if component != nil {
-		if _, ok := components[base]; !ok {
-			components[base] = component
+		if _, ok := components.Get(base); !ok {
+			components.Add(base, *component)
 		}
 	}
 
@@ -248,18 +266,18 @@ func parseDescriptorsFromSchema(serviceName string, schema smd.JSONSchema, compo
 	}
 }
 
-func parseComponentsFromDefinitions(definitions map[string]smd.Definition, components openrpc.SchemaComponents) {
+func parseComponentsFromDefinitions(definitions map[string]smd.Definition, components *openrpc.SchemaMap) {
 	for n, definition := range definitions {
 		name := objName(n)
-		if _, ok := components[name]; !ok {
-			components[name] = newPropertiesFromList(definition.Properties, components)
+		if _, ok := components.Get(name); !ok {
+			components.Add(name, *newPropertiesFromList(definition.Properties, components))
 		}
 	}
 }
 
-func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComponents) *openrpc.JSONSchema {
+func newPropertiesFromList(props smd.PropertyList, components *openrpc.SchemaMap) *openrpc.JSONSchema {
 	required := openrpc.StringArray{}
-	result := orderedmap.New()
+	result := openrpc.SchemaMap{}
 
 	for _, prop := range props {
 		if len(prop.Definitions) > 0 {
@@ -278,7 +296,7 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 
 		switch prop.Type {
 		case smd.Object:
-			result.Set(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			result.Add(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 				Ref:         refName(prop.Ref),
 				Description: desc,
 			}})
@@ -296,7 +314,7 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 			}
 
 			typ := openrpc.SimpleTypes(prop.Type)
-			result.Set(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			result.Add(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 				Description: desc,
 				Type:        &openrpc.Type{SimpleTypes: &typ},
 				Items:       &openrpc.Items{JSONSchema: &openrpc.JSONSchema{JSONSchemaObject: items}},
@@ -304,7 +322,7 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 
 		default:
 			typ := openrpc.SimpleTypes(prop.Type)
-			result.Set(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
+			result.Add(prop.Name, openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
 				Description: desc,
 				Type:        &openrpc.Type{SimpleTypes: &typ},
 			}})
@@ -312,7 +330,7 @@ func newPropertiesFromList(props smd.PropertyList, components openrpc.SchemaComp
 	}
 
 	return &openrpc.JSONSchema{JSONSchemaObject: &openrpc.JSONSchemaObject{
-		Properties: result,
+		Properties: &result,
 		Required:   &required,
 	}}
 }

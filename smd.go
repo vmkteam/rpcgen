@@ -1,8 +1,8 @@
 package rpcgen
 
 import (
-	smd1 "github.com/vmkteam/zenrpc/smd"
 	"github.com/vmkteam/zenrpc/v2/smd"
+	smd1 "github.com/vmkteam/zenrpc/smd"
 )
 
 // smdv1ToSMD convert smd v1 to smd v2
@@ -33,14 +33,14 @@ func newSMDService(service smd1.Service) smd.Service {
 	return smd.Service{
 		Description: service.Description,
 		Parameters:  newJSONSchemas(service.Parameters),
-		Returns:     newJSONSchema(service.Returns),
+		Returns:     newJSONSchema(service.Returns, false),
 		Errors:      service.Errors,
 	}
 }
 
 // newJSONSchema convert smd1 JSONSchema to smd2 JSONSchema
-func newJSONSchema(smd1Schema smd1.JSONSchema) smd.JSONSchema {
-	return smd.JSONSchema{
+func newJSONSchema(smd1Schema smd1.JSONSchema, parseTypeName bool) smd.JSONSchema {
+	schema := smd.JSONSchema{
 		Name:        smd1Schema.Name,
 		Type:        smd1Schema.Type,
 		Optional:    smd1Schema.Optional,
@@ -50,12 +50,18 @@ func newJSONSchema(smd1Schema smd1.JSONSchema) smd.JSONSchema {
 		Definitions: newSmdDefinitionsMap(smd1Schema.Definitions),
 		Items:       smd1Schema.Items,
 	}
+
+	if parseTypeName && smd.IsSMDTypeName(schema.Description, schema.Type) {
+		schema.TypeName = smd.TypeName(schema.Description, schema.Type)
+	}
+
+	return schema
 }
 
 // newJSONSchemas convert slice of smd1 JSONSchema to slice of smd2 JSONSchema
 func newJSONSchemas(schemas []smd1.JSONSchema) (res []smd.JSONSchema) {
 	for _, s := range schemas {
-		res = append(res, newJSONSchema(s))
+		res = append(res, newJSONSchema(s, false))
 	}
 
 	return res

@@ -34,6 +34,8 @@ github.com/google/gofuzz v1.0.0/go.mod h1:dBl0BpW6vV/+mYPU4Po3pmUjxk6FQPldtuIdl/
 github.com/gopherjs/gopherjs v0.0.0-20181017120253-0766667cb4d1/go.mod h1:wJfORRmW1u3UXTncJ5qlYoELFm8eSnnEO6hX4iZ3EWY=
 github.com/gorilla/websocket v1.4.2 h1:+/TMaTYc4QFitKJxsQ7Yye35DkWvkdLcvGKqM+x0Ufc=
 github.com/gorilla/websocket v1.4.2/go.mod h1:YR8l580nyteQvAITg2hZ9XVh4b55+EU/adAjf1fMHhE=
+github.com/iancoleman/orderedmap v0.2.0 h1:sq1N/TFpYH++aViPcaKjys3bDClUEU7s5B+z6jq8pNA=
+github.com/iancoleman/orderedmap v0.2.0/go.mod h1:N0Wam8K1arqPXNWjMo21EXnBPOPp36vB07FNRdD2geA=
 github.com/json-iterator/go v1.1.6/go.mod h1:+SdeFBvtyEkXs7REEP0seUULqWtbJapLOCVDaaPEHmU=
 github.com/json-iterator/go v1.1.10/go.mod h1:KdQUCv79m/52Kvf8AW2vK1V8akMuk1QjK/uOdHXbAo4=
 github.com/jtolds/gls v4.20.0+incompatible/go.mod h1:QJZ7F/aHp+rZTRtaJ1ow/lLfFfVYBRgL+9YlvaHOwJU=
@@ -78,10 +80,12 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/thoas/go-funk v0.6.0/go.mod h1:+IWnUfUmFO1+WVYQWQtIJHeRRdaIyyYglZN7xzUPe4Q=
+github.com/vmkteam/meta-schema v1.15.3 h1:0HdUDsM9Qs+h+zxWYnDBs8OxgzQxOYcx0smj/KuQPUQ=
+github.com/vmkteam/meta-schema v1.15.3/go.mod h1:RlP1hqjr2Ghap0sfjpfOJhubwmaSUGFLtgM+LHVQBfU=
 github.com/vmkteam/zenrpc v1.1.1 h1:WmModRVCwgs7XEkeJcVvmDOwEtAQk0TuYV91wdpAaCw=
 github.com/vmkteam/zenrpc v1.1.1/go.mod h1:x3fCkb9HHOpqwqC7TKXf8pyXWdPxEt2Zrndl50YxexM=
-github.com/vmkteam/zenrpc/v2 v2.2.3 h1:89+5BzWQaxJQAEWODiHV+5CzTm/iB/zNxjZ8RvC4C+E=
-github.com/vmkteam/zenrpc/v2 v2.2.3/go.mod h1:DUVyDLOKkQ0GelOkw5OcNbOi43QWhXdDM9XimWoeVSI=
+github.com/vmkteam/zenrpc/v2 v2.2.6 h1:KaHNZE3HzIQbQXRM57fcsDxIxkQC3A3Ifc0/o4yddLU=
+github.com/vmkteam/zenrpc/v2 v2.2.6/go.mod h1:DUVyDLOKkQ0GelOkw5OcNbOi43QWhXdDM9XimWoeVSI=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=

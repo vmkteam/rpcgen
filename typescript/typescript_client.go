@@ -234,15 +234,20 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 	}
 
 	// add object as complex type
-	if in.Type == "object" && in.Description != "" {
+	if in.Type == "object" && (in.TypeName != "" || in.Description != "") {
+		if in.TypeName == "" {
+			in.TypeName = in.Description
+		}
+
 		addTSComplexInterface(models, interfacesCache, in, typeMapper)
-		result.Type = interfacePrefix + in.Description
+		result.Type = interfacePrefix + in.TypeName
 	}
 
 	// add definitions as complex types
 	for name, d := range in.Definitions {
 		addTSComplexInterface(models, interfacesCache, smd.JSONSchema{
 			Name:        name,
+			TypeName:    name,
 			Description: name,
 			Type:        d.Type,
 			Properties:  d.Properties,
@@ -272,7 +277,7 @@ func addTSComplexInterface(models *tsModels, interfacesCache map[string]interfac
 	}
 
 	addTSInterface(models, interfacesCache, tsInterface{
-		Name:       interfacePrefix + in.Description,
+		Name:       interfacePrefix + in.TypeName,
 		Parameters: tsTypes,
 	})
 }

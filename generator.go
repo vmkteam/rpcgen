@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/vmkteam/rpcgen/v2/golang"
+	"github.com/vmkteam/rpcgen/v2/openrpc"
 	"github.com/vmkteam/rpcgen/v2/php"
 	"github.com/vmkteam/rpcgen/v2/typescript"
 
@@ -30,6 +31,10 @@ func (g RPCGen) PHPClient(phpNamespace string) Generator {
 
 func (g RPCGen) TSClient(typeMapper typescript.TypeMapper) Generator {
 	return typescript.NewClient(g.schema, typeMapper)
+}
+
+func (g RPCGen) OpenRPC(title, host string) Generator {
+	return openrpc.NewClient(g.schema, title, host)
 }
 
 // FromSMD create Generator from smd schema

@@ -50,13 +50,6 @@ type Address struct {
 	Street string `json:"Street"`
 }
 
-type ArithDivideResponse struct {
-	// Quo docs
-	Quo int `json:"Quo"`
-	// Rem docs
-	Rem int `json:"rem"`
-}
-
 type ArithDoSomethingWithPointPParam struct {
 	ConnectedObject ObjectsAbstractObject `json:"ConnectedObject"`
 	// coordinate
@@ -65,20 +58,7 @@ type ArithDoSomethingWithPointPParam struct {
 	Y int `json:"Y"`
 }
 
-type ArithDoSomethingWithPointResponse struct {
-	ConnectedObject ObjectsAbstractObject `json:"ConnectedObject"`
-	// coordinate
-	X int `json:"X"`
-	// coordinate
-	Y int `json:"Y"`
-}
-
 type Campaign struct {
-	Groups []Group `json:"groups"`
-	ID     int     `json:"id"`
-}
-
-type CatalogueThirdResponse struct {
 	Groups []Group `json:"groups"`
 	ID     int     `json:"id"`
 }
@@ -119,20 +99,12 @@ type Person struct {
 	Address   *Address `json:"address,omitempty"`
 }
 
-type PhonebookByIdResponse struct {
-	// Addresses Could be nil or len() == 0.
-	Addresses []Address `json:"Addresses"`
-	// Deleted is flag for
-	Deleted   bool   `json:"Deleted"`
-	FirstName string `json:"FirstName"`
-	// ID is Unique Identifier for person
-	ID       int      `json:"ID"`
-	LastName string   `json:"LastName"`
-	Mobile   []string `json:"Mobile"`
-	// Phone is main phone
-	Phone     string   `json:"Phone"`
-	WorkPhone string   `json:"WorkPhone,omitempty"`
-	Address   *Address `json:"address,omitempty"`
+type PersonSearch struct {
+	ByAddress *Address `json:"ByAddress,omitempty"`
+	// ByName is filter for searching person by first name or last name.
+	ByName  string `json:"ByName,omitempty"`
+	ByPhone string `json:"ByPhone"`
+	ByType  string `json:"ByType,omitempty"`
 }
 
 type PhonebookGetSearchParam struct {
@@ -159,7 +131,7 @@ type PhonebookSavePParam struct {
 	Address   *Address `json:"address,omitempty"`
 }
 
-type PhonebookValidateSearchResponse struct {
+type PhonebookValidateSearchSearchParam struct {
 	ByAddress *Address `json:"ByAddress,omitempty"`
 	// ByName is filter for searching person by first name or last name.
 	ByName  string `json:"ByName,omitempty"`
@@ -167,12 +139,11 @@ type PhonebookValidateSearchResponse struct {
 	ByType  string `json:"ByType,omitempty"`
 }
 
-type PhonebookValidateSearchSearchParam struct {
-	ByAddress *Address `json:"ByAddress,omitempty"`
-	// ByName is filter for searching person by first name or last name.
-	ByName  string `json:"ByName,omitempty"`
-	ByPhone string `json:"ByPhone"`
-	ByType  string `json:"ByType,omitempty"`
+type Quotient struct {
+	// Quo docs
+	Quo int `json:"Quo"`
+	// Rem docs
+	Rem int `json:"rem"`
 }
 
 type SubGroup struct {
@@ -218,7 +189,7 @@ func (c *svcArith) CheckZenRPCError(ctx context.Context, isErr bool) (err error)
 }
 
 // Divide divides two numbers.
-func (c *svcArith) Divide(ctx context.Context, a int, b int) (res *ArithDivideResponse, err error) {
+func (c *svcArith) Divide(ctx context.Context, a int, b int) (res *Quotient, err error) {
 	_req := struct {
 		A int
 		B int
@@ -240,7 +211,7 @@ func (c *svcArith) DoSomething(ctx context.Context) (err error) {
 	return
 }
 
-func (c *svcArith) DoSomethingWithPoint(ctx context.Context, p ArithDoSomethingWithPointPParam) (res ArithDoSomethingWithPointResponse, err error) {
+func (c *svcArith) DoSomethingWithPoint(ctx context.Context, p ArithDoSomethingWithPointPParam) (res ModelPoint, err error) {
 	_req := struct {
 		P ArithDoSomethingWithPointPParam
 	}{
@@ -369,7 +340,7 @@ func (c *svcCatalogue) Second(ctx context.Context, campaigns []Campaign) (res bo
 	return
 }
 
-func (c *svcCatalogue) Third(ctx context.Context) (res CatalogueThirdResponse, err error) {
+func (c *svcCatalogue) Third(ctx context.Context) (res Campaign, err error) {
 	_req := struct {
 	}{}
 
@@ -389,7 +360,7 @@ func newClientPhonebook(client *rpcClient) *svcPhonebook {
 }
 
 // ById returns Person from DB.
-func (c *svcPhonebook) ByID(ctx context.Context, id int) (res *PhonebookByIdResponse, err error) {
+func (c *svcPhonebook) ByID(ctx context.Context, id int) (res *Person, err error) {
 	_req := struct {
 		ID int
 	}{
@@ -457,7 +428,7 @@ func (c *svcPhonebook) Save(ctx context.Context, p PhonebookSavePParam, replace 
 }
 
 // ValidateSearch returns given search as result.
-func (c *svcPhonebook) ValidateSearch(ctx context.Context, search *PhonebookValidateSearchSearchParam) (res *PhonebookValidateSearchResponse, err error) {
+func (c *svcPhonebook) ValidateSearch(ctx context.Context, search *PhonebookValidateSearchSearchParam) (res *PersonSearch, err error) {
 	_req := struct {
 		Search *PhonebookValidateSearchSearchParam
 	}{

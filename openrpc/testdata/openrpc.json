@@ -1,0 +1,1070 @@
+{
+	"openrpc": "1.2.6",
+	"info": {
+		"title": "test",
+		"description": "",
+		"version": "v0.0.0-b35e0598ad2f7ebd89ac036e29113f0f"
+	},
+	"servers": [
+		{
+			"url": "http://localhost/",
+			"name": "localhost"
+		}
+	],
+	"methods": [
+		{
+			"name": "arith.CheckError",
+			"summary": "CheckError throws error is isErr true.",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "isErr",
+					"schema": {
+						"type": [
+							"boolean"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/NullResponse"
+			},
+			"errors": [
+				{
+					"code": 500,
+					"message": "test error"
+				}
+			]
+		},
+		{
+			"name": "arith.CheckZenRPCError",
+			"summary": "CheckError throws zenrpc error is isErr true.",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "isErr",
+					"schema": {
+						"type": [
+							"boolean"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/NullResponse"
+			},
+			"errors": [
+				{
+					"code": 500,
+					"message": "test error"
+				}
+			]
+		},
+		{
+			"name": "arith.Divide",
+			"summary": "Divide divides two numbers.",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "a",
+					"summary": "the a",
+					"schema": {
+						"description": "the a",
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				},
+				{
+					"name": "b",
+					"summary": "the b",
+					"schema": {
+						"description": "the b",
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"name": "ArithDivideResponse",
+				"schema": {
+					"$ref": "#/components/schemas/Quotient"
+				}
+			},
+			"errors": [
+				{
+					"code": -32603,
+					"message": "divide by zero"
+				},
+				{
+					"code": 401,
+					"message": "we do not serve 1"
+				}
+			]
+		},
+		{
+			"name": "arith.DoSomething",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"params": [],
+			"result": {
+				"$ref": "#/components/contentDescriptors/NullResponse"
+			}
+		},
+		{
+			"name": "arith.DoSomethingWithPoint",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "p",
+					"schema": {
+						"$ref": "#/components/schemas/ArithDoSomethingWithPointP"
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"name": "ArithDoSomethingWithPointResponse",
+				"schema": {
+					"$ref": "#/components/schemas/ModelPoint"
+				}
+			}
+		},
+		{
+			"name": "arith.GetPoints",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"params": [],
+			"result": {
+				"name": "ArithGetPointsResponse",
+				"schema": {
+					"items": [
+						{
+							"$ref": "#/components/schemas/ModelPoint"
+						}
+					],
+					"type": [
+						"array"
+					]
+				}
+			}
+		},
+		{
+			"name": "arith.Multiply",
+			"summary": "Multiply multiples two digits and returns result.",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "a",
+					"schema": {
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				},
+				{
+					"name": "b",
+					"schema": {
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/IntegerResponse"
+			}
+		},
+		{
+			"name": "arith.Pi",
+			"summary": "PI returns math.Pi.",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"params": [],
+			"result": {
+				"$ref": "#/components/contentDescriptors/NumberResponse"
+			}
+		},
+		{
+			"name": "arith.Positive",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"params": [],
+			"result": {
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
+			}
+		},
+		{
+			"name": "arith.Pow",
+			"summary": "Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "base",
+					"schema": {
+						"type": [
+							"number"
+						]
+					},
+					"required": true
+				},
+				{
+					"name": "exp",
+					"summary": "exponent could be empty",
+					"schema": {
+						"description": "exponent could be empty",
+						"type": [
+							"number"
+						]
+					}
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/NumberResponse"
+			}
+		},
+		{
+			"name": "arith.Sum",
+			"summary": "Sum sums two digits and returns error with error code as result and IP from context.",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "a",
+					"schema": {
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				},
+				{
+					"name": "b",
+					"schema": {
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
+			}
+		},
+		{
+			"name": "arith.SumArray",
+			"summary": "SumArray returns sum all items from array",
+			"tags": [
+				{
+					"name": "arith"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "array",
+					"schema": {
+						"items": [
+							{
+								"type": [
+									"number"
+								]
+							}
+						],
+						"type": [
+							"array"
+						]
+					}
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/NumberResponse"
+			}
+		},
+		{
+			"name": "catalogue.First",
+			"tags": [
+				{
+					"name": "catalogue"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "groups",
+					"schema": {
+						"items": [
+							{
+								"$ref": "#/components/schemas/Group"
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
+			}
+		},
+		{
+			"name": "catalogue.Second",
+			"tags": [
+				{
+					"name": "catalogue"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "campaigns",
+					"schema": {
+						"items": [
+							{
+								"$ref": "#/components/schemas/Campaign"
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
+			}
+		},
+		{
+			"name": "catalogue.Third",
+			"tags": [
+				{
+					"name": "catalogue"
+				}
+			],
+			"params": [],
+			"result": {
+				"name": "CatalogueThirdResponse",
+				"schema": {
+					"$ref": "#/components/schemas/Campaign"
+				}
+			}
+		},
+		{
+			"name": "phonebook.ById",
+			"summary": "ById returns Person from DB.",
+			"tags": [
+				{
+					"name": "phonebook"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "id",
+					"summary": "person id",
+					"schema": {
+						"description": "person id",
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"name": "PhonebookByIdResponse",
+				"schema": {
+					"$ref": "#/components/schemas/Person"
+				}
+			},
+			"errors": [
+				{
+					"code": 404,
+					"message": "person was not found"
+				}
+			]
+		},
+		{
+			"name": "phonebook.Delete",
+			"summary": "Delete marks person as deleted.",
+			"tags": [
+				{
+					"name": "phonebook"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "id",
+					"summary": "person id",
+					"schema": {
+						"description": "person id",
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
+			}
+		},
+		{
+			"name": "phonebook.Get",
+			"summary": "Get returns all people from DB.",
+			"tags": [
+				{
+					"name": "phonebook"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "search",
+					"schema": {
+						"$ref": "#/components/schemas/PhonebookGetSearch"
+					},
+					"required": true
+				},
+				{
+					"name": "page",
+					"summary": "current page",
+					"schema": {
+						"description": "current page",
+						"type": [
+							"integer"
+						]
+					}
+				},
+				{
+					"name": "count",
+					"summary": "page size",
+					"schema": {
+						"description": "page size",
+						"type": [
+							"integer"
+						]
+					}
+				}
+			],
+			"result": {
+				"name": "PhonebookGetResponse",
+				"schema": {
+					"items": [
+						{
+							"$ref": "#/components/schemas/Person"
+						}
+					],
+					"type": [
+						"array"
+					]
+				}
+			}
+		},
+		{
+			"name": "phonebook.Remove",
+			"summary": "Removes deletes person from DB.",
+			"tags": [
+				{
+					"name": "phonebook"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "id",
+					"summary": "person id",
+					"schema": {
+						"description": "person id",
+						"type": [
+							"integer"
+						]
+					},
+					"required": true
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/BooleanResponse"
+			}
+		},
+		{
+			"name": "phonebook.Save",
+			"summary": "Save saves person to DB.",
+			"tags": [
+				{
+					"name": "phonebook"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "p",
+					"schema": {
+						"$ref": "#/components/schemas/PhonebookSaveP"
+					},
+					"required": true
+				},
+				{
+					"name": "replace",
+					"summary": "update person if exist",
+					"schema": {
+						"description": "update person if exist",
+						"type": [
+							"boolean"
+						]
+					}
+				}
+			],
+			"result": {
+				"$ref": "#/components/contentDescriptors/IntegerResponse"
+			},
+			"errors": [
+				{
+					"code": 400,
+					"message": "invalid request"
+				},
+				{
+					"code": 401,
+					"message": "use replace=true"
+				}
+			]
+		},
+		{
+			"name": "phonebook.ValidateSearch",
+			"summary": "ValidateSearch returns given search as result.",
+			"tags": [
+				{
+					"name": "phonebook"
+				}
+			],
+			"paramStructure": "by-name",
+			"params": [
+				{
+					"name": "search",
+					"summary": "search object",
+					"schema": {
+						"$ref": "#/components/schemas/PhonebookValidateSearchSearch",
+						"description": "search object"
+					}
+				}
+			],
+			"result": {
+				"name": "PhonebookValidateSearchResponse",
+				"schema": {
+					"$ref": "#/components/schemas/PersonSearch"
+				}
+			}
+		}
+	],
+	"components": {
+		"schemas": {
+			"Address": {
+				"required": [
+					"Street",
+					"City"
+				],
+				"properties": {
+					"Street": {
+						"type": [
+							"string"
+						]
+					},
+					"City": {
+						"type": [
+							"string"
+						]
+					}
+				}
+			},
+			"ArithDoSomethingWithPointP": {
+				"required": [
+					"X",
+					"Y",
+					"ConnectedObject"
+				],
+				"properties": {
+					"X": {
+						"description": "coordinate",
+						"type": [
+							"integer"
+						]
+					},
+					"Y": {
+						"description": "coordinate",
+						"type": [
+							"integer"
+						]
+					},
+					"ConnectedObject": {
+						"$ref": "#/components/schemas/ObjectsAbstractObject"
+					}
+				}
+			},
+			"Campaign": {
+				"required": [
+					"id",
+					"groups"
+				],
+				"properties": {
+					"id": {
+						"type": [
+							"integer"
+						]
+					},
+					"groups": {
+						"items": [
+							{
+								"$ref": "#/components/schemas/Group"
+							}
+						],
+						"type": [
+							"array"
+						]
+					}
+				}
+			},
+			"Group": {
+				"required": [
+					"id",
+					"title",
+					"nodes",
+					"groups",
+					"sub"
+				],
+				"properties": {
+					"id": {
+						"type": [
+							"integer"
+						]
+					},
+					"title": {
+						"type": [
+							"string"
+						]
+					},
+					"nodes": {
+						"items": [
+							{
+								"$ref": "#/components/schemas/Group"
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"groups": {
+						"items": [
+							{
+								"$ref": "#/components/schemas/Group"
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"child": {
+						"$ref": "#/components/schemas/Group"
+					},
+					"sub": {
+						"$ref": "#/components/schemas/SubGroup"
+					}
+				}
+			},
+			"ModelPoint": {
+				"required": [
+					"X",
+					"Y",
+					"ConnectedObject"
+				],
+				"properties": {
+					"X": {
+						"description": "coordinate",
+						"type": [
+							"integer"
+						]
+					},
+					"Y": {
+						"description": "coordinate",
+						"type": [
+							"integer"
+						]
+					},
+					"ConnectedObject": {
+						"$ref": "#/components/schemas/ObjectsAbstractObject"
+					}
+				}
+			},
+			"ObjectsAbstractObject": {
+				"required": [],
+				"properties": {}
+			},
+			"Person": {
+				"required": [
+					"ID",
+					"FirstName",
+					"LastName",
+					"Phone",
+					"Mobile",
+					"Deleted",
+					"Addresses"
+				],
+				"properties": {
+					"ID": {
+						"description": "ID is Unique Identifier for person",
+						"type": [
+							"integer"
+						]
+					},
+					"FirstName": {
+						"type": [
+							"string"
+						]
+					},
+					"LastName": {
+						"type": [
+							"string"
+						]
+					},
+					"Phone": {
+						"description": "Phone is main phone",
+						"type": [
+							"string"
+						]
+					},
+					"WorkPhone": {
+						"type": [
+							"string"
+						]
+					},
+					"Mobile": {
+						"items": [
+							{
+								"type": [
+									"string"
+								]
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"Deleted": {
+						"description": "Deleted is flag for",
+						"type": [
+							"boolean"
+						]
+					},
+					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
+						"items": [
+							{
+								"$ref": "#/components/schemas/Address"
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"address": {
+						"$ref": "#/components/schemas/Address"
+					}
+				}
+			},
+			"PersonSearch": {
+				"required": [
+					"ByPhone"
+				],
+				"properties": {
+					"ByName": {
+						"description": "ByName is filter for searching person by first name or last name.",
+						"type": [
+							"string"
+						]
+					},
+					"ByType": {
+						"type": [
+							"string"
+						]
+					},
+					"ByPhone": {
+						"type": [
+							"string"
+						]
+					},
+					"ByAddress": {
+						"$ref": "#/components/schemas/Address"
+					}
+				}
+			},
+			"PhonebookGetSearch": {
+				"required": [
+					"ByPhone"
+				],
+				"properties": {
+					"ByName": {
+						"description": "ByName is filter for searching person by first name or last name.",
+						"type": [
+							"string"
+						]
+					},
+					"ByType": {
+						"type": [
+							"string"
+						]
+					},
+					"ByPhone": {
+						"type": [
+							"string"
+						]
+					},
+					"ByAddress": {
+						"$ref": "#/components/schemas/Address"
+					}
+				}
+			},
+			"PhonebookSaveP": {
+				"required": [
+					"ID",
+					"FirstName",
+					"LastName",
+					"Phone",
+					"Mobile",
+					"Deleted",
+					"Addresses"
+				],
+				"properties": {
+					"ID": {
+						"description": "ID is Unique Identifier for person",
+						"type": [
+							"integer"
+						]
+					},
+					"FirstName": {
+						"type": [
+							"string"
+						]
+					},
+					"LastName": {
+						"type": [
+							"string"
+						]
+					},
+					"Phone": {
+						"description": "Phone is main phone",
+						"type": [
+							"string"
+						]
+					},
+					"WorkPhone": {
+						"type": [
+							"string"
+						]
+					},
+					"Mobile": {
+						"items": [
+							{
+								"type": [
+									"string"
+								]
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"Deleted": {
+						"description": "Deleted is flag for",
+						"type": [
+							"boolean"
+						]
+					},
+					"Addresses": {
+						"description": "Addresses Could be nil or len() == 0.",
+						"items": [
+							{
+								"$ref": "#/components/schemas/Address"
+							}
+						],
+						"type": [
+							"array"
+						]
+					},
+					"address": {
+						"$ref": "#/components/schemas/Address"
+					}
+				}
+			},
+			"PhonebookValidateSearchSearch": {
+				"required": [
+					"ByPhone"
+				],
+				"properties": {
+					"ByName": {
+						"description": "ByName is filter for searching person by first name or last name.",
+						"type": [
+							"string"
+						]
+					},
+					"ByType": {
+						"type": [
+							"string"
+						]
+					},
+					"ByPhone": {
+						"type": [
+							"string"
+						]
+					},
+					"ByAddress": {
+						"$ref": "#/components/schemas/Address"
+					}
+				}
+			},
+			"Quotient": {
+				"required": [
+					"Quo",
+					"rem"
+				],
+				"properties": {
+					"Quo": {
+						"description": "Quo docs",
+						"type": [
+							"integer"
+						]
+					},
+					"rem": {
+						"description": "Rem docs",
+						"type": [
+							"integer"
+						]
+					}
+				}
+			},
+			"SubGroup": {
+				"required": [
+					"id",
+					"title",
+					"nodes"
+				],
+				"properties": {
+					"id": {
+						"type": [
+							"integer"
+						]
+					},
+					"title": {
+						"type": [
+							"string"
+						]
+					},
+					"nodes": {
+						"items": [
+							{
+								"$ref": "#/components/schemas/Group"
+							}
+						],
+						"type": [
+							"array"
+						]
+					}
+				}
+			}
+		},
+		"contentDescriptors": {
+			"BooleanResponse": {
+				"name": "BooleanResponse",
+				"summary": "boolean response",
+				"schema": {
+					"type": [
+						"boolean"
+					]
+				}
+			},
+			"IntegerResponse": {
+				"name": "IntegerResponse",
+				"summary": "integer response",
+				"schema": {
+					"type": [
+						"integer"
+					]
+				}
+			},
+			"NullResponse": {
+				"name": "NullResponse",
+				"summary": "null response",
+				"schema": {
+					"type": [
+						"null"
+					]
+				}
+			},
+			"NumberResponse": {
+				"name": "NumberResponse",
+				"summary": "number response",
+				"schema": {
+					"type": [
+						"number"
+					]
+				}
+			}
+		}
+	}
+}

@@ -6,6 +6,7 @@
 - Golang
 - PHP
 - TypeScript
+- OpenRPC schema
 
 ## Examples
 

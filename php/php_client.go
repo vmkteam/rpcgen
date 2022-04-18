@@ -159,9 +159,16 @@ func prepareParameter(param smd.JSONSchema) Parameter {
 
 	pType := phpType(param.Type)
 	p.ReturnType = pType
-	if param.Type == smd.Object && param.Description != "" && !strings.Contains(param.Description, " ") {
-		pType = param.Description
-		p.ReturnType = pType
+	if param.Type == smd.Object {
+		typeName := param.TypeName
+		if typeName == "" && param.Description != "" && smd.IsSMDTypeName(param.Description, param.Type) {
+			typeName = param.Description
+		}
+
+		if typeName != "" {
+			pType = typeName
+			p.ReturnType = pType
+		}
 	}
 	if param.Type == smd.Array {
 		pType = arrayType(param.Items)

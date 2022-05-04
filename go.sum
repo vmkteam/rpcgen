@@ -80,8 +80,8 @@ github.com/stretchr/testify v1.2.2/go.mod h1:a8OnRcib4nhh0OaRAV+Yts87kKdq0PP7pXf
 github.com/stretchr/testify v1.3.0/go.mod h1:M5WIy9Dh21IEIfnGCwXGc5bZfKNJtfHm1UVUgZn+9EI=
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/thoas/go-funk v0.6.0/go.mod h1:+IWnUfUmFO1+WVYQWQtIJHeRRdaIyyYglZN7xzUPe4Q=
-github.com/vmkteam/meta-schema v1.15.3 h1:0HdUDsM9Qs+h+zxWYnDBs8OxgzQxOYcx0smj/KuQPUQ=
-github.com/vmkteam/meta-schema v1.15.3/go.mod h1:RlP1hqjr2Ghap0sfjpfOJhubwmaSUGFLtgM+LHVQBfU=
+github.com/vmkteam/meta-schema/v2 v2.0.0 h1:LdtXwySv9ocXCCNkoHXS7ksuw2bQZVlVqdn6QTOw5dk=
+github.com/vmkteam/meta-schema/v2 v2.0.0/go.mod h1:GQzU4Rid0Q9dDIz/OeSDyL/aB/QG7tD0gOUt5nQ4JMk=
 github.com/vmkteam/zenrpc v1.1.1 h1:WmModRVCwgs7XEkeJcVvmDOwEtAQk0TuYV91wdpAaCw=
 github.com/vmkteam/zenrpc v1.1.1/go.mod h1:x3fCkb9HHOpqwqC7TKXf8pyXWdPxEt2Zrndl50YxexM=
 github.com/vmkteam/zenrpc/v2 v2.2.6 h1:KaHNZE3HzIQbQXRM57fcsDxIxkQC3A3Ifc0/o4yddLU=

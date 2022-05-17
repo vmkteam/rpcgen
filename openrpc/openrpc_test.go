@@ -30,4 +30,14 @@ func TestGenerateOpenRPCSchema(t *testing.T) {
 	if !bytes.Equal(generated, testData) {
 		t.Fatalf("bad generator output")
 	}
+
+	// second run
+	generated, err = cl.Generate()
+	if err != nil {
+		t.Fatalf("generate openrpc client: %v", err)
+	}
+
+	if !bytes.Equal(generated, testData) {
+		t.Fatalf("bad generator output")
+	}
 }

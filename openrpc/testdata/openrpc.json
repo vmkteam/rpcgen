@@ -2,7 +2,6 @@
 	"openrpc": "1.2.6",
 	"info": {
 		"title": "test",
-		"description": "",
 		"version": "v0.0.0-b35e0598ad2f7ebd89ac036e29113f0f"
 	},
 	"servers": [
@@ -25,9 +24,7 @@
 				{
 					"name": "isErr",
 					"schema": {
-						"type": [
-							"boolean"
-						]
+						"type": "boolean"
 					},
 					"required": true
 				}
@@ -55,9 +52,7 @@
 				{
 					"name": "isErr",
 					"schema": {
-						"type": [
-							"boolean"
-						]
+						"type": "boolean"
 					},
 					"required": true
 				}
@@ -87,9 +82,7 @@
 					"summary": "the a",
 					"schema": {
 						"description": "the a",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				},
@@ -98,9 +91,7 @@
 					"summary": "the b",
 					"schema": {
 						"description": "the b",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				}
@@ -174,9 +165,7 @@
 							"$ref": "#/components/schemas/ModelPoint"
 						}
 					],
-					"type": [
-						"array"
-					]
+					"type": "array"
 				}
 			}
 		},
@@ -193,18 +182,14 @@
 				{
 					"name": "a",
 					"schema": {
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				},
 				{
 					"name": "b",
 					"schema": {
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				}
@@ -251,9 +236,7 @@
 				{
 					"name": "base",
 					"schema": {
-						"type": [
-							"number"
-						]
+						"type": "number"
 					},
 					"required": true
 				},
@@ -262,9 +245,7 @@
 					"summary": "exponent could be empty",
 					"schema": {
 						"description": "exponent could be empty",
-						"type": [
-							"number"
-						]
+						"type": "number"
 					}
 				}
 			],
@@ -285,18 +266,14 @@
 				{
 					"name": "a",
 					"schema": {
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				},
 				{
 					"name": "b",
 					"schema": {
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				}
@@ -320,14 +297,10 @@
 					"schema": {
 						"items": [
 							{
-								"type": [
-									"number"
-								]
+								"type": "number"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					}
 				}
 			],
@@ -352,9 +325,7 @@
 								"$ref": "#/components/schemas/Group"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"required": true
 				}
@@ -380,9 +351,7 @@
 								"$ref": "#/components/schemas/Campaign"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"required": true
 				}
@@ -421,9 +390,7 @@
 					"summary": "person id",
 					"schema": {
 						"description": "person id",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				}
@@ -456,9 +423,7 @@
 					"summary": "person id",
 					"schema": {
 						"description": "person id",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				}
@@ -489,9 +454,7 @@
 					"summary": "current page",
 					"schema": {
 						"description": "current page",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					}
 				},
 				{
@@ -499,9 +462,7 @@
 					"summary": "page size",
 					"schema": {
 						"description": "page size",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					}
 				}
 			],
@@ -513,9 +474,7 @@
 							"$ref": "#/components/schemas/Person"
 						}
 					],
-					"type": [
-						"array"
-					]
+					"type": "array"
 				}
 			}
 		},
@@ -534,9 +493,7 @@
 					"summary": "person id",
 					"schema": {
 						"description": "person id",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"required": true
 				}
@@ -567,9 +524,7 @@
 					"summary": "update person if exist",
 					"schema": {
 						"description": "update person if exist",
-						"type": [
-							"boolean"
-						]
+						"type": "boolean"
 					}
 				}
 			],
@@ -623,14 +578,10 @@
 				],
 				"properties": {
 					"Street": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"City": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					}
 				}
 			},
@@ -643,15 +594,11 @@
 				"properties": {
 					"X": {
 						"description": "coordinate",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"Y": {
 						"description": "coordinate",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"ConnectedObject": {
 						"$ref": "#/components/schemas/ObjectsAbstractObject"
@@ -665,9 +612,7 @@
 				],
 				"properties": {
 					"id": {
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"groups": {
 						"items": [
@@ -675,9 +620,7 @@
 								"$ref": "#/components/schemas/Group"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					}
 				}
 			},
@@ -691,14 +634,10 @@
 				],
 				"properties": {
 					"id": {
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"title": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"nodes": {
 						"items": [
@@ -706,9 +645,7 @@
 								"$ref": "#/components/schemas/Group"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"groups": {
 						"items": [
@@ -716,9 +653,7 @@
 								"$ref": "#/components/schemas/Group"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"child": {
 						"$ref": "#/components/schemas/Group"
@@ -737,15 +672,11 @@
 				"properties": {
 					"X": {
 						"description": "coordinate",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"Y": {
 						"description": "coordinate",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"ConnectedObject": {
 						"$ref": "#/components/schemas/ObjectsAbstractObject"
@@ -753,7 +684,6 @@
 				}
 			},
 			"ObjectsAbstractObject": {
-				"required": [],
 				"properties": {}
 			},
 			"Person": {
@@ -769,48 +699,32 @@
 				"properties": {
 					"ID": {
 						"description": "ID is Unique Identifier for person",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"FirstName": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"LastName": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"Phone": {
 						"description": "Phone is main phone",
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"WorkPhone": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"Mobile": {
 						"items": [
 							{
-								"type": [
-									"string"
-								]
+								"type": "string"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"Deleted": {
 						"description": "Deleted is flag for",
-						"type": [
-							"boolean"
-						]
+						"type": "boolean"
 					},
 					"Addresses": {
 						"description": "Addresses Could be nil or len() == 0.",
@@ -819,9 +733,7 @@
 								"$ref": "#/components/schemas/Address"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"address": {
 						"$ref": "#/components/schemas/Address"
@@ -835,19 +747,13 @@
 				"properties": {
 					"ByName": {
 						"description": "ByName is filter for searching person by first name or last name.",
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByType": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByPhone": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByAddress": {
 						"$ref": "#/components/schemas/Address"
@@ -861,19 +767,13 @@
 				"properties": {
 					"ByName": {
 						"description": "ByName is filter for searching person by first name or last name.",
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByType": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByPhone": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByAddress": {
 						"$ref": "#/components/schemas/Address"
@@ -893,48 +793,32 @@
 				"properties": {
 					"ID": {
 						"description": "ID is Unique Identifier for person",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"FirstName": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"LastName": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"Phone": {
 						"description": "Phone is main phone",
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"WorkPhone": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"Mobile": {
 						"items": [
 							{
-								"type": [
-									"string"
-								]
+								"type": "string"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"Deleted": {
 						"description": "Deleted is flag for",
-						"type": [
-							"boolean"
-						]
+						"type": "boolean"
 					},
 					"Addresses": {
 						"description": "Addresses Could be nil or len() == 0.",
@@ -943,9 +827,7 @@
 								"$ref": "#/components/schemas/Address"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					},
 					"address": {
 						"$ref": "#/components/schemas/Address"
@@ -959,19 +841,13 @@
 				"properties": {
 					"ByName": {
 						"description": "ByName is filter for searching person by first name or last name.",
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByType": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByPhone": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"ByAddress": {
 						"$ref": "#/components/schemas/Address"
@@ -986,15 +862,11 @@
 				"properties": {
 					"Quo": {
 						"description": "Quo docs",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"rem": {
 						"description": "Rem docs",
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					}
 				}
 			},
@@ -1006,14 +878,10 @@
 				],
 				"properties": {
 					"id": {
-						"type": [
-							"integer"
-						]
+						"type": "integer"
 					},
 					"title": {
-						"type": [
-							"string"
-						]
+						"type": "string"
 					},
 					"nodes": {
 						"items": [
@@ -1021,9 +889,7 @@
 								"$ref": "#/components/schemas/Group"
 							}
 						],
-						"type": [
-							"array"
-						]
+						"type": "array"
 					}
 				}
 			}
@@ -1033,36 +899,28 @@
 				"name": "BooleanResponse",
 				"summary": "boolean response",
 				"schema": {
-					"type": [
-						"boolean"
-					]
+					"type": "boolean"
 				}
 			},
 			"IntegerResponse": {
 				"name": "IntegerResponse",
 				"summary": "integer response",
 				"schema": {
-					"type": [
-						"integer"
-					]
+					"type": "integer"
 				}
 			},
 			"NullResponse": {
 				"name": "NullResponse",
 				"summary": "null response",
 				"schema": {
-					"type": [
-						"null"
-					]
+					"type": "null"
 				}
 			},
 			"NumberResponse": {
 				"name": "NumberResponse",
 				"summary": "number response",
 				"schema": {
-					"type": [
-						"number"
-					]
+					"type": "number"
 				}
 			}
 		}

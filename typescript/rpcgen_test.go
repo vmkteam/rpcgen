@@ -41,7 +41,7 @@ func TestGenerateTypeScriptClasses(t *testing.T) {
 		t.Fatalf("generate typescript client: %v", err)
 	}
 
-	testData, err := os.ReadFile("./testdata/catalogue_with_classes.ts")
+	testData, err := ioutil.ReadFile("./testdata/catalogue_with_classes.ts")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}

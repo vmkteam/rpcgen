@@ -29,22 +29,26 @@ export interface ISubGroup {
 
 export class Campaign implements ICampaign {
   static entityName = "campaign";
+
   id: number = 0;
   groups: Array<IGroup> = null;
 }
 
 export class CatalogueFirstParams implements ICatalogueFirstParams {
   static entityName = "cataloguefirstparams";
+
   groups: Array<IGroup> = null;
 }
 
 export class CatalogueSecondParams implements ICatalogueSecondParams {
   static entityName = "cataloguesecondparams";
+
   campaigns: Array<ICampaign> = null;
 }
 
 export class Group implements IGroup {
   static entityName = "group";
+
   id: number = 0;
   title: string = null;
   nodes: Array<IGroup> = null;
@@ -55,6 +59,7 @@ export class Group implements IGroup {
 
 export class SubGroup implements ISubGroup {
   static entityName = "subgroup";
+
   id: number = 0;
   title: string = null;
   nodes: Array<IGroup> = null;

@@ -15,6 +15,8 @@ import (
 const (
 	interfacePrefix = "I"
 	voidResponse    = "void"
+	viewOps         = "viewOps"
+	numberType      = "number"
 
 	definitionsPrefix = "#/definitions/"
 )
@@ -22,11 +24,17 @@ const (
 type Generator struct {
 	schema smd.Schema
 
-	typeMapper TypeMapper
+	settings Settings
 }
 
-func NewClient(schema smd.Schema, typeMapper TypeMapper) *Generator {
-	return &Generator{schema: schema, typeMapper: typeMapper}
+type Settings struct {
+	TypeMapper        TypeMapper
+	ExcludedNamespace []string
+	WithClasses       bool
+}
+
+func NewClient(schema smd.Schema, settings Settings) *Generator {
+	return &Generator{schema: schema, settings: settings}
 }
 
 type TypeMapper func(in smd.JSONSchema, tsType Type) Type
@@ -41,23 +49,7 @@ func (g *Generator) Generate() ([]byte, error) {
 		},
 	}
 
-	tmpl, err := template.New("test").Funcs(fns).Parse(
-		`/* eslint-disable */{{range .Interfaces}}
-export interface {{.Name}} {
-{{$len := len .Parameters}}{{range $i,$e := .Parameters}}  {{.Name}}{{if .Optional}}?{{end}}: {{.Type}}{{if ne $i $len}},{{end}}{{if ne .Comment ""}} // {{.Comment}}{{end}}{{if ne $i $len}}
-{{end}}{{end}}
-}
-{{end}}
-export const factory = (send) => ({
-{{$lenN := len .Namespaces}}{{range $i,$e := .Namespaces}}  {{.Name}}: {
-{{$lenS := len .Services}}{{range $i,$e := .Services}}    {{.NameLCF}}({{if .HasParams}}params: {{.Params}}{{end}}): Promise<{{.Response}}> {
-      return send('{{.Namespace}}.{{.Name}}'{{if .HasParams}}, params{{end}})
-    }{{if ne $i $lenS}},
-{{end}}{{end}}
-  }{{if ne $i $lenN}},
-{{end}}{{end}}
-})
-`)
+	tmpl, err := template.New("test").Funcs(fns).Parse(client)
 	if err != nil {
 		return nil, err
 	}
@@ -77,10 +69,12 @@ type tsInterface struct {
 }
 
 type Type struct {
-	Name     string
-	Comment  string
-	Type     string
-	Optional bool
+	Name       string
+	Comment    string
+	Type       string
+	Optional   bool
+	HasDefault bool
+	Default    *string
 }
 
 type tsServiceNamespace struct {
@@ -98,8 +92,57 @@ type tsService struct {
 }
 
 type tsModels struct {
-	Interfaces []tsInterface
-	Namespaces []tsServiceNamespace
+	WithClasses bool
+	Interfaces  []tsInterface
+	Namespaces  []tsServiceNamespace
+}
+
+func (ts tsInterface) ModelName() string {
+	return strings.TrimPrefix(ts.Name, interfacePrefix)
+}
+
+func (ts tsInterface) EntityName() string {
+	return strings.TrimSuffix(nameLCF(ts.ModelName()), "Summary")
+}
+
+func (ts tsInterface) EntityNameTmpl() string {
+	return strings.ToLower(ts.EntityName())
+}
+
+func (ts tsInterface) IsSearch() bool {
+	entityName := ts.EntityName()
+
+	if entityName == viewOps || strings.HasSuffix(entityName, "Search") {
+		return true
+	}
+
+	return false
+}
+
+func (t Type) DefaultTmpl() string {
+	result := "null"
+	if t.Default != nil {
+		result = *t.Default
+	}
+
+	if t.HasDefault && result == "null" {
+		switch t.Type {
+		case numberType:
+			result = "0"
+		case "string":
+			result = `""`
+		case "boolean":
+			result = "false"
+		case "Array<number>":
+			result = "[0]"
+		case "Array<string>":
+			result = `[""]`
+		case "Array<boolean>":
+			result = "[false]"
+		}
+	}
+
+	return result
 }
 
 // tsModels return converted schema to TypeScript.
@@ -110,6 +153,7 @@ func (g *Generator) tsModels() tsModels {
 	)
 
 	// iterate over all services
+skipNS:
 	for serviceName, service := range g.schema.Services {
 		serviceNameParts := strings.Split(serviceName, ".")
 		if len(serviceNameParts) != 2 {
@@ -119,11 +163,17 @@ func (g *Generator) tsModels() tsModels {
 		method := serviceNameParts[1]
 		interfaceName := fmt.Sprintf("%s%s%sParams", interfacePrefix, strings.Title(namespace), strings.Title(method))
 
+		for _, ns := range g.settings.ExcludedNamespace {
+			if namespace == ns {
+				continue skipNS
+			}
+		}
+
 		// add service params as TypeScript interfaces
 		if len(service.Parameters) > 0 {
 			tsTypes := make([]Type, len(service.Parameters))
 			for i := range service.Parameters {
-				tsTypes[i] = convertTSType(&models, interfacesCache, service.Parameters[i], "", g.typeMapper)
+				tsTypes[i] = convertTSType(&models, interfacesCache, service.Parameters[i], "", g.settings.TypeMapper)
 			}
 			addTSInterface(&models, interfacesCache, tsInterface{
 				Name:       interfaceName,
@@ -132,7 +182,7 @@ func (g *Generator) tsModels() tsModels {
 		}
 
 		// add service "returns" as TypeScript interface
-		respType := convertTSType(&models, interfacesCache, service.Returns, "", g.typeMapper)
+		respType := convertTSType(&models, interfacesCache, service.Returns, "", g.settings.TypeMapper)
 
 		// add namespace to TypeScript services
 		nIdx := -1
@@ -186,6 +236,8 @@ func (g *Generator) tsModels() tsModels {
 		})
 	}
 
+	models.WithClasses = g.settings.WithClasses
+
 	return models
 }
 
@@ -193,6 +245,28 @@ func (g *Generator) tsModels() tsModels {
 func addTSInterface(models *tsModels, interfaces map[string]interface{}, ti tsInterface) {
 	if len(ti.Parameters) == 0 {
 		return
+	}
+
+	// set "HasDefault" for each parameter
+	isSearch := ti.IsSearch()
+	for i := range ti.Parameters {
+		if isSearch || ti.Parameters[i].Type == "boolean" || ti.Parameters[i].Type == numberType {
+			ti.Parameters[i].HasDefault = true
+		}
+	}
+
+	// default 25 pageSize for viewOps
+	if ti.EntityName() == viewOps {
+		for i := range ti.Parameters {
+			if ti.Parameters[i].Name == "pageSize" {
+				pageSize := "25"
+				ti.Parameters[i].Default = &pageSize
+			}
+			if ti.Parameters[i].Name == "page" {
+				page := "1"
+				ti.Parameters[i].Default = &page
+			}
+		}
 	}
 
 	if _, ok := interfaces[ti.Name]; !ok {
@@ -241,6 +315,10 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 
 		addTSComplexInterface(models, interfacesCache, in, typeMapper)
 		result.Type = interfacePrefix + in.TypeName
+
+		if in.TypeName == "time.Time" {
+			result.Type = "string"
+		}
 	}
 
 	// add definitions as complex types

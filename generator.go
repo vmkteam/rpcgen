@@ -30,7 +30,11 @@ func (g RPCGen) PHPClient(phpNamespace string) Generator {
 }
 
 func (g RPCGen) TSClient(typeMapper typescript.TypeMapper) Generator {
-	return typescript.NewClient(g.schema, typeMapper)
+	return typescript.NewClient(g.schema, typescript.Settings{TypeMapper: typeMapper})
+}
+
+func (g RPCGen) TSCustomClient(settings typescript.Settings) Generator {
+	return typescript.NewClient(g.schema, settings)
 }
 
 func (g RPCGen) OpenRPC(title, host string) Generator {

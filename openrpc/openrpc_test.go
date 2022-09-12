@@ -22,8 +22,6 @@ func TestGenerateOpenRPCSchema(t *testing.T) {
 		t.Fatalf("generate openrpc client: %v", err)
 	}
 
-	os.WriteFile("./testdata/new.json", generated, os.ModePerm)
-
 	testData, err := os.ReadFile("./testdata/openrpc.json")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)

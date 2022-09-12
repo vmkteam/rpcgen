@@ -11,7 +11,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"io/ioutil"
+	"io"
 	"sync/atomic"
 	"strconv"
 	"time"
@@ -170,7 +170,7 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("bad response (%d)", resp.StatusCode)
 	}
 
-	bb, err := ioutil.ReadAll(resp.Body)
+	bb, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("response body (%s) read failed: %w", bb, err)
 	}

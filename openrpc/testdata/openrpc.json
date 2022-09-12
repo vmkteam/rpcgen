@@ -2,7 +2,7 @@
 	"openrpc": "1.2.6",
 	"info": {
 		"title": "test",
-		"version": "v0.0.0-b35e0598ad2f7ebd89ac036e29113f0f"
+		"version": "v0.0.0-71a9f83c605fe392a7c9a74f5ee90342"
 	},
 	"servers": [
 		{
@@ -137,7 +137,7 @@
 				{
 					"name": "p",
 					"schema": {
-						"$ref": "#/components/schemas/ArithDoSomethingWithPointP"
+						"$ref": "#/components/schemas/ModelPoint"
 					},
 					"required": true
 				}
@@ -445,7 +445,7 @@
 				{
 					"name": "search",
 					"schema": {
-						"$ref": "#/components/schemas/PhonebookGetSearch"
+						"$ref": "#/components/schemas/PersonSearch"
 					},
 					"required": true
 				},
@@ -515,7 +515,7 @@
 				{
 					"name": "p",
 					"schema": {
-						"$ref": "#/components/schemas/PhonebookSaveP"
+						"$ref": "#/components/schemas/Person"
 					},
 					"required": true
 				},
@@ -556,7 +556,7 @@
 					"name": "search",
 					"summary": "search object",
 					"schema": {
-						"$ref": "#/components/schemas/PhonebookValidateSearchSearch",
+						"$ref": "#/components/schemas/PersonSearch",
 						"description": "search object"
 					}
 				}
@@ -582,26 +582,6 @@
 					},
 					"City": {
 						"type": "string"
-					}
-				}
-			},
-			"ArithDoSomethingWithPointP": {
-				"required": [
-					"X",
-					"Y",
-					"ConnectedObject"
-				],
-				"properties": {
-					"X": {
-						"description": "coordinate",
-						"type": "integer"
-					},
-					"Y": {
-						"description": "coordinate",
-						"type": "integer"
-					},
-					"ConnectedObject": {
-						"$ref": "#/components/schemas/ObjectsAbstractObject"
 					}
 				}
 			},
@@ -741,100 +721,6 @@
 				}
 			},
 			"PersonSearch": {
-				"required": [
-					"ByPhone"
-				],
-				"properties": {
-					"ByName": {
-						"description": "ByName is filter for searching person by first name or last name.",
-						"type": "string"
-					},
-					"ByType": {
-						"type": "string"
-					},
-					"ByPhone": {
-						"type": "string"
-					},
-					"ByAddress": {
-						"$ref": "#/components/schemas/Address"
-					}
-				}
-			},
-			"PhonebookGetSearch": {
-				"required": [
-					"ByPhone"
-				],
-				"properties": {
-					"ByName": {
-						"description": "ByName is filter for searching person by first name or last name.",
-						"type": "string"
-					},
-					"ByType": {
-						"type": "string"
-					},
-					"ByPhone": {
-						"type": "string"
-					},
-					"ByAddress": {
-						"$ref": "#/components/schemas/Address"
-					}
-				}
-			},
-			"PhonebookSaveP": {
-				"required": [
-					"ID",
-					"FirstName",
-					"LastName",
-					"Phone",
-					"Mobile",
-					"Deleted",
-					"Addresses"
-				],
-				"properties": {
-					"ID": {
-						"description": "ID is Unique Identifier for person",
-						"type": "integer"
-					},
-					"FirstName": {
-						"type": "string"
-					},
-					"LastName": {
-						"type": "string"
-					},
-					"Phone": {
-						"description": "Phone is main phone",
-						"type": "string"
-					},
-					"WorkPhone": {
-						"type": "string"
-					},
-					"Mobile": {
-						"items": [
-							{
-								"type": "string"
-							}
-						],
-						"type": "array"
-					},
-					"Deleted": {
-						"description": "Deleted is flag for",
-						"type": "boolean"
-					},
-					"Addresses": {
-						"description": "Addresses Could be nil or len() == 0.",
-						"items": [
-							{
-								"$ref": "#/components/schemas/Address"
-							}
-						],
-						"type": "array"
-					},
-					"address": {
-						"$ref": "#/components/schemas/Address"
-					}
-				}
-			},
-			"PhonebookValidateSearchSearch": {
 				"required": [
 					"ByPhone"
 				],

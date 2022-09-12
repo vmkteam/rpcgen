@@ -2,7 +2,7 @@ package php
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/vmkteam/zenrpc/v2"
@@ -20,7 +20,7 @@ func TestGeneratePHPClient(t *testing.T) {
 		t.Fatalf("generate php client: %v", err)
 	}
 
-	testData, err := ioutil.ReadFile("./testdata/RpcClient.php")
+	testData, err := os.ReadFile("./testdata/RpcClient.php")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}

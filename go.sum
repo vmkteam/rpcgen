@@ -84,8 +84,8 @@ github.com/vmkteam/meta-schema/v2 v2.0.1 h1:7eoImKpnCs2wiCcBB8AUCtfVVhGa6L6DDqih
 github.com/vmkteam/meta-schema/v2 v2.0.1/go.mod h1:GQzU4Rid0Q9dDIz/OeSDyL/aB/QG7tD0gOUt5nQ4JMk=
 github.com/vmkteam/zenrpc v1.1.1 h1:WmModRVCwgs7XEkeJcVvmDOwEtAQk0TuYV91wdpAaCw=
 github.com/vmkteam/zenrpc v1.1.1/go.mod h1:x3fCkb9HHOpqwqC7TKXf8pyXWdPxEt2Zrndl50YxexM=
-github.com/vmkteam/zenrpc/v2 v2.2.6 h1:KaHNZE3HzIQbQXRM57fcsDxIxkQC3A3Ifc0/o4yddLU=
-github.com/vmkteam/zenrpc/v2 v2.2.6/go.mod h1:DUVyDLOKkQ0GelOkw5OcNbOi43QWhXdDM9XimWoeVSI=
+github.com/vmkteam/zenrpc/v2 v2.2.7 h1:FUhptP51Sw+9SsUXCqvWUFio09KRvoPyxmG0VF3PoOM=
+github.com/vmkteam/zenrpc/v2 v2.2.7/go.mod h1:/Ro+cCtoXtcGkacSQ6nL3riL0RjSq4g2miVTY64i0Rc=
 github.com/yuin/goldmark v1.1.32/go.mod h1:3hX8gzYuyVAZsxl0MRgGTJEmQBFcNTphYh9decYSb74=
 golang.org/x/crypto v0.0.0-20180904163835-0709b304e793/go.mod h1:6SG95UA2DQfeDnfUPMdvaQW0Q7yPrPDi9nlGo2tz2b4=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
@@ -110,8 +110,9 @@ golang.org/x/sys v0.0.0-20190412213103-97732733099d/go.mod h1:h1NjWce9XRLGQEsW7w
 golang.org/x/sys v0.0.0-20190422165155-953cdadca894/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200106162015-b016eb3dc98e/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
 golang.org/x/sys v0.0.0-20200323222414-85ca7c5b95cd/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
-golang.org/x/sys v0.0.0-20200615200032-f1bc736245b1 h1:ogLJMz+qpzav7lGMh10LMvAkM/fAoGlaiiHYiFYdm80=
 golang.org/x/sys v0.0.0-20200615200032-f1bc736245b1/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=
+golang.org/x/sys v0.0.0-20220615213510-4f61da869c0c h1:aFV+BgZ4svzjfabn8ERpuB4JI4N6/rdy1iusx77G3oU=
+golang.org/x/sys v0.0.0-20220615213510-4f61da869c0c/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/text v0.3.0/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=
 golang.org/x/tools v0.0.0-20190328211700-ab21143f2384/go.mod h1:LCzVGOaR6xXOjkQ3onu1FJEFr0SW1gC7cKk1uF8kGRs=
 golang.org/x/tools v0.0.0-20191119224855-298f0cb1881e/go.mod h1:b+2E5dAYhXwXZwtnZ6UAqBI28+e2cm9otk0dWdXHAEo=

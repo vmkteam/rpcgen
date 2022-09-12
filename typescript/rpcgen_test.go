@@ -2,7 +2,7 @@ package typescript
 
 import (
 	"bytes"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/vmkteam/zenrpc/v2"
@@ -20,7 +20,7 @@ func TestGenerateTypeScriptClient(t *testing.T) {
 		t.Fatalf("generate typescript client: %v", err)
 	}
 
-	testData, err := ioutil.ReadFile("./testdata/catalogue_client.ts")
+	testData, err := os.ReadFile("./testdata/catalogue_client.ts")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}
@@ -41,7 +41,7 @@ func TestGenerateTypeScriptClasses(t *testing.T) {
 		t.Fatalf("generate typescript client: %v", err)
 	}
 
-	testData, err := ioutil.ReadFile("./testdata/catalogue_with_classes.ts")
+	testData, err := os.ReadFile("./testdata/catalogue_with_classes.ts")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}

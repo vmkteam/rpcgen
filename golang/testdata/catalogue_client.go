@@ -123,7 +123,7 @@ func newClientArith(client *rpcClient) *svcArith {
 }
 
 var (
-	ErrArithCheckErrorTestError = zenrpc.NewError(500, fmt.Errorf("test error"))
+	ErrArithCheckError500 = zenrpc.NewError(500, fmt.Errorf("test error"))
 )
 
 // CheckError throws error is isErr true.
@@ -139,7 +139,7 @@ func (c *svcArith) CheckError(ctx context.Context, isErr bool) (err error) {
 	switch v := err.(type) {
 	case *zenrpc.Error:
 		if v.Code == 500 {
-			err = ErrArithCheckErrorTestError
+			err = ErrArithCheckError500
 		}
 	}
 
@@ -147,7 +147,7 @@ func (c *svcArith) CheckError(ctx context.Context, isErr bool) (err error) {
 }
 
 var (
-	ErrArithCheckZenRPCErrorTestError = zenrpc.NewError(500, fmt.Errorf("test error"))
+	ErrArithCheckZenRPCError500 = zenrpc.NewError(500, fmt.Errorf("test error"))
 )
 
 // CheckError throws zenrpc error is isErr true.
@@ -163,7 +163,7 @@ func (c *svcArith) CheckZenRPCError(ctx context.Context, isErr bool) (err error)
 	switch v := err.(type) {
 	case *zenrpc.Error:
 		if v.Code == 500 {
-			err = ErrArithCheckZenRPCErrorTestError
+			err = ErrArithCheckZenRPCError500
 		}
 	}
 
@@ -171,8 +171,8 @@ func (c *svcArith) CheckZenRPCError(ctx context.Context, isErr bool) (err error)
 }
 
 var (
-	ErrArithDivideDivideByZero  = zenrpc.NewError(-32603, fmt.Errorf("divide by zero"))
-	ErrArithDivideWeDoNotServe1 = zenrpc.NewError(401, fmt.Errorf("we do not serve 1"))
+	ErrArithDivide_32603 = zenrpc.NewError(-32603, fmt.Errorf("divide by zero"))
+	ErrArithDivide401    = zenrpc.NewError(401, fmt.Errorf("we do not serve 1"))
 )
 
 // Divide divides two numbers.
@@ -189,10 +189,10 @@ func (c *svcArith) Divide(ctx context.Context, a int, b int) (res *Quotient, err
 	switch v := err.(type) {
 	case *zenrpc.Error:
 		if v.Code == -32603 {
-			err = ErrArithDivideDivideByZero
+			err = ErrArithDivide_32603
 		}
 		if v.Code == 401 {
-			err = ErrArithDivideWeDoNotServe1
+			err = ErrArithDivide401
 		}
 	}
 
@@ -357,7 +357,7 @@ func newClientPhonebook(client *rpcClient) *svcPhonebook {
 }
 
 var (
-	ErrPhonebookByIDPersonWasNotFound = zenrpc.NewError(404, fmt.Errorf("person was not found"))
+	ErrPhonebookByID404 = zenrpc.NewError(404, fmt.Errorf("person was not found"))
 )
 
 // ById returns Person from DB.
@@ -373,7 +373,7 @@ func (c *svcPhonebook) ByID(ctx context.Context, id int) (res *Person, err error
 	switch v := err.(type) {
 	case *zenrpc.Error:
 		if v.Code == 404 {
-			err = ErrPhonebookByIDPersonWasNotFound
+			err = ErrPhonebookByID404
 		}
 	}
 
@@ -422,8 +422,8 @@ func (c *svcPhonebook) Remove(ctx context.Context, id int) (res bool, err error)
 }
 
 var (
-	ErrPhonebookSaveInvalidRequest = zenrpc.NewError(400, fmt.Errorf("invalid request"))
-	ErrPhonebookSaveUseReplaceTrue = zenrpc.NewError(401, fmt.Errorf("use replace=true"))
+	ErrPhonebookSave400 = zenrpc.NewError(400, fmt.Errorf("invalid request"))
+	ErrPhonebookSave401 = zenrpc.NewError(401, fmt.Errorf("use replace=true"))
 )
 
 // Save saves person to DB.
@@ -440,10 +440,10 @@ func (c *svcPhonebook) Save(ctx context.Context, p Person, replace bool) (res in
 	switch v := err.(type) {
 	case *zenrpc.Error:
 		if v.Code == 400 {
-			err = ErrPhonebookSaveInvalidRequest
+			err = ErrPhonebookSave400
 		}
 		if v.Code == 401 {
-			err = ErrPhonebookSaveUseReplaceTrue
+			err = ErrPhonebookSave401
 		}
 	}
 

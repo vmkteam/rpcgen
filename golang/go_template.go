@@ -70,7 +70,7 @@ func newClient{{ title . }} (client *rpcClient) *svc{{ title . }}  {
 {{ if $method.HasErrors }}
 var (
 {{ range $method.Errors }}
-Err{{ title $namespace }}{{ title $method.Name }}{{ .Name }} = zenrpc.NewError({{ .Code }}, fmt.Errorf("{{ .Message }}")){{ end }}
+Err{{ title $namespace }}{{ title $method.Name }}{{ .StringCode }} = zenrpc.NewError({{ .Code }}, fmt.Errorf("{{ .Message }}")){{ end }}
 )
 {{ end }}
 
@@ -89,7 +89,7 @@ func (c *svc{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $met
 		case *zenrpc.Error:
 				{{- range $method.Errors }}
 				if v.Code == {{ .Code }} {
-					err = Err{{ title $namespace }}{{ title $method.Name }}{{ .Name }}
+					err = Err{{ title $namespace }}{{ title $method.Name }}{{ .StringCode }}
 				}
                 {{- end }}
 	}

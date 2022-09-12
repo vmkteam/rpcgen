@@ -2,8 +2,8 @@ package golang
 
 import (
 	"fmt"
-	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/vmkteam/zenrpc/v2/smd"
@@ -147,18 +147,11 @@ type Error struct {
 	Message string
 }
 
-var (
-	charRe = regexp.MustCompile("[^a-zA-Z\\d]+")
-)
-
-func (e Error) Name() string {
-	msg := charRe.ReplaceAllString(e.Message, " ")
-
-	arr := strings.Fields(msg)
-	for i, v := range arr {
-		arr[i] = strings.Title(v)
+func (e Error) StringCode() string {
+	if e.Code < 0 {
+		return "_" + strconv.Itoa(e.Code*-1)
 	}
-	return strings.Join(arr, "")
+	return strconv.Itoa(e.Code)
 }
 
 type Model struct {

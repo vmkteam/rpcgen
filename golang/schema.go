@@ -3,6 +3,7 @@ package golang
 import (
 	"fmt"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/vmkteam/zenrpc/v2/smd"
@@ -128,6 +129,10 @@ func (m Method) HasResult() bool {
 	return m.Returns != nil
 }
 
+func (m Method) HasErrors() bool {
+	return len(m.Errors) > 0
+}
+
 // CommentDescription add to head of all lines two slashes
 func (m Method) CommentDescription() string {
 	if len(m.Description) == 0 {
@@ -140,6 +145,13 @@ func (m Method) CommentDescription() string {
 type Error struct {
 	Code    int
 	Message string
+}
+
+func (e Error) StringCode() string {
+	if e.Code < 0 {
+		return "_" + strconv.Itoa(e.Code*-1)
+	}
+	return strconv.Itoa(e.Code)
 }
 
 type Model struct {

@@ -122,6 +122,10 @@ func newClientArith(client *rpcClient) *svcArith {
 	}
 }
 
+var (
+	ErrArithCheckErrorTestError = zenrpc.NewError(500, fmt.Errorf("test error"))
+)
+
 // CheckError throws error is isErr true.
 func (c *svcArith) CheckError(ctx context.Context, isErr bool) (err error) {
 	_req := struct {
@@ -132,8 +136,19 @@ func (c *svcArith) CheckError(ctx context.Context, isErr bool) (err error) {
 
 	err = c.client.call(ctx, "arith.CheckError", _req, nil)
 
+	switch v := err.(type) {
+	case *zenrpc.Error:
+		if v.Code == 500 {
+			err = ErrArithCheckErrorTestError
+		}
+	}
+
 	return
 }
+
+var (
+	ErrArithCheckZenRPCErrorTestError = zenrpc.NewError(500, fmt.Errorf("test error"))
+)
 
 // CheckError throws zenrpc error is isErr true.
 func (c *svcArith) CheckZenRPCError(ctx context.Context, isErr bool) (err error) {
@@ -145,8 +160,20 @@ func (c *svcArith) CheckZenRPCError(ctx context.Context, isErr bool) (err error)
 
 	err = c.client.call(ctx, "arith.CheckZenRPCError", _req, nil)
 
+	switch v := err.(type) {
+	case *zenrpc.Error:
+		if v.Code == 500 {
+			err = ErrArithCheckZenRPCErrorTestError
+		}
+	}
+
 	return
 }
+
+var (
+	ErrArithDivideDivideByZero  = zenrpc.NewError(-32603, fmt.Errorf("divide by zero"))
+	ErrArithDivideWeDoNotServe1 = zenrpc.NewError(401, fmt.Errorf("we do not serve 1"))
+)
 
 // Divide divides two numbers.
 func (c *svcArith) Divide(ctx context.Context, a int, b int) (res *Quotient, err error) {
@@ -158,6 +185,16 @@ func (c *svcArith) Divide(ctx context.Context, a int, b int) (res *Quotient, err
 	}
 
 	err = c.client.call(ctx, "arith.Divide", _req, &res)
+
+	switch v := err.(type) {
+	case *zenrpc.Error:
+		if v.Code == -32603 {
+			err = ErrArithDivideDivideByZero
+		}
+		if v.Code == 401 {
+			err = ErrArithDivideWeDoNotServe1
+		}
+	}
 
 	return
 }
@@ -319,6 +356,10 @@ func newClientPhonebook(client *rpcClient) *svcPhonebook {
 	}
 }
 
+var (
+	ErrPhonebookByIDPersonWasNotFound = zenrpc.NewError(404, fmt.Errorf("person was not found"))
+)
+
 // ById returns Person from DB.
 func (c *svcPhonebook) ByID(ctx context.Context, id int) (res *Person, err error) {
 	_req := struct {
@@ -328,6 +369,13 @@ func (c *svcPhonebook) ByID(ctx context.Context, id int) (res *Person, err error
 	}
 
 	err = c.client.call(ctx, "phonebook.ById", _req, &res)
+
+	switch v := err.(type) {
+	case *zenrpc.Error:
+		if v.Code == 404 {
+			err = ErrPhonebookByIDPersonWasNotFound
+		}
+	}
 
 	return
 }
@@ -373,6 +421,11 @@ func (c *svcPhonebook) Remove(ctx context.Context, id int) (res bool, err error)
 	return
 }
 
+var (
+	ErrPhonebookSaveInvalidRequest = zenrpc.NewError(400, fmt.Errorf("invalid request"))
+	ErrPhonebookSaveUseReplaceTrue = zenrpc.NewError(401, fmt.Errorf("use replace=true"))
+)
+
 // Save saves person to DB.
 func (c *svcPhonebook) Save(ctx context.Context, p Person, replace bool) (res int, err error) {
 	_req := struct {
@@ -383,6 +436,16 @@ func (c *svcPhonebook) Save(ctx context.Context, p Person, replace bool) (res in
 	}
 
 	err = c.client.call(ctx, "phonebook.Save", _req, &res)
+
+	switch v := err.(type) {
+	case *zenrpc.Error:
+		if v.Code == 400 {
+			err = ErrPhonebookSaveInvalidRequest
+		}
+		if v.Code == 401 {
+			err = ErrPhonebookSaveUseReplaceTrue
+		}
+	}
 
 	return
 }

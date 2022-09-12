@@ -67,6 +67,13 @@ func newClient{{ title . }} (client *rpcClient) *svc{{ title . }}  {
 
 {{ range $.NamespaceMethodNames .}} {{ $method := $.MethodByName $namespace . }}
 
+{{ if $method.HasErrors }}
+var (
+{{ range $method.Errors }}
+Err{{ title $namespace }}{{ title $method.Name }}{{ .Name }} = zenrpc.NewError({{ .Code }}, fmt.Errorf("{{ .Message }}")){{ end }}
+)
+{{ end }}
+
 {{ $method.CommentDescription }}
 func (c *svc{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Returns.GoType }},  {{ else }} {{end}} err error) {
 	_req := struct {
@@ -75,9 +82,19 @@ func (c *svc{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $met
 	} {
 		{{ range $method.Params }}{{ title .Name }}: {{ .Name }}, {{ end }}
 	}
-	
+
 	err = c.client.call(ctx, "{{ $namespace }}.{{ . }}", _req, {{ if $method.HasResult }} &res {{ else }} nil {{ end }})
-	
+{{ if $method.HasErrors }}
+	switch v:= err.(type) {
+		case *zenrpc.Error:
+				{{- range $method.Errors }}
+				if v.Code == {{ .Code }} {
+					err = Err{{ title $namespace }}{{ title $method.Name }}{{ .Name }}
+				}
+                {{- end }}
+	}
+{{- end }}
+
 	return
 }
 {{ end }}

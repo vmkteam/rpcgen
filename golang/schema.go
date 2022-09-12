@@ -2,6 +2,7 @@ package golang
 
 import (
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -128,6 +129,10 @@ func (m Method) HasResult() bool {
 	return m.Returns != nil
 }
 
+func (m Method) HasErrors() bool {
+	return len(m.Errors) > 0
+}
+
 // CommentDescription add to head of all lines two slashes
 func (m Method) CommentDescription() string {
 	if len(m.Description) == 0 {
@@ -140,6 +145,20 @@ func (m Method) CommentDescription() string {
 type Error struct {
 	Code    int
 	Message string
+}
+
+var (
+	charRe = regexp.MustCompile("[^a-zA-Z\\d]+")
+)
+
+func (e Error) Name() string {
+	msg := charRe.ReplaceAllString(e.Message, " ")
+
+	arr := strings.Fields(msg)
+	for i, v := range arr {
+		arr[i] = strings.Title(v)
+	}
+	return strings.Join(arr, "")
 }
 
 type Model struct {

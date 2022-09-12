@@ -7,7 +7,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"strconv"
 	"sync/atomic"
@@ -48,14 +48,6 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 type Address struct {
 	City   string `json:"City"`
 	Street string `json:"Street"`
-}
-
-type ArithDoSomethingWithPointPParam struct {
-	ConnectedObject ObjectsAbstractObject `json:"ConnectedObject"`
-	// coordinate
-	X int `json:"X"`
-	// coordinate
-	Y int `json:"Y"`
 }
 
 type Campaign struct {
@@ -100,38 +92,6 @@ type Person struct {
 }
 
 type PersonSearch struct {
-	ByAddress *Address `json:"ByAddress,omitempty"`
-	// ByName is filter for searching person by first name or last name.
-	ByName  string `json:"ByName,omitempty"`
-	ByPhone string `json:"ByPhone"`
-	ByType  string `json:"ByType,omitempty"`
-}
-
-type PhonebookGetSearchParam struct {
-	ByAddress *Address `json:"ByAddress,omitempty"`
-	// ByName is filter for searching person by first name or last name.
-	ByName  string `json:"ByName,omitempty"`
-	ByPhone string `json:"ByPhone"`
-	ByType  string `json:"ByType,omitempty"`
-}
-
-type PhonebookSavePParam struct {
-	// Addresses Could be nil or len() == 0.
-	Addresses []Address `json:"Addresses"`
-	// Deleted is flag for
-	Deleted   bool   `json:"Deleted"`
-	FirstName string `json:"FirstName"`
-	// ID is Unique Identifier for person
-	ID       int      `json:"ID"`
-	LastName string   `json:"LastName"`
-	Mobile   []string `json:"Mobile"`
-	// Phone is main phone
-	Phone     string   `json:"Phone"`
-	WorkPhone string   `json:"WorkPhone,omitempty"`
-	Address   *Address `json:"address,omitempty"`
-}
-
-type PhonebookValidateSearchSearchParam struct {
 	ByAddress *Address `json:"ByAddress,omitempty"`
 	// ByName is filter for searching person by first name or last name.
 	ByName  string `json:"ByName,omitempty"`
@@ -211,9 +171,9 @@ func (c *svcArith) DoSomething(ctx context.Context) (err error) {
 	return
 }
 
-func (c *svcArith) DoSomethingWithPoint(ctx context.Context, p ArithDoSomethingWithPointPParam) (res ModelPoint, err error) {
+func (c *svcArith) DoSomethingWithPoint(ctx context.Context, p ModelPoint) (res ModelPoint, err error) {
 	_req := struct {
-		P ArithDoSomethingWithPointPParam
+		P ModelPoint
 	}{
 		P: p,
 	}
@@ -386,9 +346,9 @@ func (c *svcPhonebook) Delete(ctx context.Context, id int) (res bool, err error)
 }
 
 // Get returns all people from DB.
-func (c *svcPhonebook) Get(ctx context.Context, search PhonebookGetSearchParam, page int, count int) (res []Person, err error) {
+func (c *svcPhonebook) Get(ctx context.Context, search PersonSearch, page int, count int) (res []Person, err error) {
 	_req := struct {
-		Search PhonebookGetSearchParam
+		Search PersonSearch
 		Page   int
 		Count  int
 	}{
@@ -414,9 +374,9 @@ func (c *svcPhonebook) Remove(ctx context.Context, id int) (res bool, err error)
 }
 
 // Save saves person to DB.
-func (c *svcPhonebook) Save(ctx context.Context, p PhonebookSavePParam, replace bool) (res int, err error) {
+func (c *svcPhonebook) Save(ctx context.Context, p Person, replace bool) (res int, err error) {
 	_req := struct {
-		P       PhonebookSavePParam
+		P       Person
 		Replace bool
 	}{
 		P: p, Replace: replace,
@@ -428,9 +388,9 @@ func (c *svcPhonebook) Save(ctx context.Context, p PhonebookSavePParam, replace 
 }
 
 // ValidateSearch returns given search as result.
-func (c *svcPhonebook) ValidateSearch(ctx context.Context, search *PhonebookValidateSearchSearchParam) (res *PersonSearch, err error) {
+func (c *svcPhonebook) ValidateSearch(ctx context.Context, search *PersonSearch) (res *PersonSearch, err error) {
 	_req := struct {
-		Search *PhonebookValidateSearchSearchParam
+		Search *PersonSearch
 	}{
 		Search: search,
 	}
@@ -527,7 +487,7 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("bad response (%d)", resp.StatusCode)
 	}
 
-	bb, err := ioutil.ReadAll(resp.Body)
+	bb, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("response body (%s) read failed: %w", bb, err)
 	}

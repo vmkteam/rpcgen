@@ -522,6 +522,10 @@ func (c *rpcClient) call(ctx context.Context, methodName string, request, result
 
 // Exec makes http request to jsonrpc endpoint and returns json rpc response.
 func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.Response, error) {
+	if n, ok := ctx.Value("JSONRPC2-Notification").(bool); ok && n {
+		rpcReq.ID = nil
+	}
+
 	c, err := json.Marshal(rpcReq)
 	if err != nil {
 		return nil, fmt.Errorf("json marshal call failed: %w", err)

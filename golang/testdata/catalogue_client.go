@@ -540,8 +540,8 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 	req.Header = rc.header.Clone()
 	req.Header.Add("Content-Type", "application/json")
 
-	if xRequestID, ok := ctx.Value("X-Request-ID").(string); ok && xRequestID != "" {
-		req.Header.Add("X-Request-ID", xRequestID)
+	if xRequestID, ok := ctx.Value("X-Request-Id").(string); ok && xRequestID != "" {
+		req.Header.Add("X-Request-Id", xRequestID)
 	}
 
 	// Do request

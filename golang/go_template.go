@@ -116,14 +116,14 @@ func newRPCClient(endpoint string, header http.Header, httpClient *http.Client) 
 	}
 }
 
-func (c *rpcClient) call(ctx context.Context, methodName string, request, result interface{}) error {
+func (rc *rpcClient) call(ctx context.Context, methodName string, request, result interface{}) error {
 	// encode params
 	bts, err := json.Marshal(request)
 	if err != nil {
 		return fmt.Errorf("encode params: %w", err)
 	}
 
-	requestID := atomic.AddUint64(&c.requestID, 1)
+	requestID := atomic.AddUint64(&rc.requestID, 1)
 	requestIDBts := json.RawMessage(strconv.Itoa(int(requestID)))
 
 	req := zenrpc.Request{
@@ -133,7 +133,7 @@ func (c *rpcClient) call(ctx context.Context, methodName string, request, result
 		Params:  bts,
 	}
 
-	res, err := c.Exec(ctx, req)
+	res, err := rc.Exec(ctx, req)
 	if err != nil {
 		return err
 	}
@@ -177,7 +177,7 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 	req.Header = rc.header.Clone()
 	req.Header.Add("Content-Type", "application/json")
 
-	if xRequestID, ok := ctx.Value("X-Request-Id").(string); ok && xRequestID != "" {
+	if xRequestID, ok := ctx.Value("X-Request-Id").(string); ok && req.Header.Get("X-Request-Id") == "" && xRequestID != "" {
 		req.Header.Add("X-Request-Id", xRequestID)
 	}
 
@@ -195,16 +195,20 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("bad response (%d)", resp.StatusCode)
 	}
 
+	var zresp *zenrpc.Response
+	if rpcReq.ID == nil {
+		return zresp, nil
+	}
+
 	bb, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return nil, fmt.Errorf("response body (%s) read failed: %w", bb, err)
 	}
 
-	var zresp zenrpc.Response
-	if err = json.Unmarshal(bb, &zresp); err != nil {
+	if err = json.Unmarshal(bb, zresp); err != nil {
 		return nil, fmt.Errorf("json decode failed (%s): %w", bb, err)
 	}
 
-	return &zresp, nil
+	return zresp, nil
 }
 `

@@ -195,9 +195,9 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("bad response (%d)", resp.StatusCode)
 	}
 
-	var zresp *zenrpc.Response
+	var zresp zenrpc.Response
 	if rpcReq.ID == nil {
-		return zresp, nil
+		return &zresp, nil
 	}
 
 	bb, err := io.ReadAll(resp.Body)
@@ -205,10 +205,10 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("response body (%s) read failed: %w", bb, err)
 	}
 
-	if err = json.Unmarshal(bb, zresp); err != nil {
+	if err = json.Unmarshal(bb, &zresp); err != nil {
 		return nil, fmt.Errorf("json decode failed (%s): %w", bb, err)
 	}
 
-	return zresp, nil
+	return &zresp, nil
 }
 `

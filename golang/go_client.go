@@ -7,17 +7,8 @@ import (
 	"text/template"
 	"unicode"
 
+	"github.com/vmkteam/rpcgen/v2/gen"
 	"github.com/vmkteam/zenrpc/v2/smd"
-)
-
-const (
-	definitionsPrefix = "#/definitions/"
-
-	typeArray   = "array"
-	typeInteger = "integer"
-	typeNumber  = "number"
-	typeObject  = "object"
-	typeInt     = "int"
 )
 
 // Generator main package structure
@@ -32,6 +23,8 @@ func NewClient(schema smd.Schema) *Generator {
 
 // Generate returns generated Go client.
 func (g *Generator) Generate() ([]byte, error) {
+	g.schema.GeneratorData = gen.DefaultGeneratorData()
+
 	tmpl, err := template.New("").Funcs(templateFuncs).Parse(goTpl)
 	if err != nil {
 		return nil, err

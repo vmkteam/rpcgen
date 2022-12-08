@@ -1,9 +1,7 @@
 package php
 
 const phpTpl = `<?php
-/**
-* PHP RPC Client by rpcgen
-*/
+/** Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT. */
 
 namespace {{.Namespace}};
 

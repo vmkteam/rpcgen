@@ -1,3 +1,5 @@
+/// Code generated from jsonrpc schema by rpcgen v2.4.0; DO NOT EDIT.
+
 import Foundation
 
 extension RPCAPI: RPCMethod {

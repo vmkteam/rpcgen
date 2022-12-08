@@ -1,6 +1,8 @@
 package swift
 
-const client = `import Foundation
+const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+
+import Foundation
 
 extension {{ .Class }}: RPCMethod {
     public var rpcMethod: String {

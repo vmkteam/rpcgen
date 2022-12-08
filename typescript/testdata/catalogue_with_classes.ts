@@ -1,3 +1,4 @@
+/* Code generated from jsonrpc schema by rpcgen v2.4.0; DO NOT EDIT. */
 /* eslint-disable */
 export interface ICampaign {
   id: number,

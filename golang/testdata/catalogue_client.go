@@ -1,4 +1,4 @@
-// Code generated from jsonrpc schema by rpc_client_generator; DO NOT EDIT.
+// Code generated from jsonrpc schema by rpcgen v2.4.0; DO NOT EDIT.
 
 package client
 

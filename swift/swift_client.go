@@ -8,12 +8,12 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/vmkteam/rpcgen/v2/gen"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 const (
-	defaultClass      = "RPCAPI"
-	definitionsPrefix = "#/definitions/"
+	defaultClass = "RPCAPI"
 
 	Bool   = "Bool"
 	Int    = "Int"
@@ -70,6 +70,7 @@ func (p Parameter) SafeName() string {
 type TypeMapper func(typeName string, in smd.Property, swiftType Parameter) Parameter
 
 type templateData struct {
+	gen.GeneratorData
 	Class   string
 	Methods []Method
 	Models  []Model
@@ -92,7 +93,7 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 
 // Generate returns generated Swift client
 func (g *Generator) Generate() ([]byte, error) {
-	data := templateData{Class: defaultClass}
+	data := templateData{Class: defaultClass, GeneratorData: gen.DefaultGeneratorData()}
 	if g.settings.Class != "" {
 		data.Class = g.settings.Class
 	}
@@ -177,7 +178,7 @@ func (g *Generator) propertiesToParams(typeName string, list smd.PropertyList) [
 
 		pType := swiftType(prop.Type)
 		if prop.Type == smd.Object && prop.Ref != "" {
-			pType = strings.TrimPrefix(prop.Ref, definitionsPrefix)
+			pType = strings.TrimPrefix(prop.Ref, gen.DefinitionsPrefix)
 			p.IsObject = true
 		}
 
@@ -308,7 +309,7 @@ func arrayType(items map[string]string) string {
 		subType = swiftType(scalar)
 	}
 	if ref, ok := items["$ref"]; ok {
-		subType = strings.TrimPrefix(ref, definitionsPrefix)
+		subType = strings.TrimPrefix(ref, gen.DefinitionsPrefix)
 	}
 	return fmt.Sprintf("[%s]", subType)
 }

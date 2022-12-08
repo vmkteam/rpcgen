@@ -1,6 +1,7 @@
 package typescript
 
-const client = `/* eslint-disable */
+const client = `/* Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT. */
+/* eslint-disable */
 {{- range .Interfaces }}
 export interface {{ .Name }} {
 {{- $len := len .Parameters }}

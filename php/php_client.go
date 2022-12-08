@@ -8,12 +8,11 @@ import (
 	"text/template"
 	"time"
 
+	"github.com/vmkteam/rpcgen/v2/gen"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 const (
-	definitionsPrefix = "#/definitions/"
-
 	defaultPhpNamespace = "JsonRpcClient"
 
 	phpBoolean = "bool"
@@ -42,6 +41,8 @@ func NewClient(schema smd.Schema, phpNamespace string) *Generator {
 // Generate returns generate TypeScript client
 func (g *Generator) Generate() ([]byte, error) {
 	m := g.PHPModels()
+	m.GeneratorData = gen.DefaultGeneratorData()
+
 	funcMap := template.FuncMap{
 		"now": time.Now,
 	}
@@ -85,6 +86,7 @@ type Parameter struct {
 }
 
 type phpModels struct {
+	gen.GeneratorData
 	Namespace string
 	Methods   []phpMethod
 	Classes   []phpClass
@@ -231,13 +233,13 @@ func objectType(ref string) string {
 	if ref == "" {
 		return phpObject
 	}
-	return strings.TrimPrefix(ref, definitionsPrefix)
+	return strings.TrimPrefix(ref, gen.DefinitionsPrefix)
 }
 
 // arrayType return array type from $ref
 func arrayType(ref map[string]string) string {
 	if r, ok := ref["$ref"]; ok {
-		return strings.TrimPrefix(r, definitionsPrefix) + "[]"
+		return strings.TrimPrefix(r, gen.DefinitionsPrefix) + "[]"
 	}
 	return phpArray
 }

@@ -150,7 +150,7 @@ var (
 	ErrArithCheckZenRPCError500 = zenrpc.NewError(500, fmt.Errorf("test error"))
 )
 
-// CheckError throws zenrpc error is isErr true.
+// CheckZenRPCError throws zenrpc error is isErr true.
 func (c *svcArith) CheckZenRPCError(ctx context.Context, isErr bool) (err error) {
 	_req := struct {
 		IsErr bool
@@ -171,8 +171,7 @@ func (c *svcArith) CheckZenRPCError(ctx context.Context, isErr bool) (err error)
 }
 
 var (
-	ErrArithDivide_32603 = zenrpc.NewError(-32603, fmt.Errorf("divide by zero"))
-	ErrArithDivide401    = zenrpc.NewError(401, fmt.Errorf("we do not serve 1"))
+	ErrArithDivide401 = zenrpc.NewError(401, fmt.Errorf("we do not serve 1"))
 )
 
 // Divide divides two numbers.
@@ -188,9 +187,6 @@ func (c *svcArith) Divide(ctx context.Context, a int, b int) (res *Quotient, err
 
 	switch v := err.(type) {
 	case *zenrpc.Error:
-		if v.Code == -32603 {
-			err = ErrArithDivide_32603
-		}
 		if v.Code == 401 {
 			err = ErrArithDivide401
 		}
@@ -243,7 +239,7 @@ func (c *svcArith) Multiply(ctx context.Context, a int, b int) (res int, err err
 	return
 }
 
-// PI returns math.Pi.
+// Pi returns math.Pi.
 func (c *svcArith) Pi(ctx context.Context) (res float64, err error) {
 	_req := struct {
 	}{}

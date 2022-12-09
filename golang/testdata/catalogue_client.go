@@ -87,16 +87,16 @@ type Person struct {
 	Mobile   []string `json:"Mobile"`
 	// Phone is main phone
 	Phone     string   `json:"Phone"`
-	WorkPhone string   `json:"WorkPhone,omitempty"`
+	WorkPhone *string  `json:"WorkPhone,omitempty"`
 	Address   *Address `json:"address,omitempty"`
 }
 
 type PersonSearch struct {
 	ByAddress *Address `json:"ByAddress,omitempty"`
 	// ByName is filter for searching person by first name or last name.
-	ByName  string `json:"ByName,omitempty"`
-	ByPhone string `json:"ByPhone"`
-	ByType  string `json:"ByType,omitempty"`
+	ByName  *string `json:"ByName,omitempty"`
+	ByPhone string  `json:"ByPhone"`
+	ByType  *string `json:"ByType,omitempty"`
 }
 
 type Quotient struct {
@@ -259,10 +259,10 @@ func (c *svcArith) Positive(ctx context.Context) (res bool, err error) {
 }
 
 // Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.
-func (c *svcArith) Pow(ctx context.Context, base float64, exp float64) (res float64, err error) {
+func (c *svcArith) Pow(ctx context.Context, base float64, exp *float64) (res float64, err error) {
 	_req := struct {
 		Base float64
-		Exp  float64
+		Exp  *float64
 	}{
 		Base: base, Exp: exp,
 	}
@@ -390,11 +390,11 @@ func (c *svcPhonebook) Delete(ctx context.Context, id int) (res bool, err error)
 }
 
 // Get returns all people from DB.
-func (c *svcPhonebook) Get(ctx context.Context, search PersonSearch, page int, count int) (res []Person, err error) {
+func (c *svcPhonebook) Get(ctx context.Context, search PersonSearch, page *int, count *int) (res []Person, err error) {
 	_req := struct {
 		Search PersonSearch
-		Page   int
-		Count  int
+		Page   *int
+		Count  *int
 	}{
 		Search: search, Page: page, Count: count,
 	}
@@ -423,10 +423,10 @@ var (
 )
 
 // Save saves person to DB.
-func (c *svcPhonebook) Save(ctx context.Context, p Person, replace bool) (res int, err error) {
+func (c *svcPhonebook) Save(ctx context.Context, p Person, replace *bool) (res int, err error) {
 	_req := struct {
 		P       Person
-		Replace bool
+		Replace *bool
 	}{
 		P: p, Replace: replace,
 	}

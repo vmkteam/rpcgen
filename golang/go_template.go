@@ -3,7 +3,7 @@ package golang
 // goTpl contains template for Go client
 const goTpl = `// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
 
-package client
+package {{ .Package }}
 
 import (
 	"bytes"
@@ -47,7 +47,7 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 {{ range .Models }}
 type {{ .Name }} struct {
 	{{ range .Fields }}{{ if ne .Description "" }}// {{ .Description }}
-	{{ end }}{{ title .Name }} {{ .GoType }} ` + "`json:\"{{ .Name }}{{if .Optional}},omitempty{{end}}\"`" + `
+	{{ end }}{{ title .Name }} {{ if and .Optional (eq .ArrayItemType "")}}*{{ end }}{{ .GoType }} ` + "`json:\"{{ .Name }}{{if .Optional}},omitempty{{end}}\"`" + `
 {{ end }}
 }
 {{ end }} 
@@ -75,9 +75,9 @@ Err{{ title $namespace }}{{ title $method.Name }}{{ .StringCode }} = zenrpc.NewE
 {{ end }}
 
 {{ $method.CommentDescription }}
-func (c *svc{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ $method.Returns.GoType }},  {{ else }} {{end}} err error) {
+func (c *svc{{ title $lTitle}}) {{ title . }}(ctx context.Context, {{ range $method.Params }}{{ .Name }} {{ if and .Optional (eq .ArrayItemType "")}}*{{ end }}{{ .GoType }}, {{ end }}) ( {{ if $method.HasResult }} res {{ if and $method.Returns.Optional (eq $method.Returns.ArrayItemType "")}}*{{ end }}{{ $method.Returns.GoType }},  {{ else }} {{end}} err error) {
 	_req := struct {
-		{{ range $method.Params }}{{ title .Name }} {{ .GoType }}
+		{{ range $method.Params }}{{ title .Name }} {{ if and .Optional (eq .ArrayItemType "")}}*{{ end }}{{ .GoType }}
 {{ end }}
 	} {
 		{{ range $method.Params }}{{ title .Name }}: {{ .Name }}, {{ end }}

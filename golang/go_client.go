@@ -11,21 +11,30 @@ import (
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
+type Settings struct {
+	Package string
+}
+
 // Generator main package structure
 type Generator struct {
-	schema Schema
+	schema   Schema
+	settings Settings
 }
 
 // NewClient create Generator from zenrpc/v2 SMD.
-func NewClient(schema smd.Schema) *Generator {
-	return &Generator{schema: NewSchema(schema)}
+func NewClient(schema smd.Schema, settings Settings) *Generator {
+	if settings.Package == "" {
+		settings.Package = "client"
+	}
+	return &Generator{schema: NewSchema(schema), settings: settings}
 }
 
 // Generate returns generated Go client.
 func (g *Generator) Generate() ([]byte, error) {
 	g.schema.GeneratorData = gen.DefaultGeneratorData()
+	g.schema.Package = g.settings.Package
 
-	tmpl, err := template.New("").Funcs(templateFuncs).Parse(goTpl)
+	tmpl, err := template.New("golang client").Funcs(templateFuncs).Parse(goTpl)
 	if err != nil {
 		return nil, err
 	}

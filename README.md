@@ -39,22 +39,23 @@ func main() {
 ### Generate in HTTP handler
 
 ```go
-package main 
+package main
 
 import (
 	"net/http"
-	
+
 	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/golang"
 	"github.com/vmkteam/rpcgen/v2/swift"
 	"github.com/vmkteam/zenrpc/v2"
 )
 
-func main () {
+func main() {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
 
 	gen := rpcgen.FromSMD(rpc.SMD())
 
-	http.HandleFunc("/client.go", rpcgen.Handler(gen.GoClient()))
+	http.HandleFunc("/client.go", rpcgen.Handler(gen.GoClient(golang.Settings{})))
 	http.HandleFunc("/client.ts", rpcgen.Handler(gen.TSClient(nil)))
 	http.HandleFunc("/RpcClient.php", rpcgen.Handler(gen.PHPClient("")))
 	http.HandleFunc("/client.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{})))

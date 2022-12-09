@@ -22,8 +22,8 @@ type Generator interface {
 	Generate() ([]byte, error)
 }
 
-func (g RPCGen) GoClient() Generator {
-	return golang.NewClient(g.schema)
+func (g RPCGen) GoClient(settings golang.Settings) Generator {
+	return golang.NewClient(g.schema, settings)
 }
 
 func (g RPCGen) PHPClient(phpNamespace string) Generator {

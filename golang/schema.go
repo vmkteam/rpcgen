@@ -30,6 +30,7 @@ func NewSchema(schema smd.Schema) Schema {
 
 type Schema struct {
 	gen.GeneratorData
+	Package    string
 	Namespaces []Namespace
 }
 
@@ -203,10 +204,6 @@ func (v *Value) GoType() string {
 
 		return fmt.Sprintf("[]%s", simpleGoType(v.ArrayItemType))
 	} else if v.Type == smd.Object {
-		if v.Optional {
-			return fmt.Sprintf("*%s", v.LocalModelName())
-		}
-
 		return v.LocalModelName()
 	}
 

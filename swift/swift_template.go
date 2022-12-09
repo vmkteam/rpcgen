@@ -57,7 +57,7 @@ public struct {{ .Name }}: Codable, Hashable {
     {{- end }}
     init({{ range $index, $f := .Fields }}{{ .Name }}: {{ .Type }}{{ if .Optional }}? = nil{{ end }}{{ if (notLast $index $fieldsLen) }}, {{ end }}{{ end }}) {
         {{- range .Fields }}
-        self.{{ .Name }} = {{ .Name }}
+        self.{{ .Name }} = {{ if .NeedEscaping }}{{ .SafeName }}{{ else }}{{ .Name }}{{ end }}
         {{- end }}
     }
 }

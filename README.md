@@ -6,6 +6,7 @@
 - Golang
 - PHP
 - TypeScript
+- Swift
 - OpenRPC schema
 
 ## Examples
@@ -19,7 +20,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/vmkteam/rpcgen"
+	"github.com/vmkteam/rpcgen/v2"
 	"github.com/vmkteam/zenrpc/v2"
 )
 
@@ -43,7 +44,8 @@ package main
 import (
 	"net/http"
 	
-	"github.com/vmkteam/rpcgen"
+	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/swift"
 	"github.com/vmkteam/zenrpc/v2"
 )
 
@@ -55,6 +57,7 @@ func main () {
 	http.HandleFunc("/client.go", rpcgen.Handler(gen.GoClient()))
 	http.HandleFunc("/client.ts", rpcgen.Handler(gen.TSClient(nil)))
 	http.HandleFunc("/RpcClient.php", rpcgen.Handler(gen.PHPClient("")))
+	http.HandleFunc("/client.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{})))
 }
 ```
 
@@ -64,10 +67,11 @@ func main () {
 package main
 
 import (
+	"fmt"
 	"net/http"
 
-	"github.com/vmkteam/rpcgen"
-	"github.com/vmkteam/rpcgen/typescript"
+	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/typescript"
 	"github.com/vmkteam/zenrpc/v2"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
@@ -88,5 +92,41 @@ func main() {
 	}
 
 	http.HandleFunc("/client.ts", rpcgen.Handler(gen.TSClient(typeMapper)))
+}
+```
+
+### Add custom Swift type mapper
+
+```go
+package main
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/swift"
+	"github.com/vmkteam/zenrpc/v2"
+	"github.com/vmkteam/zenrpc/v2/smd"
+)
+
+func main() {
+	rpc := zenrpc.NewServer(zenrpc.Options{})
+
+	gen := rpcgen.FromSMD(rpc.SMD())
+
+	typeMapper := func(typeName string, in smd.Property, param swift.Parameter) swift.Parameter {
+		switch typeName {
+		case "Group":
+			switch in.Name {
+			case "groups":
+				param.Type = fmt.Sprintf("[Int: %s]", param.Type)
+				param.DecodableDefault = swift.DefaultMap
+			}
+		}
+		return param
+	}
+
+	http.HandleFunc("/client.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{"", typeMapper})))
 }
 ```

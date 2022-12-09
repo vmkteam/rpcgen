@@ -2,7 +2,7 @@
 	"openrpc": "1.2.6",
 	"info": {
 		"title": "test",
-		"version": "v0.0.0-71a9f83c605fe392a7c9a74f5ee90342"
+		"version": "v0.0.0-9ac57ca8e88fda67daec2cbaa50d71bd"
 	},
 	"servers": [
 		{
@@ -41,7 +41,7 @@
 		},
 		{
 			"name": "arith.CheckZenRPCError",
-			"summary": "CheckError throws zenrpc error is isErr true.",
+			"summary": "CheckZenRPCError throws zenrpc error is isErr true.",
 			"tags": [
 				{
 					"name": "arith"
@@ -103,10 +103,6 @@
 				}
 			},
 			"errors": [
-				{
-					"code": -32603,
-					"message": "divide by zero"
-				},
 				{
 					"code": 401,
 					"message": "we do not serve 1"
@@ -200,7 +196,7 @@
 		},
 		{
 			"name": "arith.Pi",
-			"summary": "PI returns math.Pi.",
+			"summary": "Pi returns math.Pi.",
 			"tags": [
 				{
 					"name": "arith"

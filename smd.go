@@ -1,8 +1,8 @@
 package rpcgen
 
 import (
-	"github.com/vmkteam/zenrpc/v2/smd"
 	smd1 "github.com/vmkteam/zenrpc/smd"
+	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
 // smdv1ToSMD convert smd v1 to smd v2

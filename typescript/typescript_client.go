@@ -9,6 +9,7 @@ import (
 	"text/template"
 	"unicode"
 
+	"github.com/vmkteam/rpcgen/v2/gen"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
@@ -17,8 +18,6 @@ const (
 	voidResponse    = "void"
 	viewOps         = "viewOps"
 	numberType      = "number"
-
-	definitionsPrefix = "#/definitions/"
 )
 
 type Generator struct {
@@ -42,6 +41,7 @@ type TypeMapper func(in smd.JSONSchema, tsType Type) Type
 // Generate returns generate TypeScript client
 func (g *Generator) Generate() ([]byte, error) {
 	tsModels := g.tsModels()
+	tsModels.GeneratorData = gen.DefaultGeneratorData()
 
 	var fns = template.FuncMap{
 		"len": func(a interface{}) int {
@@ -92,6 +92,7 @@ type tsService struct {
 }
 
 type tsModels struct {
+	gen.GeneratorData
 	WithClasses bool
 	Interfaces  []tsInterface
 	Namespaces  []tsServiceNamespace
@@ -301,7 +302,7 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 			subType = convertTSScalar(scalar)
 		}
 		if ref, ok := in.Items["$ref"]; ok {
-			subType = interfacePrefix + strings.TrimPrefix(ref, definitionsPrefix)
+			subType = interfacePrefix + strings.TrimPrefix(ref, gen.DefinitionsPrefix)
 		}
 
 		result.Type = fmt.Sprintf("Array<%s>", subType)
@@ -348,7 +349,7 @@ func addTSComplexInterface(models *tsModels, interfacesCache map[string]interfac
 		tsTypes = append(tsTypes, convertTSType(models, interfacesCache, smd.JSONSchema{
 			Name:        p.Name,
 			Optional:    p.Optional,
-			Description: strings.TrimPrefix(p.Ref, definitionsPrefix),
+			Description: strings.TrimPrefix(p.Ref, gen.DefinitionsPrefix),
 			Type:        p.Type,
 			Items:       p.Items,
 		}, p.Description, typeMapper))

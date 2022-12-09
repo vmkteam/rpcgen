@@ -1,4 +1,4 @@
-package php
+package swift
 
 import (
 	"bytes"
@@ -10,18 +10,18 @@ import (
 	"github.com/vmkteam/zenrpc/v2/testdata"
 )
 
-func TestGeneratePHPClient(t *testing.T) {
+func TestGenerateSwiftClient(t *testing.T) {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
 	rpc.Register("catalogue", testdata.CatalogueService{})
 
-	cl := NewClient(rpc.SMD(), "")
+	cl := NewClient(rpc.SMD(), Settings{})
 
 	generated, err := cl.Generate()
 	if err != nil {
-		t.Fatalf("generate php client: %v", err)
+		t.Fatalf("generate swift client: %v", err)
 	}
 
-	testData, err := os.ReadFile("./testdata/RpcClient.php")
+	testData, err := os.ReadFile("./testdata/rpc.generated.swift")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}

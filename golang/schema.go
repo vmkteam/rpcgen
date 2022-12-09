@@ -6,6 +6,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/vmkteam/rpcgen/v2/gen"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
@@ -28,6 +29,7 @@ func NewSchema(schema smd.Schema) Schema {
 }
 
 type Schema struct {
+	gen.GeneratorData
 	Namespaces []Namespace
 }
 
@@ -317,7 +319,7 @@ func newValue(in smd.JSONSchema, namespace, methodName string, isParam, isReturn
 			value.ArrayItemType = in.Items["type"]
 		} else { // complex type
 			value.ArrayItemType = "object"
-			value.ModelName = strings.TrimPrefix(in.Items["$ref"], definitionsPrefix)
+			value.ModelName = strings.TrimPrefix(in.Items["$ref"], gen.DefinitionsPrefix)
 		}
 	}
 
@@ -355,7 +357,7 @@ func newValueFromProp(in smd.Property) Value {
 
 	// in is an object
 	if in.Type == smd.Object && in.Ref != "" {
-		value.ModelName = strings.TrimPrefix(in.Ref, definitionsPrefix)
+		value.ModelName = strings.TrimPrefix(in.Ref, gen.DefinitionsPrefix)
 	}
 
 	// in is an array
@@ -364,7 +366,7 @@ func newValueFromProp(in smd.Property) Value {
 			value.ArrayItemType = in.Items["type"]
 		} else { // complex type
 			value.ArrayItemType = "object"
-			value.ModelName = strings.TrimPrefix(in.Items["$ref"], definitionsPrefix)
+			value.ModelName = strings.TrimPrefix(in.Items["$ref"], gen.DefinitionsPrefix)
 		}
 	}
 

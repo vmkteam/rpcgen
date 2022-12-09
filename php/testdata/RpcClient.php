@@ -1,7 +1,5 @@
 <?php
-/**
-* PHP RPC Client by rpcgen
-*/
+/** Code generated from jsonrpc schema by rpcgen v2.4.0; DO NOT EDIT. */
 
 namespace JsonRpcClient;
 

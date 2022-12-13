@@ -46,7 +46,7 @@ func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Cl
 
 {{ range .Models }}
 type {{ .Name }} struct {
-	{{ range .Fields }}{{ if ne .Description "" }}// {{ .Description }}
+	{{ range .Fields }}{{ if ne .Description "" }} {{ .CommentDescription }}
 	{{ end }}{{ title .Name }} {{ if and .Optional (eq .ArrayItemType "")}}*{{ end }}{{ .GoType }} ` + "`json:\"{{ .Name }}{{if .Optional}},omitempty{{end}}\"`" + `
 {{ end }}
 }

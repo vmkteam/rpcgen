@@ -138,11 +138,7 @@ func (m Method) HasErrors() bool {
 
 // CommentDescription add to head of all lines two slashes
 func (m Method) CommentDescription() string {
-	if len(m.Description) == 0 {
-		return ""
-	}
-
-	return "// " + strings.ReplaceAll(m.Description, "\n", "\n// ")
+	return commentText(m.Description)
 }
 
 type Error struct {
@@ -185,6 +181,11 @@ type Value struct {
 // LocalModelName rename external packages model names: pkg.Model -> PkgModel
 func (v Value) LocalModelName() string {
 	return localModelName(v.ModelName)
+}
+
+// CommentDescription add to head of all lines two slashes
+func (v Value) CommentDescription() string {
+	return commentText(v.Description)
 }
 
 func localModelName(name string) string {
@@ -490,4 +491,13 @@ func convertDefinitionToModel(def smd.Definition, name string) Model {
 	}
 
 	return model
+}
+
+// commentText add to head of all lines two slashes
+func commentText(text string) string {
+	if text == "" {
+		return ""
+	}
+
+	return "// " + strings.ReplaceAll(text, "\n", "\n// ")
 }

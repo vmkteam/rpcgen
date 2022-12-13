@@ -1,6 +1,6 @@
 package gen
 
-const version = "2.4.0"
+const version = "2.4.1"
 
 const DefinitionsPrefix = "#/definitions/"
 

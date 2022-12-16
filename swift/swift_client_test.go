@@ -5,7 +5,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/vmkteam/rpcgen/v2/gen"
 	"github.com/vmkteam/zenrpc/v2"
 	"github.com/vmkteam/zenrpc/v2/testdata"
 )
@@ -26,11 +25,11 @@ func TestGenerateSwiftClient(t *testing.T) {
 		t.Fatalf("open test data file: %v", err)
 	}
 
-	// cut version from comparsion
-	generated = bytes.ReplaceAll(generated, []byte("v"+gen.DefaultGeneratorData().Version), []byte(""))
-	testData = bytes.ReplaceAll(testData, []byte("v"+gen.DefaultGeneratorData().Version), []byte(""))
+	// cut first line with version from comparsion
+	_, generatedBody, _ := bytes.Cut(generated, []byte{'\n'})
+	_, testDataBody, _ := bytes.Cut(testData, []byte{'\n'})
 
-	if !bytes.Equal(generated, testData) {
+	if !bytes.Equal(generatedBody, testDataBody) {
 		t.Fatalf("bad generator output")
 	}
 }

@@ -2,7 +2,7 @@
 	"openrpc": "1.2.6",
 	"info": {
 		"title": "test",
-		"version": "v0.0.0-9ac57ca8e88fda67daec2cbaa50d71bd"
+		"version": "v0.0.0-6920a46120f3837481a03bee56a8ac6a"
 	},
 	"servers": [
 		{
@@ -667,6 +667,7 @@
 					"ID",
 					"FirstName",
 					"LastName",
+					"BirthDate",
 					"Phone",
 					"Mobile",
 					"Deleted",
@@ -681,6 +682,9 @@
 						"type": "string"
 					},
 					"LastName": {
+						"type": "string"
+					},
+					"BirthDate": {
 						"type": "string"
 					},
 					"Phone": {

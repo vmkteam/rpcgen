@@ -3,6 +3,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/vmkteam/rpcgen)](https://goreportcard.com/report/github.com/vmkteam/rpcgen) [![Go Reference](https://pkg.go.dev/badge/github.com/vmkteam/rpcgen.svg)](https://pkg.go.dev/github.com/vmkteam/rpcgen)
 
 `rpcgen` is a JSON-RPC 2.0 client library generator for [zenrpc](https://github.com/vmkteam/zenrpc). It supports client generation for following languages:
+- Dart
 - Golang
 - PHP
 - TypeScript
@@ -45,6 +46,7 @@ import (
 	"net/http"
 
 	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/dart"
 	"github.com/vmkteam/rpcgen/v2/golang"
 	"github.com/vmkteam/rpcgen/v2/swift"
 	"github.com/vmkteam/zenrpc/v2"
@@ -59,6 +61,7 @@ func main() {
 	http.HandleFunc("/client.ts", rpcgen.Handler(gen.TSClient(nil)))
 	http.HandleFunc("/RpcClient.php", rpcgen.Handler(gen.PHPClient("")))
 	http.HandleFunc("/client.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{})))
+	http.HandleFunc("/client.dart", rpcgen.Handler(gen.DartClient(dart.Settings{ Part: "client"})))
 }
 ```
 
@@ -129,5 +132,46 @@ func main() {
 	}
 
 	http.HandleFunc("/client.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{"", typeMapper})))
+}
+```
+
+### Add custom Dart type mapper
+
+```go
+package main
+
+import (
+	"net/http"
+
+	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/dart"
+	"github.com/vmkteam/zenrpc/v2"
+	"github.com/vmkteam/zenrpc/v2/smd"
+)
+
+func main() {
+	rpc := zenrpc.NewServer(zenrpc.Options{})
+
+	gen := rpcgen.FromSMD(rpc.SMD())
+
+	typeMapper := func(in smd.JSONSchema, param dart.Parameter) dart.Parameter {
+		if in.Type == smd.Object {
+			switch in.TypeName {
+			case "Time", "Date":
+				param.Type = "String"
+			}
+		}
+		if in.Type == smd.Array {
+			switch in.TypeName {
+			case "[]Date", "[]Time":
+				param.Type = "List<String>"
+				param.ReturnType = "List<String>"
+			}
+		}
+		
+		return param
+	}
+
+	http.HandleFunc("/client.dart", rpcgen.Handler(gen.DartClient(dart.Settings{Part: "client", TypeMapper: typeMapper})))
 }
 ```

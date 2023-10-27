@@ -1,4 +1,4 @@
-// Code generated from jsonrpc schema by rpcgen v2.4.0; DO NOT EDIT.
+// Code generated from jsonrpc schema by rpcgen v2.4.2; DO NOT EDIT.
 
 package client
 
@@ -78,6 +78,7 @@ type ObjectsAbstractObject struct {
 type Person struct {
 	// Addresses Could be nil or len() == 0.
 	Addresses []Address `json:"Addresses"`
+	BirthDate string    `json:"BirthDate"`
 	// Deleted is flag for
 	Deleted   bool   `json:"Deleted"`
 	FirstName string `json:"FirstName"`

@@ -1,4 +1,4 @@
-package php
+package dart
 
 import (
 	"bytes"
@@ -9,26 +9,23 @@ import (
 	"github.com/vmkteam/zenrpc/v2/testdata"
 )
 
-func TestGeneratePHPClient(t *testing.T) {
+func TestGenerateDartClient(t *testing.T) {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
 	rpc.Register("catalogue", testdata.CatalogueService{})
 
-	cl := NewClient(rpc.SMD(), "")
+	cl := NewClient(rpc.SMD(), Settings{Part: "client"})
 
 	generated, err := cl.Generate()
 	if err != nil {
-		t.Fatalf("generate php client: %v", err)
+		t.Fatalf("generate dart client: %v", err)
 	}
 
-	testData, err := os.ReadFile("./testdata/RpcClient.php")
+	testData, err := os.ReadFile("./testdata/client.dart")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}
 
-	// cut first two lines with version from comparison
-	generated = bytes.TrimPrefix(generated, []byte("<?php\n"))
-	testData = bytes.TrimPrefix(testData, []byte("<?php\n"))
-
+	// cut first line with version from comparison
 	_, generatedBody, _ := bytes.Cut(generated, []byte{'\n'})
 	_, testDataBody, _ := bytes.Cut(testData, []byte{'\n'})
 

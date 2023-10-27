@@ -25,7 +25,7 @@ func TestGenerateSwiftClient(t *testing.T) {
 		t.Fatalf("open test data file: %v", err)
 	}
 
-	// cut first line with version from comparsion
+	// cut first line with version from comparison
 	_, generatedBody, _ := bytes.Cut(generated, []byte{'\n'})
 	_, testDataBody, _ := bytes.Cut(testData, []byte{'\n'})
 

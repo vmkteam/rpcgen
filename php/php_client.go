@@ -38,7 +38,7 @@ func NewClient(schema smd.Schema, phpNamespace string) *Generator {
 	return &Generator{schema: schema, phpNamespace: ns}
 }
 
-// Generate returns generate TypeScript client
+// Generate returns generate PHP client
 func (g *Generator) Generate() ([]byte, error) {
 	m := g.PHPModels()
 	m.GeneratorData = gen.DefaultGeneratorData()

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/vmkteam/rpcgen/v2/dart"
 	"github.com/vmkteam/rpcgen/v2/golang"
 	"github.com/vmkteam/rpcgen/v2/openrpc"
 	"github.com/vmkteam/rpcgen/v2/php"
@@ -40,6 +41,10 @@ func (g RPCGen) TSCustomClient(settings typescript.Settings) Generator {
 
 func (g RPCGen) SwiftClient(settings swift.Settings) Generator {
 	return swift.NewClient(g.schema, settings)
+}
+
+func (g RPCGen) DartClient(settings dart.Settings) Generator {
+	return dart.NewClient(g.schema, settings)
 }
 
 func (g RPCGen) OpenRPC(title, host string) Generator {

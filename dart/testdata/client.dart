@@ -1,4 +1,4 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.sdsd2; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.4.3; DO NOT EDIT.
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smd_annotations/annotations.dart';

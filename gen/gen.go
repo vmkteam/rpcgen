@@ -10,7 +10,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-const version = "2.4.2"
+const version = "2.4.3"
 
 const DefinitionsPrefix = "#/definitions/"
 
@@ -55,6 +55,17 @@ func GetMethodName(methodName string) string {
 	}
 
 	return arr[1]
+}
+
+func StringToSlice(in, separator string) []string {
+	s := strings.Split(in, separator)
+	var out []string
+	for _, str := range s {
+		if str != "" {
+			out = append(out, str)
+		}
+	}
+	return out
 }
 
 var TemplateFuncs = template.FuncMap{

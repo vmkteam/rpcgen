@@ -48,7 +48,7 @@ func (m Method) ParamsClass() string {
 
 type Parameter struct {
 	Name         string
-	Description  string
+	Description  []string
 	Type         string
 	BaseType     string
 	ReturnType   string
@@ -209,7 +209,7 @@ func (g *Generator) propertiesToParams(list smd.PropertyList) []Parameter {
 		p := Parameter{
 			Name:        prop.Name,
 			Optional:    prop.Optional,
-			Description: prop.Description,
+			Description: gen.StringToSlice(prop.Description, "\n"),
 		}
 
 		pType := dartType(prop.Type)
@@ -257,7 +257,7 @@ func (g *Generator) prepareParameters(in []smd.JSONSchema) []Parameter {
 func (g *Generator) prepareParameter(in smd.JSONSchema) Parameter {
 	out := Parameter{
 		Name:        in.Name,
-		Description: in.Description,
+		Description: gen.StringToSlice(in.Description, "\n"),
 		BaseType:    dartType(in.Type),
 		Optional:    in.Optional,
 		Properties:  g.propertiesToParams(in.Properties),

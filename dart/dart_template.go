@@ -7,14 +7,14 @@ import 'package:smd_annotations/annotations.dart';
 
 part '{{ .Part }}.g.dart';
 {{ range .Models }}
-{{- if .Description }}
-/// {{ .Description }}
+{{- range .Description }}
+/// {{ . }}
 {{- end }}
 @JsonSerializable()
 class {{ .Type }} {
   {{- range .Properties }}
-  {{- if .Description }}
-  /// {{ .Description }}
+  {{- range .Description }}
+  /// {{ . }}
   {{- end }}
   @JsonKey(name: '{{ .Name }}')
   final {{ .Type }}{{ if .Optional }}?{{ end }} {{ .Name }};
@@ -41,8 +41,8 @@ class {{ .Type }} {
 @JsonSerializable()
 class {{ title $namespaceName }}{{ .ParamsClass }} {
   {{- range .Parameters }}
-  {{- if .Description }}
-  /// {{ .Description }}
+  {{- range .Description }}
+  /// {{ . }}
   {{- end }}
   @JsonKey(name: '{{ .Name }}')
   final {{ .Type }}{{ if .Optional }}?{{ end }} {{ .Name }};

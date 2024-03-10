@@ -11,7 +11,7 @@ part '{{ .Part }}.g.dart';
 /// {{ . }}
 {{- end }}
 @JsonSerializable()
-class {{ .Type }} {
+class {{ .Type }} extends Equatable {
   {{- range .Properties }}
   {{- range .Description }}
   /// {{ . }}
@@ -30,6 +30,13 @@ class {{ .Type }} {
 
   factory {{ .Type }}.fromJson(Map<String, dynamic> json) =>
       _${{ .Type }}FromJson(json);
+
+  @override
+  List<Object?> get props => [
+        {{- range .Properties }}
+        {{ .Name }},
+        {{- end }}
+      ];
 }
 {{ end }}
 

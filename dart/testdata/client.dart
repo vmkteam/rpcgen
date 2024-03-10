@@ -1,4 +1,4 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.3; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.4.4; DO NOT EDIT.
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smd_annotations/annotations.dart';
@@ -6,7 +6,7 @@ import 'package:smd_annotations/annotations.dart';
 part 'client.g.dart';
 
 @JsonSerializable()
-class Campaign {
+class Campaign extends Equatable {
   @JsonKey(name: 'groups')
   final List<Group> groups;
   @JsonKey(name: 'id')
@@ -21,10 +21,16 @@ class Campaign {
 
   factory Campaign.fromJson(Map<String, dynamic> json) =>
       _$CampaignFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        groups,
+        id,
+      ];
 }
 
 @JsonSerializable()
-class Group {
+class Group extends Equatable {
   @JsonKey(name: 'child')
   final Group? child;
   @JsonKey(name: 'groups')
@@ -51,10 +57,20 @@ class Group {
 
   factory Group.fromJson(Map<String, dynamic> json) =>
       _$GroupFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        child,
+        groups,
+        id,
+        nodes,
+        sub,
+        title,
+      ];
 }
 
 @JsonSerializable()
-class SubGroup {
+class SubGroup extends Equatable {
   @JsonKey(name: 'id')
   final int id;
   @JsonKey(name: 'nodes')
@@ -72,6 +88,13 @@ class SubGroup {
 
   factory SubGroup.fromJson(Map<String, dynamic> json) =>
       _$SubGroupFromJson(json);
+
+  @override
+  List<Object?> get props => [
+        id,
+        nodes,
+        title,
+      ];
 }
 
 @JsonSerializable()

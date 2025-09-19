@@ -7,6 +7,7 @@ import Foundation
 extension {{ .Class }}: RPCMethod {
     public var rpcMethod: String {
         switch self {
+        case .batch(let requests): return requests.compactMap { $0.rpcMethod }.joined(separator: ",")
        	{{- range .Methods }}
         case .{{ .SafeName }}: return "{{ .Name }}"
        	{{- end }}
@@ -17,6 +18,8 @@ extension {{ .Class }}: RPCMethod {
 extension {{ .Class }}: RPCParameters {
     public var rpcParameters: [String: Any?]? {
         switch self {
+        case .batch:
+              return nil
 {{- $methodsLen := len .Methods }}
 {{- range $idx, $m := .Methods }}{{- $paramsLen := len .Parameters }}
         case {{ if gt $paramsLen 0 }}let {{ end }}.{{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range $index, $item := .Parameters }}{{ .Name }}{{ if (notLast $index $paramsLen) }}, {{ end }}{{ end }}){{ end }}:
@@ -28,7 +31,9 @@ extension {{ .Class }}: RPCParameters {
 }
 
 public enum {{ .Class }} {
-{{- range .Methods }}{{- $paramsLen := len .Parameters }}
+    /// Make batch requests.
+    case batch(requests: [{{ .Class }}])
+{{ range .Methods }}{{- $paramsLen := len .Parameters }}
     {{- range .Description }}
     {{- if ne . "" }}
     /// {{ . }}

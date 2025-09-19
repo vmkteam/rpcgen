@@ -1,12 +1,12 @@
 module github.com/vmkteam/rpcgen/v2
 
-go 1.19
+go 1.24.0
 
 require (
 	github.com/vmkteam/meta-schema/v2 v2.0.1
 	github.com/vmkteam/zenrpc v1.1.1
-	github.com/vmkteam/zenrpc/v2 v2.2.11
-	golang.org/x/text v0.14.0
+	github.com/vmkteam/zenrpc/v2 v2.2.12
+	golang.org/x/text v0.29.0
 )
 
 require (

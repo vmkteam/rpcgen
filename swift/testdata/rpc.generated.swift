@@ -1,10 +1,11 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.0; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.4.5; DO NOT EDIT.
 
 import Foundation
 
 extension RPCAPI: RPCMethod {
     public var rpcMethod: String {
         switch self {
+        case .batch(let requests): return requests.compactMap { $0.rpcMethod }.joined(separator: ",")
         case .catalogueFirst: return "catalogue.First"
         case .catalogueSecond: return "catalogue.Second"
         case .catalogueThird: return "catalogue.Third"
@@ -15,6 +16,8 @@ extension RPCAPI: RPCMethod {
 extension RPCAPI: RPCParameters {
     public var rpcParameters: [String: Any?]? {
         switch self {
+        case .batch:
+              return nil
         case let .catalogueFirst(groups):
             return ["groups": groups.any]
 
@@ -28,6 +31,9 @@ extension RPCAPI: RPCParameters {
 }
 
 public enum RPCAPI {
+    /// Make batch requests.
+    case batch(requests: [RPCAPI])
+
     /// - Returns: Bool
     case catalogueFirst(groups: [Group])
 

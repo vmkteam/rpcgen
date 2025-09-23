@@ -3,7 +3,6 @@ package swift
 import (
 	"bytes"
 	"os"
-	"reflect"
 	"testing"
 
 	"github.com/vmkteam/zenrpc/v2"
@@ -66,7 +65,7 @@ func TestGenerator_Generate(t *testing.T) {
 			_, generatedBody, _ := bytes.Cut(got, []byte{'\n'})
 			_, testDataBody, _ := bytes.Cut(testData, []byte{'\n'})
 
-			if !reflect.DeepEqual(generatedBody, testDataBody) {
+			if !bytes.Equal(generatedBody, testDataBody) {
 				t.Fatalf("bad generator output")
 			}
 		})

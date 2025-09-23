@@ -72,32 +72,32 @@ public struct {{ .Name }}: Codable, Hashable {
 const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
 
 import Foundation
-{{- range $service := .Protocols }}
+{{- range $service := .Namespaces }}
 
-protocol {{ $service.Class }}Networking {
+protocol {{ $service.Namespace }}Networking {
 {{- range $method := $service.Methods }}
     {{- range .Description }}
     {{- if ne . "" }}
     /// {{ . }}
     {{- end }}
     {{- end }}
-    func {{ enumCaseName $method.Name }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}?{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}) async -> Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError>
+    func {{ $method.SafeName }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}?{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}) async -> Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError>
 {{- end }}
 }
 
-extension Networking: {{ $service.Class }}Networking {
+extension Networking: {{ $service.Namespace }}Networking {
 {{- range $idx, $method := $service.Methods }}
     {{- range .Description }}
     {{- if ne . "" }}
     /// {{ . }}
     {{- end }}
     {{- end }}
-    func {{ enumCaseName $method.Name }}(
+    func {{  $method.SafeName }}(
         {{- range $index, $item := $method.Parameters -}}
             {{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}? = nil{{ end }}{{ if (notLast $index (len $method.Parameters)) }},{{ end }}
         {{- end -}}
     ) async -> Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError> {
-        await request(.{{ enumCaseName $method.Name }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}(){{ end }})
+        await request(.{{ $method.SafeName }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}(){{ end }})
     }
 {{- if (notLast $idx (len $service.Methods)) }}
 {{ end }}

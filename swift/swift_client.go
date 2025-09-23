@@ -74,15 +74,15 @@ type TypeMapper func(typeName string, in smd.Property, swiftType Parameter) Para
 
 type templateData struct {
 	gen.GeneratorData
-	Class     string
-	Methods   []Method
-	Models    []Model
-	Protocols []ProtocolData
+	Class      string
+	Methods    []Method
+	Models     []Model
+	Namespaces []NamespaceData
 }
 
-type ProtocolData struct {
-	Class   string
-	Methods []Method
+type NamespaceData struct {
+	Namespace string
+	Methods   []Method
 }
 
 type Generator struct {
@@ -103,19 +103,13 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 
 // Generate returns generated Swift client
 func (g *Generator) Generate() ([]byte, error) {
-	if g.settings.IsProtocol {
-		return g.protocolGenerate()
-	}
-	return g.rpcGenerate()
-}
-
-func (g *Generator) rpcGenerate() ([]byte, error) {
 	data := templateData{Class: defaultClass, GeneratorData: gen.DefaultGeneratorData()}
 	if g.settings.Class != "" {
 		data.Class = g.settings.Class
 	}
 
 	modelsMap := make(map[string]Model, 0)
+	services := make(map[string][]Method)
 	// iterate over all services
 	for serviceName, service := range g.schema.Services {
 		var (
@@ -139,6 +133,14 @@ func (g *Generator) rpcGenerate() ([]byte, error) {
 		}
 		method.Parameters = params
 		data.Methods = append(data.Methods, method)
+		if g.settings.IsProtocol {
+			parts := strings.SplitN(method.Name, ".", 2)
+			if len(parts) != 2 {
+				continue
+			}
+			serviceKey := parts[0]
+			services[serviceKey] = append(services[serviceKey], method)
+		}
 	}
 
 	for _, v := range modelsMap {
@@ -167,7 +169,32 @@ func (g *Generator) rpcGenerate() ([]byte, error) {
 			return index+1 != len
 		},
 	}
+
+	if g.settings.IsProtocol {
+		for serviceKey, methods := range services {
+			sort.Slice(methods, func(i, j int) bool {
+				return methods[i].Name < methods[j].Name
+			})
+
+			data.Namespaces = append(data.Namespaces, NamespaceData{
+				Namespace: cases.Title(language.Und).String(serviceKey),
+				Methods:   methods,
+			})
+		}
+
+		// sort amespaces
+		sort.Slice(data.Namespaces, func(i, j int) bool {
+			return data.Namespaces[i].Namespace < data.Namespaces[j].Namespace
+		})
+	}
+
+	var tmpl *template.Template
 	tmpl, err := template.New("swift_client").Funcs(funcMap).Parse(client)
+
+	if g.settings.IsProtocol {
+		tmpl, err = tmpl.Parse(protocolTemplate)
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -175,72 +202,6 @@ func (g *Generator) rpcGenerate() ([]byte, error) {
 	// compile template
 	var buf bytes.Buffer
 	if err := tmpl.Execute(&buf, data); err != nil {
-		return nil, err
-	}
-
-	return buf.Bytes(), nil
-}
-
-func (g *Generator) protocolGenerate() ([]byte, error) {
-	data := templateData{GeneratorData: gen.DefaultGeneratorData()}
-
-	services := make(map[string][]Method)
-	for serviceName, service := range g.schema.Services {
-		desc := linebreakRegex.ReplaceAllString(service.Description, "\n")
-		method := Method{
-			Name:        serviceName,
-			SafeName:    strings.ReplaceAll(serviceName, ".", ""),
-			Description: strings.Split(desc, "\n"),
-			Returns:     g.prepareParameter(service.Returns),
-		}
-
-		var params []Parameter
-		for _, param := range service.Parameters {
-			params = append(params, g.prepareParameter(param))
-		}
-		method.Parameters = params
-		parts := strings.SplitN(method.Name, ".", 2)
-		if len(parts) != 2 {
-			continue
-		}
-		serviceKey := parts[0]
-		method.SafeName = parts[1]
-		services[serviceKey] = append(services[serviceKey], method)
-	}
-
-	// sort methods
-	for serviceKey, methods := range services {
-		sort.Slice(methods, func(i, j int) bool {
-			return methods[i].Name < methods[j].Name
-		})
-
-		data.Protocols = append(data.Protocols, ProtocolData{
-			Class:   cases.Title(language.Und).String(serviceKey),
-			Methods: methods,
-		})
-	}
-
-	// sort protocols
-	sort.Slice(data.Protocols, func(i, j int) bool {
-		return data.Protocols[i].Class < data.Protocols[j].Class
-	})
-
-	funcMap := template.FuncMap{
-		"notLast": func(index int, len int) bool {
-			return index+1 != len
-		},
-		"enumCaseName": func(name string) string {
-			return strings.ReplaceAll(name, ".", "")
-		},
-	}
-
-	tmpl, err := template.New("swift_protocols").Funcs(funcMap).Parse(protocolTemplate)
-	if err != nil {
-		return nil, err
-	}
-
-	var buf bytes.Buffer
-	if err = tmpl.Execute(&buf, data); err != nil {
 		return nil, err
 	}
 

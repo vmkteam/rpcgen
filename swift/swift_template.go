@@ -74,7 +74,7 @@ const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .
 import Foundation
 {{- range $service := .Namespaces }}
 
-protocol {{ $service.Namespace }}Networking {
+protocol {{ title $service.Namespace }}Networking {
 {{- range $method := $service.Methods }}
     {{- range .Description }}
     {{- if ne . "" }}
@@ -85,7 +85,7 @@ protocol {{ $service.Namespace }}Networking {
 {{- end }}
 }
 
-extension Networking: {{ $service.Namespace }}Networking {
+extension Networking: {{ title $service.Namespace }}Networking {
 {{- range $idx, $method := $service.Methods }}
     {{- range .Description }}
     {{- if ne . "" }}

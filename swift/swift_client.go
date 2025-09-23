@@ -8,9 +8,6 @@ import (
 	"strings"
 	"text/template"
 
-	"golang.org/x/text/cases"
-	"golang.org/x/text/language"
-
 	"github.com/vmkteam/rpcgen/v2/gen"
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
@@ -108,8 +105,8 @@ func (g *Generator) Generate() ([]byte, error) {
 		data.Class = g.settings.Class
 	}
 
-	modelsMap := make(map[string]Model, 0)
-	services := make(map[string][]Method)
+	modelsMap := make(map[string]Model)
+	servicesMap := make(map[string][]Method)
 	// iterate over all services
 	for serviceName, service := range g.schema.Services {
 		var (
@@ -138,8 +135,7 @@ func (g *Generator) Generate() ([]byte, error) {
 			if len(parts) != 2 {
 				continue
 			}
-			serviceKey := parts[0]
-			services[serviceKey] = append(services[serviceKey], method)
+			servicesMap[parts[0]] = append(servicesMap[parts[0]], method)
 		}
 	}
 
@@ -164,20 +160,14 @@ func (g *Generator) Generate() ([]byte, error) {
 		})
 	}
 
-	funcMap := template.FuncMap{
-		"notLast": func(index int, len int) bool {
-			return index+1 != len
-		},
-	}
-
 	if g.settings.IsProtocol {
-		for serviceKey, methods := range services {
+		for namespace, methods := range servicesMap {
 			sort.Slice(methods, func(i, j int) bool {
 				return methods[i].Name < methods[j].Name
 			})
 
 			data.Namespaces = append(data.Namespaces, NamespaceData{
-				Namespace: cases.Title(language.Und).String(serviceKey),
+				Namespace: namespace,
 				Methods:   methods,
 			})
 		}
@@ -194,7 +184,7 @@ func (g *Generator) Generate() ([]byte, error) {
 		t = protocolTemplate
 	}
 
-	tmpl, err := template.New("swift_client").Funcs(funcMap).Parse(t)
+	tmpl, err := template.New("swift_client").Funcs(gen.TemplateFuncs).Parse(t)
 	if err != nil {
 		return nil, err
 	}

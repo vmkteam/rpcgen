@@ -188,13 +188,13 @@ func (g *Generator) Generate() ([]byte, error) {
 		})
 	}
 
-	var tmpl *template.Template
-	tmpl, err := template.New("swift_client").Funcs(funcMap).Parse(client)
-
+	// base template
+	t := client
 	if g.settings.IsProtocol {
-		tmpl, err = tmpl.Parse(protocolTemplate)
+		t = protocolTemplate
 	}
 
+	tmpl, err := template.New("swift_client").Funcs(funcMap).Parse(t)
 	if err != nil {
 		return nil, err
 	}

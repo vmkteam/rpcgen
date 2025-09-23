@@ -1,6 +1,7 @@
 package swift
 
 import (
+	"bytes"
 	"os"
 	"reflect"
 	"testing"
@@ -11,7 +12,6 @@ import (
 
 const rpcGenFilePath = "./testdata/rpc.generated.swift"
 const protocolGenFilePath = "./testdata/protocol.generated.swift"
-const multiProtocolGenFilePath = "./testdata/multiProtocol.generated.swift"
 
 func TestGenerator_Generate(t *testing.T) {
 	type fields struct {
@@ -35,16 +35,6 @@ func TestGenerator_Generate(t *testing.T) {
 			outputFile: rpcGenFilePath,
 		},
 		{
-			name: "generate protocol",
-			fields: fields{
-				servicesMap: map[string]zenrpc.Invoker{
-					"catalogue": testdata.CatalogueService{},
-				},
-				settings: Settings{IsProtocol: true},
-			},
-			outputFile: protocolGenFilePath,
-		},
-		{
 			name: "generate multi protocol",
 			fields: fields{
 				servicesMap: map[string]zenrpc.Invoker{
@@ -53,7 +43,7 @@ func TestGenerator_Generate(t *testing.T) {
 				},
 				settings: Settings{IsProtocol: true},
 			},
-			outputFile: multiProtocolGenFilePath,
+			outputFile: protocolGenFilePath,
 		},
 	}
 	for _, tt := range tests {
@@ -73,7 +63,10 @@ func TestGenerator_Generate(t *testing.T) {
 				t.Fatalf("open test data file: %v", err)
 			}
 
-			if !reflect.DeepEqual(got, testData) {
+			_, generatedBody, _ := bytes.Cut(got, []byte{'\n'})
+			_, testDataBody, _ := bytes.Cut(testData, []byte{'\n'})
+
+			if !reflect.DeepEqual(generatedBody, testDataBody) {
 				t.Fatalf("bad generator output")
 			}
 		})

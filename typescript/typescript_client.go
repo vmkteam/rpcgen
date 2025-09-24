@@ -30,6 +30,7 @@ type Settings struct {
 	TypeMapper        TypeMapper
 	ExcludedNamespace []string
 	WithClasses       bool
+	TypesOnly         bool
 }
 
 func NewClient(schema smd.Schema, settings Settings) *Generator {
@@ -94,6 +95,7 @@ type tsService struct {
 type tsModels struct {
 	gen.GeneratorData
 	WithClasses bool
+	TypesOnly   bool
 	Interfaces  []tsInterface
 	Namespaces  []tsServiceNamespace
 }
@@ -238,6 +240,7 @@ skipNS:
 	}
 
 	models.WithClasses = g.settings.WithClasses
+	models.TypesOnly = g.settings.TypesOnly
 
 	return models
 }

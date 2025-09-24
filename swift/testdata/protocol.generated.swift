@@ -27,57 +27,74 @@ protocol ArithNetworking {
 
 extension Networking: ArithNetworking {
     /// CheckError throws error is isErr true.
+	/// - Returns: Result<RpcError>
     func arithCheckError(isErr: Bool) async -> Result<RpcError> {
         await request(.arithCheckError(isErr: isErr))
     }
 
     /// CheckZenRPCError throws zenrpc error is isErr true.
+	/// - Returns: Result<RpcError>
     func arithCheckZenRPCError(isErr: Bool) async -> Result<RpcError> {
         await request(.arithCheckZenRPCError(isErr: isErr))
     }
 
     /// Divide divides two numbers.
-    func arithDivide(a: Int,b: Int) async -> Result<Quotient, RpcError> {
+	/// - Parameters:
+	///  - a : the a
+	///  - b : the b
+	/// - Returns: Result<Quotient, RpcError>
+    func arithDivide(a: Int, b: Int) async -> Result<Quotient, RpcError> {
         await request(.arithDivide(a: a, b: b))
     }
 
+	/// - Returns: Result<RpcError>
     func arithDoSomething() async -> Result<RpcError> {
         await request(.arithDoSomething())
     }
 
+	/// - Returns: Result<ModelPoint, RpcError>
     func arithDoSomethingWithPoint(p: ModelPoint) async -> Result<ModelPoint, RpcError> {
         await request(.arithDoSomethingWithPoint(p: p))
     }
 
+	/// - Returns: Result<[model.Point], RpcError>
     func arithGetPoints() async -> Result<[model.Point], RpcError> {
         await request(.arithGetPoints())
     }
 
     /// Multiply multiples two digits and returns result.
-    func arithMultiply(a: Int,b: Int) async -> Result<Int, RpcError> {
+	/// - Returns: Result<Int, RpcError>
+    func arithMultiply(a: Int, b: Int) async -> Result<Int, RpcError> {
         await request(.arithMultiply(a: a, b: b))
     }
 
     /// Pi returns math.Pi.
+	/// - Returns: Result<Double, RpcError>
     func arithPi() async -> Result<Double, RpcError> {
         await request(.arithPi())
     }
 
+	/// - Returns: Result<Bool, RpcError>
     func arithPositive() async -> Result<Bool, RpcError> {
         await request(.arithPositive())
     }
 
     /// Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.
-    func arithPow(base: Double,exp: Double? = nil) async -> Result<Double, RpcError> {
+	/// - Parameters:
+	///  - exp : exponent could be empty
+	/// - Returns: Result<Double, RpcError>
+    func arithPow(base: Double, exp: Double? = nil) async -> Result<Double, RpcError> {
         await request(.arithPow(base: base, exp: exp))
     }
 
     /// Sum sums two digits and returns error with error code as result and IP from context.
-    func arithSum(a: Int,b: Int) async -> Result<Bool, RpcError> {
+	/// - Returns: Result<Bool, RpcError>
+    func arithSum(a: Int, b: Int) async -> Result<Bool, RpcError> {
         await request(.arithSum(a: a, b: b))
     }
 
     /// SumArray returns sum all items from array
+	/// - Returns: Result<Double, RpcError>
     func arithSumArray(array: [Double]? = nil) async -> Result<Double, RpcError> {
         await request(.arithSumArray(array: array))
     }
@@ -91,14 +108,17 @@ protocol CatalogueNetworking {
 }
 
 extension Networking: CatalogueNetworking {
+	/// - Returns: Result<Bool, RpcError>
     func catalogueFirst(groups: [Group]) async -> Result<Bool, RpcError> {
         await request(.catalogueFirst(groups: groups))
     }
 
+	/// - Returns: Result<Bool, RpcError>
     func catalogueSecond(campaigns: [Campaign]) async -> Result<Bool, RpcError> {
         await request(.catalogueSecond(campaigns: campaigns))
     }
 
+	/// - Returns: Result<Campaign, RpcError>
     func catalogueThird() async -> Result<Campaign, RpcError> {
         await request(.catalogueThird())
     }

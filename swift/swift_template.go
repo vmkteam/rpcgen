@@ -92,9 +92,18 @@ extension Networking: {{ title $service.Namespace }}Networking {
     /// {{ . }}
     {{- end }}
     {{- end }}
+	{{- if hasParamDescriptions .Parameters }}
+	/// - Parameters:
+	{{- range .Parameters }}
+	{{- if ne .Description "" }}
+	///  - {{ .Name }} : {{ .Description }}
+	{{- end }}
+	{{- end }}
+	{{- end }}
+	/// - Returns: Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError>
     func {{  $method.SafeName }}(
         {{- range $index, $item := $method.Parameters -}}
-            {{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}? = nil{{ end }}{{ if (notLast $index (len $method.Parameters)) }},{{ end }}
+            {{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}? = nil{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}
         {{- end -}}
     ) async -> Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError> {
         await request(.{{ $method.SafeName }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}(){{ end }})

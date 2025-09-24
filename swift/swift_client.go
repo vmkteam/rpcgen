@@ -184,6 +184,8 @@ func (g *Generator) Generate() ([]byte, error) {
 		t = protocolTemplate
 	}
 
+	gen.TemplateFuncs["hasParamDescriptions"] = hasParamDescriptions
+
 	tmpl, err := template.New("swift_client").Funcs(gen.TemplateFuncs).Parse(t)
 	if err != nil {
 		return nil, err
@@ -350,6 +352,15 @@ func arrayType(items map[string]string) string {
 func needEscaping(name string) bool {
 	for _, keyword := range reservedKeywords {
 		if name == keyword {
+			return true
+		}
+	}
+	return false
+}
+
+func hasParamDescriptions(params []Parameter) bool {
+	for _, p := range params {
+		if p.Description != "" {
 			return true
 		}
 	}

@@ -81,7 +81,7 @@ protocol {{ title $service.Namespace }}Networking {
     /// {{ . }}
     {{- end }}
     {{- end }}
-    func {{ $method.SafeName }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}?{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}) async -> Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError>
+    func {{ $method.SafeName }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}?{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}) async -> {{ if $method.Returns.Type }}Result<{{ $method.Returns.Type }}, RpcError>{{ else }}RpcError?{{ end }}
 {{- end }}
 }
 
@@ -105,8 +105,8 @@ extension Networking: {{ title $service.Namespace }}Networking {
         {{- range $index, $item := $method.Parameters -}}
             {{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}? = nil{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}
         {{- end -}}
-    ) async -> Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError> {
-        await request(.{{ $method.SafeName }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}(){{ end }})
+    ) async -> {{ if $method.Returns.Type }}Result<{{ $method.Returns.Type }}, RpcError>{{ else }}RpcError?{{ end }} {
+        await request(.{{ $method.SafeName }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}{{ end }})
     }
 {{- if (notLast $idx (len $service.Methods)) }}
 {{ end }}

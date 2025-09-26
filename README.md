@@ -134,6 +134,28 @@ func main() {
 	http.HandleFunc("/client.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{"", typeMapper})))
 }
 ```
+### Generate Swift networking protocols 
+
+```go
+package main
+
+import (
+	"net/http"
+
+	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/swift"
+	"github.com/vmkteam/zenrpc/v2"
+	"github.com/vmkteam/zenrpc/v2/smd"
+)
+
+func main() {
+	rpc := zenrpc.NewServer(zenrpc.Options{})
+
+	gen := rpcgen.FromSMD(rpc.SMD())
+
+	http.HandleFunc("/networking.generated.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{IsProtocol: true})))
+}
+```
 
 ### Add custom Dart type mapper
 

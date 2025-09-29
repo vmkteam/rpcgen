@@ -71,9 +71,15 @@ type TypeMapper func(typeName string, in smd.Property, swiftType Parameter) Para
 
 type templateData struct {
 	gen.GeneratorData
-	Class   string
-	Methods []Method
-	Models  []Model
+	Class      string
+	Methods    []Method
+	Models     []Model
+	Namespaces []NamespaceData
+}
+
+type NamespaceData struct {
+	Namespace string
+	Methods   []Method
 }
 
 type Generator struct {
@@ -85,6 +91,7 @@ type Generator struct {
 type Settings struct {
 	Class      string
 	TypeMapper TypeMapper
+	IsProtocol bool
 }
 
 func NewClient(schema smd.Schema, settings Settings) *Generator {
@@ -98,7 +105,8 @@ func (g *Generator) Generate() ([]byte, error) {
 		data.Class = g.settings.Class
 	}
 
-	modelsMap := make(map[string]Model, 0)
+	modelsMap := make(map[string]Model)
+	servicesMap := make(map[string][]Method)
 	// iterate over all services
 	for serviceName, service := range g.schema.Services {
 		var (
@@ -122,6 +130,13 @@ func (g *Generator) Generate() ([]byte, error) {
 		}
 		method.Parameters = params
 		data.Methods = append(data.Methods, method)
+		if g.settings.IsProtocol {
+			parts := strings.SplitN(method.Name, ".", 2)
+			if len(parts) != 2 {
+				continue
+			}
+			servicesMap[parts[0]] = append(servicesMap[parts[0]], method)
+		}
 	}
 
 	for _, v := range modelsMap {
@@ -145,12 +160,33 @@ func (g *Generator) Generate() ([]byte, error) {
 		})
 	}
 
-	funcMap := template.FuncMap{
-		"notLast": func(index int, len int) bool {
-			return index+1 != len
-		},
+	if g.settings.IsProtocol {
+		for namespace, methods := range servicesMap {
+			sort.Slice(methods, func(i, j int) bool {
+				return methods[i].Name < methods[j].Name
+			})
+
+			data.Namespaces = append(data.Namespaces, NamespaceData{
+				Namespace: namespace,
+				Methods:   methods,
+			})
+		}
+
+		// sort amespaces
+		sort.Slice(data.Namespaces, func(i, j int) bool {
+			return data.Namespaces[i].Namespace < data.Namespaces[j].Namespace
+		})
 	}
-	tmpl, err := template.New("swift_client").Funcs(funcMap).Parse(client)
+
+	// base template
+	t := client
+	if g.settings.IsProtocol {
+		t = protocolTemplate
+	}
+
+	gen.TemplateFuncs["hasParamDescriptions"] = hasParamDescriptions
+
+	tmpl, err := template.New("swift_client").Funcs(gen.TemplateFuncs).Parse(t)
 	if err != nil {
 		return nil, err
 	}
@@ -162,7 +198,6 @@ func (g *Generator) Generate() ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
-
 }
 
 // propertiesToParams convert smd.PropertyList to []Parameter
@@ -317,6 +352,15 @@ func arrayType(items map[string]string) string {
 func needEscaping(name string) bool {
 	for _, keyword := range reservedKeywords {
 		if name == keyword {
+			return true
+		}
+	}
+	return false
+}
+
+func hasParamDescriptions(params []Parameter) bool {
+	for _, p := range params {
+		if p.Description != "" {
 			return true
 		}
 	}

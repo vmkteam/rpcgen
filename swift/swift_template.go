@@ -68,3 +68,48 @@ public struct {{ .Name }}: Codable, Hashable {
 }
 {{ end }}
 `
+
+const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+
+import Foundation
+{{- range $service := .Namespaces }}
+
+protocol {{ title $service.Namespace }}Networking {
+{{- range $method := $service.Methods }}
+    {{- range .Description }}
+    {{- if ne . "" }}
+    /// {{ . }}
+    {{- end }}
+    {{- end }}
+    func {{ $method.SafeName }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}?{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}) async -> {{ if $method.Returns.Type }}Result<{{ $method.Returns.Type }}, RpcError>{{ else }}RpcError?{{ end }}
+{{- end }}
+}
+
+extension Networking: {{ title $service.Namespace }}Networking {
+{{- range $idx, $method := $service.Methods }}
+    {{- range .Description }}
+    {{- if ne . "" }}
+    /// {{ . }}
+    {{- end }}
+    {{- end }}
+	{{- if hasParamDescriptions .Parameters }}
+	/// - Parameters:
+	{{- range .Parameters }}
+	{{- if ne .Description "" }}
+	///  - {{ .Name }} : {{ .Description }}
+	{{- end }}
+	{{- end }}
+	{{- end }}
+	/// - Returns: Result<{{ if $method.Returns.Type }}{{ $method.Returns.Type }}, {{ else }}{{ end }}RpcError>
+    func {{  $method.SafeName }}(
+        {{- range $index, $item := $method.Parameters -}}
+            {{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}? = nil{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}
+        {{- end -}}
+    ) async -> {{ if $method.Returns.Type }}Result<{{ $method.Returns.Type }}, RpcError>{{ else }}RpcError?{{ end }} {
+        await request(.{{ $method.SafeName }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}{{ end }})
+    }
+{{- if (notLast $idx (len $service.Methods)) }}
+{{ end }}
+{{- end }}
+}
+{{ end }}`

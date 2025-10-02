@@ -90,6 +90,7 @@ type tsService struct {
 	HasParams bool
 	Params    string
 	Response  string
+	Comment   string
 }
 
 type tsModels struct {
@@ -202,6 +203,8 @@ skipNS:
 			nIdx = len(models.Namespaces) - 1
 		}
 
+		fmt.Printf("[%s] Description: %q\n", serviceName, service.Description)
+
 		// add service to TypeScript services
 		respService := tsService{
 			Namespace: namespace,
@@ -210,6 +213,7 @@ skipNS:
 			HasParams: false,
 			Params:    "",
 			Response:  respType.Type,
+			Comment:   service.Description,
 		}
 		if len(service.Parameters) > 0 {
 			respService.HasParams = true

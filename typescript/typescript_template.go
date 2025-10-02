@@ -31,6 +31,11 @@ export interface RpcMethods {
   {{ .Name }}: {
 {{- $lenS := len .Services }}
 {{- range $i, $e := .Services }}
+{{- if ne .Comment "" }}
+    /**
+     * {{ .Comment }}
+     */
+{{- end }}
     {{ .NameLCF }}({{ if .HasParams }}params: {{ .Params }}{{ end }}): Promise<{{ .Response }}>{{ if ne $i $lenS }},{{ end }}
 {{- end }}
   }{{ if ne $i $lenN }},{{ end }}
@@ -43,6 +48,11 @@ export const factory = (send: any) => ({
   {{ .Name }}: {
 {{- $lenS := len .Services }}
 {{- range $i, $e := .Services }}
+{{- if ne .Comment "" }}
+    /**
+     * {{ .Comment }}
+     */
+{{- end }}
     {{ .NameLCF }}({{ if .HasParams }}params: {{ .Params }}{{ end }}): Promise<{{ .Response }}> {
       return send('{{ .Namespace }}.{{ .Name }}'{{ if .HasParams }}, params{{ end }})
     }{{ if ne $i $lenS }},{{ end }}

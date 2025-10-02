@@ -58,3 +58,28 @@ func TestGenerateTypeScriptClasses(t *testing.T) {
 		t.Fatalf("bad generator output")
 	}
 }
+
+func TestGenerateTypeScriptTypesOnly(t *testing.T) {
+	rpc := zenrpc.NewServer(zenrpc.Options{})
+	rpc.Register("catalogue", testdata.CatalogueService{})
+
+	cl := NewClient(rpc.SMD(), Settings{TypesOnly: true})
+
+	generated, err := cl.Generate()
+	if err != nil {
+		t.Fatalf("generate typescript client: %v", err)
+	}
+
+	testData, err := os.ReadFile("./testdata/catalogue_with_types_only.ts")
+	if err != nil {
+		t.Fatalf("open test data file: %v", err)
+	}
+
+	// cut first line with version from comparsion
+	_, generatedBody, _ := bytes.Cut(generated, []byte{'\n'})
+	_, testDataBody, _ := bytes.Cut(testData, []byte{'\n'})
+
+	if !bytes.Equal(generatedBody, testDataBody) {
+		t.Fatalf("bad generator output")
+	}
+}

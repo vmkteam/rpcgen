@@ -10,7 +10,7 @@ import (
 	"golang.org/x/text/language"
 )
 
-const version = "2.4.6"
+const version = "2.4.7"
 
 const DefinitionsPrefix = "#/definitions/"
 

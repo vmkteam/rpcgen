@@ -203,8 +203,6 @@ skipNS:
 			nIdx = len(models.Namespaces) - 1
 		}
 
-		fmt.Printf("[%s] Description: %q\n", serviceName, service.Description)
-
 		// add service to TypeScript services
 		respService := tsService{
 			Namespace: namespace,

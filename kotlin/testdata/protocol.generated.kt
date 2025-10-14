@@ -4,6 +4,7 @@ package api
 import com.google.gson.reflect.TypeToken
 import api.model.*
 import java.time.ZonedDateTime
+import java.time.LocalTime
 
 interface Api : Transport {
 
@@ -16,6 +17,7 @@ interface Api : Transport {
      *    "500": "test error",
      *
      *
+     * @return 
      */
     fun arithCheckError(
         isErr: Boolean,
@@ -29,13 +31,14 @@ interface Api : Transport {
 
     /**
      * CheckZenRPCError throws zenrpc error is isErr true.
-     * Вторая строка описания
+     * Second description row
      *
      * Коды ошибок:
      *
      *    "500": "test error",
      *
      *
+     * @return 
      */
     fun arithCheckZenRPCError(
         isErr: Boolean,
@@ -55,8 +58,9 @@ interface Api : Transport {
      *    "401": "we do not serve 1",
      *
      *
-     * @param a the a
-     * @param b the b
+     * @param a
+     * @param b
+     * @return 
      */
     fun arithDivide(
         a: Int,
@@ -78,8 +82,16 @@ interface Api : Transport {
         "arith.DoSomething",
     )
 
+    fun arithDoSomethingV2(
+        vararg transportOptions: TransportOption,
+    ) = request(
+        transportOptions,
+        object : TypeToken<ApiResponse<ExternalData>>() {},
+        "arith.DoSomethingV2",
+    )
+
     /**
-     * @return Point test description in return
+     * @return 
      */
     fun arithDoSomethingWithPoint(
         p: Point,
@@ -103,6 +115,7 @@ interface Api : Transport {
 
     /**
      * Multiply multiples two digits and returns result.
+     * @return 
      */
     fun arithMultiply(
         a: Int,
@@ -118,6 +131,7 @@ interface Api : Transport {
 
     /**
      * Pi returns math.Pi.
+     * @return 
      */
     fun arithPi(
         vararg transportOptions: TransportOption,
@@ -137,7 +151,8 @@ interface Api : Transport {
 
     /**
      * Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.
-     * @param exp exponent could be empty
+     * @param exp
+     * @return 
      */
     fun arithPow(
         base: Float,
@@ -153,6 +168,7 @@ interface Api : Transport {
 
     /**
      * Sum sums two digits and returns error with error code as result and IP from context.
+     * @return 
      */
     fun arithSum(
         a: Int,
@@ -168,6 +184,7 @@ interface Api : Transport {
 
     /**
      * SumArray returns sum all items from array
+     * @return 
      */
     fun arithSumArray(
         array: List<Float>?,

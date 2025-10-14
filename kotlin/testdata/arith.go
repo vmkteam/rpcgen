@@ -1,4 +1,4 @@
-package service
+package testdata
 
 import (
 	"context"
@@ -13,25 +13,28 @@ import (
 type ArithService struct{ zenrpc.Service }
 
 type Point struct {
-	X, Y            int     // coordinate
-	Z               int     `json:"-"`
-	ID              int     `json:"id"`              // version id - 1
-	BaseID          int     `json:"baseId"`          // version id - 2
-	SecondID        int     `json:"secondID"`        // version id - 3
-	CreatedAt       string  `json:"createdAt"`       // version date - 1
-	UpdatedAt       string  `json:"updatedAt"`       // version date - 2
-	ManualChangedAt string  `json:"manualChangedAt"` // version date - 3
-	NewLat          float64 `json:"newLat"`          // version group geo coordinate № - 1
-	NewLon          float64 `json:"newLon"`          // version group geo coordinate № - 1
-	Lat             float64 `json:"lat"`             // version group geo coordinate № - 2
-	Lon             float64 `json:"lon"`             // version group geo coordinate № - 2
-	Latitude        float64 `json:"latitude"`        // version group geo coordinate № - 3
-	Longitude       float64 `json:"longitude"`       // version group geo coordinate № - 3
-	BaseFloat       float64 `json:"baseFloat"`       // version group float - 1
-	SecondFloat     float32 `json:"secondFloat"`     // version group float - 2
-	EmptyString     *string `json:"emptyString"`
-	Name            string  `json:"name"`
-	SecondPoints    []Point `json:"secondPoints"`
+	X, Y            int       // coordinate
+	Z               int       `json:"-"`
+	ID              int       `json:"id"`              // version id - 1
+	BaseID          int       `json:"baseId"`          // version id - 2
+	SecondID        int       `json:"secondID"`        // version id - 3
+	CreatedAt       string    `json:"createdAt"`       // version date - 1
+	UpdatedAt       string    `json:"updatedAt"`       // version date - 2
+	ManualChangedAt string    `json:"manualChangedAt"` // version date - 3
+	NewLat          float64   `json:"newLat"`          // version group geo coordinate № - 1
+	NewLon          float64   `json:"newLon"`          // version group geo coordinate № - 1
+	Lat             float64   `json:"lat"`             // version group geo coordinate № - 2
+	Lon             float64   `json:"lon"`             // version group geo coordinate № - 2
+	Latitude        float64   `json:"latitude"`        // version group geo coordinate № - 3
+	Longitude       float64   `json:"longitude"`       // version group geo coordinate № - 3
+	BaseFloat       float64   `json:"baseFloat"`       // version group float - 1
+	SecondFloat     float32   `json:"secondFloat"`     // version group float - 2
+	EmptyString     *string   `json:"emptyString"`
+	Name            string    `json:"name"`
+	SecondPoints    []Point   `json:"secondPoints"`
+	NextQuotient    Quotient  `json:"nextQuotient"`
+	SecondQuotient  *Quotient `json:"secondQuotient"`
+	Class           string    `json:"class"`
 }
 
 type SecondPoint struct {
@@ -50,6 +53,10 @@ func (as ArithService) Positive() (bool, *zenrpc.Error) {
 
 func (ArithService) DoSomething() {
 	// some optimistic operations
+}
+func (ArithService) DoSomethingV2() ExternalData {
+	// some optimistic operations
+	return ExternalData{}
 }
 
 func (ArithService) GetPoints() []Point {
@@ -97,9 +104,17 @@ type Quotient struct {
 	Quo int
 
 	// Rem docs
-	Rem     int     `json:"rem"`
-	BaseRow string  `json:"baseRow"`
-	RowNil  *string `json:"rowNil"`
+	Rem     int             `json:"rem"`
+	BaseRow string          `json:"baseRow"`
+	RowNil  *string         `json:"rowNil"`
+	Data    CycleInitStruct `json:"data"`
+}
+
+type CycleInitStruct struct {
+	IsCycleInit bool `json:"isCycleInit"`
+}
+type ExternalData struct {
+	Name string `json:"name"`
 }
 
 // Divide divides two numbers.

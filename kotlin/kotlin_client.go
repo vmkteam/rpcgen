@@ -15,6 +15,7 @@ import (
 
 const (
 	BasePackageAPI = "api"
+	BaseClass      = "Api"
 	Bool           = "Boolean"
 	Int            = "Int"
 	Double         = "Double"
@@ -23,6 +24,7 @@ const (
 	Long           = "Long"
 	Timestamp      = "ZonedDateTime"
 	List           = "List"
+	Map            = "Map"
 
 	DefaultBoolFalse = "false"
 	DefaultString    = "\"\""
@@ -31,6 +33,8 @@ const (
 	DefaultFloat     = "0f"
 	DefaultTimestamp = "ZonedDateTime.now()"
 	DefaultList      = "emptyList()"
+	DefaultMap       = "emptyMap()"
+	DefaultLocalTime = "LocalTime.now()"
 )
 
 var (
@@ -51,6 +55,9 @@ var (
 		"Latitude":  {},
 		"Longitude": {},
 	}
+	reservedKeywords = []string{"as", "as?", "break", "class", "continue", "do", "else", "false", "for", "fun", "if",
+		"in", "!in", "interface", "is", "!is", "null", "object", "package", "return", "super", "this", "throw", "true",
+		"try", "typealias", "typeof", "val", "var", "when", "while"}
 )
 
 type templateData struct {
@@ -58,6 +65,7 @@ type templateData struct {
 	Methods    []Method
 	Models     []Model
 	PackageAPI string
+	Class      string
 }
 
 type Method struct {
@@ -77,22 +85,26 @@ type Model struct {
 }
 
 type Parameter struct {
-	Name         string
-	Description  string
-	Type         string
-	BaseType     string
-	ReturnType   string
-	Optional     bool
-	DefaultValue string
-	IsObject     bool
-	Properties   []Parameter
+	Name             string
+	Description      string
+	Type             string
+	BaseType         string
+	ReturnType       string
+	Optional         bool
+	DefaultValue     string
+	IsObject         bool
+	DecodableDefault string
+	Properties       []Parameter
 }
 
 type Settings struct {
 	Class      string
 	IsProtocol bool
 	PackageAPI string
+	TypeMapper TypeMapper
 }
+
+type TypeMapper func(typeName string, in smd.Property, kotlinType Parameter) Parameter
 
 type Generator struct {
 	schema   smd.Schema
@@ -116,7 +128,11 @@ func (g *Generator) fillTemplateData() templateData {
 		g.settings.PackageAPI = BasePackageAPI
 	}
 
-	data := templateData{GeneratorData: gen.DefaultGeneratorData(), PackageAPI: g.settings.PackageAPI}
+	if g.settings.Class == "" {
+		g.settings.Class = BaseClass
+	}
+
+	data := templateData{GeneratorData: gen.DefaultGeneratorData(), PackageAPI: g.settings.PackageAPI, Class: g.settings.Class}
 
 	modelsMap := make(map[string]Model)
 	servicesMap := make(map[string][]Method)
@@ -160,26 +176,77 @@ func (g *Generator) fillTemplateData() templateData {
 		data.Models = append(data.Models, v)
 	}
 
-	initialModels := make(map[string]struct{})
+	g.fillIsInitial(&data)
+	g.sortTemplateData(&data)
+	g.prepareModelFieldName(&data)
+
+	return data
+}
+
+func (g *Generator) fillIsInitial(data *templateData) {
+	modelByName := make(map[string]*Model, len(data.Models))
+	for i := range data.Models {
+		modelByName[data.Models[i].Name] = &data.Models[i]
+	}
+
+	initialMap := make(map[string]struct{})
+
+	// first step - search from all methods and find all model from method params
 	for _, m := range data.Methods {
-		if len(m.Parameters) > 0 {
-			for _, param := range m.Parameters {
-				if param.IsObject {
-					initialModels[param.ReturnType] = struct{}{}
+		for _, p := range m.Parameters {
+			if p.IsObject {
+				typ := p.Type
+				if typ == "" {
+					typ = p.ReturnType
+				}
+				checkModelName(typ, modelByName, initialMap)
+			}
+		}
+	}
+
+	// init loop for initialMap
+	for loopWithChanged := true; loopWithChanged; {
+		loopWithChanged = false
+		for t := range initialMap {
+			md := modelByName[t]
+			if md == nil {
+				continue
+			}
+			for _, f := range md.Fields {
+				if f.IsObject {
+					if _, ok := initialMap[f.Type]; !ok {
+						// when find new modelName - use checkModelName and add next cycle
+						checkModelName(f.Type, modelByName, initialMap)
+						loopWithChanged = true
+					}
 				}
 			}
 		}
 	}
 
-	for i := range data.Models {
-		if _, ok := initialModels[data.Models[i].Name]; ok {
-			data.Models[i].IsInitial = true
+	for name := range initialMap {
+		if md := modelByName[name]; md != nil {
+			md.IsInitial = true
 		}
 	}
+}
 
-	g.sortTemplateData(&data)
+func checkModelName(name string, modelByName map[string]*Model, initialMap map[string]struct{}) {
+	if name == "" {
+		return
+	}
+	if _, ok := modelByName[name]; !ok {
+		return
+	}
+	initialMap[name] = struct{}{}
+}
 
-	return data
+func (g *Generator) prepareModelFieldName(data *templateData) {
+	for i := range data.Models {
+		for j := range data.Models[i].Fields {
+			data.Models[i].Fields[j].Name = formattedReservedKey(data.Models[i].Fields[j].Name)
+		}
+	}
 }
 
 func (g *Generator) sortTemplateData(data *templateData) {
@@ -220,7 +287,7 @@ func (g *Generator) executeTemplate(data templateData) ([]byte, error) {
 }
 
 // propertiesToParams convert smd.PropertyList to []Parameter
-func (g *Generator) propertiesToParams(list smd.PropertyList) []Parameter {
+func (g *Generator) propertiesToParams(typeName string, list smd.PropertyList) []Parameter {
 	parameters := make([]Parameter, 0, len(list))
 	for _, prop := range list {
 		p := Parameter{
@@ -236,6 +303,7 @@ func (g *Generator) propertiesToParams(list smd.PropertyList) []Parameter {
 		}
 
 		if prop.Type == smd.Array {
+			prop.Items["name"] = p.Name
 			pType = arrayType(prop.Items, false)
 		}
 
@@ -243,6 +311,9 @@ func (g *Generator) propertiesToParams(list smd.PropertyList) []Parameter {
 
 		p.DefaultValue = kotlinDefault(pType)
 
+		if g.settings.TypeMapper != nil {
+			p = g.settings.TypeMapper(typeName, prop, p)
+		}
 		parameters = append(parameters, p)
 	}
 	return parameters
@@ -268,7 +339,7 @@ func (g *Generator) prepareParameter(in smd.JSONSchema) Parameter {
 		Description: in.Description,
 		BaseType:    kotlinType(in.Type),
 		Optional:    in.Optional,
-		Properties:  g.propertiesToParams(in.Properties),
+		Properties:  g.propertiesToParams(in.TypeName, in.Properties),
 	}
 
 	pType := out.BaseType
@@ -289,6 +360,7 @@ func (g *Generator) prepareParameter(in smd.JSONSchema) Parameter {
 	out.Type = pType
 
 	if in.Type == smd.Array {
+		in.Items["name"] = in.Name
 		out.Type = arrayType(in.Items, false)
 		out.ReturnType = arrayType(in.Items, true)
 	}
@@ -299,7 +371,7 @@ func (g *Generator) prepareParameter(in smd.JSONSchema) Parameter {
 // defToModelMap convert smd.Definition to Model and add to models map
 func (g *Generator) defToModelMap(modelMap map[string]Model, definitions map[string]smd.Definition) {
 	for name, def := range definitions {
-		modelMap[name] = Model{Name: name, Fields: g.propertiesToParams(def.Properties)}
+		modelMap[name] = Model{Name: name, Fields: g.propertiesToParams(name, def.Properties)}
 	}
 }
 
@@ -348,7 +420,11 @@ func kotlinDefault(smdType string) string {
 		return val
 	}
 
-	if strings.Contains(smdType, List) {
+	if strings.HasPrefix(smdType, List) {
+		return DefaultList
+	}
+
+	if strings.HasPrefix(smdType, Map) {
 		return DefaultList
 	}
 
@@ -372,7 +448,10 @@ func kotlinTypeDouble(name string) bool {
 
 // kotlinTypeID check if property is ID set type Long
 func kotlinTypeID(name string) bool {
-	return name == id || strings.HasSuffix(name, strings.ToUpper(id)) || strings.HasSuffix(name, "Id")
+	return name == id ||
+		strings.HasSuffix(name, strings.ToUpper(id)) ||
+		strings.HasSuffix(name, "Id") ||
+		strings.HasSuffix(name, "Ids")
 }
 
 // kotlinTypeTimestamp check if is time property set Timestamp
@@ -383,7 +462,7 @@ func kotlinTypeTimestamp(name string) bool {
 func arrayType(items map[string]string, isReturnType bool) string {
 	var subType string
 	if scalar, ok := items["type"]; ok {
-		subType = kotlinType(scalar)
+		subType = kotlinType(scalar, items["name"])
 	}
 	if ref, ok := items["$ref"]; ok {
 		subType = strings.TrimPrefix(ref, gen.DefinitionsPrefix)
@@ -399,4 +478,14 @@ func arrayType(items map[string]string, isReturnType bool) string {
 // hasDescriptions check description
 func hasDescriptions(m Method) bool {
 	return m.Returns.Description != "" || len(m.Description) > 0 || len(m.Parameters) > 0
+}
+
+// formattedReservedKey formatted if key exist in reservedKeywords
+func formattedReservedKey(str string) string {
+	for _, keyword := range reservedKeywords {
+		if str == keyword {
+			return fmt.Sprintf("`%s`", str)
+		}
+	}
+	return str
 }

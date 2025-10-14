@@ -17,7 +17,7 @@ data class {{ $model.Name }}(
      */
     {{- end }}
     {{- if $model.IsInitial }}
-    val {{ .Name }}: {{ .Type }}{{ if .Optional }}? = null{{ else }} = {{ .DefaultValue}}{{ end }},
+    val {{ .Name }}: {{ .Type }}{{ if .Optional }}? = null{{ else }} = {{ .DefaultValue}}{{ if .IsObject}}(){{ else }}{{ end }}{{ end }},
     {{- else }}
     val {{ .Name }}: {{ .Type }}{{ if .Optional }}?{{ else }}{{ end }},
     {{- end }}
@@ -31,8 +31,9 @@ package {{ .PackageAPI }}
 import com.google.gson.reflect.TypeToken
 import {{ .PackageAPI }}.model.*
 import java.time.ZonedDateTime
+import java.time.LocalTime
 
-interface Api : Transport {
+interface {{ .Class }} : Transport {
 {{- range .Methods }}
 {{  if  hasDescriptions . }}
     /**
@@ -54,13 +55,11 @@ interface Api : Transport {
 {{ if (len .Parameters) }}
     {{- range .Parameters }}
         {{- if ne .Description "" }}
-     * @param {{ .Name }} {{ .Description }}
+     * @param {{ .Name }} 
         {{- end }}
     {{- end }}
 {{- end }}
-{{- if ne .Returns.Description  "" }}
-     * @return {{ .Returns.Description }}
-{{- end }}
+     * @return 
      */
 {{- end }}
     fun {{ .SafeName }}(

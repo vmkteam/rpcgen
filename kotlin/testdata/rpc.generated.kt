@@ -4,6 +4,14 @@ import java.time.LocalTime
 import java.time.ZonedDateTime
 
 
+data class CycleInitStruct(
+    val isCycleInit: Boolean = false,
+)
+
+data class ExternalData(
+    val name: String,
+)
+
 data class Point(
     /**
      * coordinate
@@ -21,6 +29,7 @@ data class Point(
      * version id - 2
      */
     val baseId: Long = 0,
+    val `class`: String = "",
     /**
      * version date - 1
      */
@@ -59,6 +68,7 @@ data class Point(
      * version group geo coordinate № - 1
      */
     val newLon: Double = 0.0,
+    val nextQuotient: Quotient = Quotient(),
     /**
      * version group float - 2
      */
@@ -68,6 +78,7 @@ data class Point(
      */
     val secondID: Long = 0,
     val secondPoints: List<Point> = emptyList(),
+    val secondQuotient: Quotient? = null,
     /**
      * version date - 2
      */
@@ -78,12 +89,13 @@ data class Quotient(
     /**
      * Quo docs
      */
-    val Quo: Int,
-    val baseRow: String,
+    val Quo: Int = 0,
+    val baseRow: String = "",
+    val data: CycleInitStruct = CycleInitStruct(),
     /**
      * Rem docs
      */
-    val rem: Int,
-    val rowNil: String?,
+    val rem: Int = 0,
+    val rowNil: String? = null,
 )
 

@@ -8,6 +8,7 @@
 - PHP
 - TypeScript
 - Swift
+- Kotlin
 - OpenRPC schema
 
 ## Examples
@@ -154,6 +155,50 @@ func main() {
 	gen := rpcgen.FromSMD(rpc.SMD())
 
 	http.HandleFunc("/networking.generated.swift", rpcgen.Handler(gen.SwiftClient(swift.Settings{IsProtocol: true})))
+}
+```
+
+### Generate Kotlin networking protocols, rpc models and custom type mapper
+Kotlin settings have a lot of properties:
+- Class - custom interface name. Default value: `kotlin.BaseClass`
+- PackageAPI - custom package name. Default value: `kotlin.BasePackageAPI`
+- Imports - optional list of imports in interface.
+- IsProtocol - flag controls the output type. Set to `true` to generate a Kotlin interface for the JSON-RPC client, or set to `false` to generate the corresponding data class models.
+- TypeMapper - function allows you to implement custom logic for converting schema types into specific Kotlin types.
+```go
+package main
+
+import (
+	"fmt"
+	"net/http"
+
+	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/kotlin"
+	"github.com/vmkteam/zenrpc/v2"
+	"github.com/vmkteam/zenrpc/v2/smd"
+)
+
+func main() {
+	rpc := zenrpc.NewServer(zenrpc.Options{})
+
+	gen := rpcgen.FromSMD(rpc.SMD())
+
+	kotlinTypeMapper := func(typeName string, in smd.Property, param kotlin.Parameter) kotlin.Parameter {
+		switch typeName {
+		case "CustomMapType":
+				param.Type = "Map<String, String>"
+				param.DecodableDefault = kotlin.DefaultMap
+		case "Group":
+			if in.Name == "group"{
+				param.Type = fmt.Sprintf("Map<Int, %s>", param.Type)
+				param.DecodableDefault = kotlin.DefaultMap
+			}
+		}
+		return param
+	}
+	
+	http.HandleFunc("/networking.generated.kt", rpcgen.Handler(gen.KotlinClient(kotlin.Settings{PackageAPI: "example.api", IsProtocol: true, TypeMapper: kotlinTypeMapper})))
+	http.HandleFunc("/rpc.generated.kt", rpcgen.Handler(gen.KotlinClient(kotlin.Settings{Class: "ExampleApi", TypeMapper: kotlinTypeMapper, PackageAPI: "example.api", Imports: []string{"exampleImport"}})))
 }
 ```
 

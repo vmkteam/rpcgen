@@ -24,12 +24,35 @@ export class {{ .ModelName }} implements {{ .Name }} {
 {{ end }}
 
 {{- end }}
+{{- if .TypesOnly }}
+export interface RpcMethods {
+{{- $lenN := len .Namespaces }}
+{{- range $i,$e := .Namespaces }}
+  {{ .Name }}: {
+{{- $lenS := len .Services }}
+{{- range $i, $e := .Services }}
+{{- if ne .Comment "" }}
+    /**
+     * {{ .Comment }}
+     */
+{{- end }}
+    {{ .NameLCF }}({{ if .HasParams }}params: {{ .Params }}{{ end }}): Promise<{{ .Response }}>{{ if ne $i $lenS }},{{ end }}
+{{- end }}
+  }{{ if ne $i $lenN }},{{ end }}
+{{- end }}
+}
+{{- else }}
 export const factory = (send: any) => ({
 {{- $lenN := len .Namespaces }}
 {{- range $i,$e := .Namespaces }}
   {{ .Name }}: {
 {{- $lenS := len .Services }}
 {{- range $i, $e := .Services }}
+{{- if ne .Comment "" }}
+    /**
+     * {{ .Comment }}
+     */
+{{- end }}
     {{ .NameLCF }}({{ if .HasParams }}params: {{ .Params }}{{ end }}): Promise<{{ .Response }}> {
       return send('{{ .Namespace }}.{{ .Name }}'{{ if .HasParams }}, params{{ end }})
     }{{ if ne $i $lenS }},{{ end }}
@@ -37,4 +60,5 @@ export const factory = (send: any) => ({
   }{{ if ne $i $lenN }},{{ end }}
 {{- end }}
 })
+{{- end }}
 `

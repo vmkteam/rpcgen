@@ -2,6 +2,7 @@ package kotlin
 
 const model = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
 package {{ .PackageAPI }}.model
+
 import java.time.LocalTime
 import java.time.ZonedDateTime
 
@@ -29,9 +30,12 @@ const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .
 package {{ .PackageAPI }}
 
 import com.google.gson.reflect.TypeToken
-import {{ .PackageAPI }}.model.*
 import java.time.ZonedDateTime
 import java.time.LocalTime
+import {{ .PackageAPI }}.model.*
+{{- range .Imports }}
+import {{.}}
+{{- end }}
 
 interface {{ .Class }} : Transport {
 {{- range .Methods }}

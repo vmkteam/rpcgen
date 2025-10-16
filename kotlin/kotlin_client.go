@@ -66,6 +66,7 @@ type templateData struct {
 	Models     []Model
 	PackageAPI string
 	Class      string
+	Imports    []string
 }
 
 type Method struct {
@@ -101,6 +102,7 @@ type Settings struct {
 	Class      string
 	IsProtocol bool
 	PackageAPI string
+	Imports    []string
 	TypeMapper TypeMapper
 }
 
@@ -117,13 +119,13 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 
 // Generate return kotlin generated code by template
 func (g *Generator) Generate() ([]byte, error) {
-	data := g.fillTemplateData()
+	data := g.prepareTemplateData()
 
 	return g.executeTemplate(data)
 }
 
-// fillTemplateData prepare template data
-func (g *Generator) fillTemplateData() templateData {
+// prepareTemplateData prepare template data
+func (g *Generator) prepareTemplateData() templateData {
 	if g.settings.PackageAPI == "" {
 		g.settings.PackageAPI = BasePackageAPI
 	}
@@ -132,7 +134,7 @@ func (g *Generator) fillTemplateData() templateData {
 		g.settings.Class = BaseClass
 	}
 
-	data := templateData{GeneratorData: gen.DefaultGeneratorData(), PackageAPI: g.settings.PackageAPI, Class: g.settings.Class}
+	data := templateData{GeneratorData: gen.DefaultGeneratorData(), PackageAPI: g.settings.PackageAPI, Imports: g.settings.Imports, Class: g.settings.Class}
 
 	modelsMap := make(map[string]Model)
 	servicesMap := make(map[string][]Method)

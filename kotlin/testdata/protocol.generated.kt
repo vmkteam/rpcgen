@@ -1,10 +1,13 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.6; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.4.8; DO NOT EDIT.
 package api
 
 import com.google.gson.reflect.TypeToken
-import api.model.*
 import java.time.ZonedDateTime
 import java.time.LocalTime
+import api.model.*
+import api.debug.model.*
+import api.TransportOption
+import api.Transport
 
 interface Api : Transport {
 

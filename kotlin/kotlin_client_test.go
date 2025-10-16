@@ -43,6 +43,7 @@ func TestGenerator_Generate(t *testing.T) {
 				},
 				settings: Settings{
 					IsProtocol: true,
+					Imports:    []string{"api.debug.model.*", "api.TransportOption", "api.Transport"},
 				},
 			},
 			outputFile: testDataProtocolPath,

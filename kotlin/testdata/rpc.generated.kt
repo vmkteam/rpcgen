@@ -1,5 +1,6 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.6; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.4.8; DO NOT EDIT.
 package api.model
+
 import java.time.LocalTime
 import java.time.ZonedDateTime
 

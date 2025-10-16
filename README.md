@@ -158,11 +158,13 @@ func main() {
 }
 ```
 
-### Generate Kotlin networking protocols , rpc models and custom type mapper
-Kotlin settings have a lot of properties
-- Class - is custom name for your interface. If this row is empty set `kotlin.BaseClass`
-- PackageAPI - is custom name for your package. If this row is empty set `kotlin.BasePackageAPI`
-- Imports - it's optional imports in your interface.
+### Generate Kotlin networking protocols, rpc models and custom type mapper
+Kotlin settings have a lot of properties:
+- Class - custom interface name. Default value: `kotlin.BaseClass`
+- PackageAPI - custom package name. Default value: `kotlin.BasePackageAPI`
+- Imports - optional list of imports in interface.
+- IsProtocol - flag controls the output type. Set to `true` to generate a Kotlin interface for the JSON-RPC client, or set to `false` to generate the corresponding data class models.
+- TypeMapper - function allows you to implement custom logic for converting schema types into specific Kotlin types.
 ```go
 package main
 

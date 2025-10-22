@@ -22,7 +22,7 @@ func TestGenerateGoClient(t *testing.T) {
 		t.Fatalf("generate go client: %v", err)
 	}
 
-	testData, err := os.ReadFile("./testdata/catalogue_client.go")
+	testData, err := os.ReadFile("./testdata/catalogue_client.go.test")
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}

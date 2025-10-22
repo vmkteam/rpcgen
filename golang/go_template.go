@@ -16,8 +16,11 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/vmkteam/appkit"
 	"github.com/vmkteam/zenrpc/v2"
 )
+
+const name = "{{ .Package }}"
 
 var (
 	// Always import time package. Generated models can contain time.Time fields.
@@ -30,13 +33,12 @@ type Client struct {
 {{ range .NamespaceNames }}
 	{{ title . }} *svc{{ title .}}{{ end }}}
 
-func NewDefaultClient(endpoint string) *Client {
-	return NewClient(endpoint, http.Header{}, &http.Client{})
-}
-
-func NewClient(endpoint string, header http.Header, httpClient *http.Client) *Client {
+func NewClient(endpoint string, httpClient *http.Client) *Client {
+	if httpClient == nil {
+		httpClient = &http.Client{Timeout: time.Second * 30}
+	}
 	c := &Client{
-		rpcClient: newRPCClient(endpoint, header, httpClient),
+		rpcClient: newRPCClient(endpoint, httpClient),
 	}
 {{ range .NamespaceNames }}
 	c.{{ title . }} = newClient{{ title .}}(c.rpcClient){{ end }}
@@ -105,13 +107,11 @@ type rpcClient struct {
 	cl       *http.Client
 
 	requestID uint64
-	header    http.Header
 }
 
-func newRPCClient(endpoint string, header http.Header, httpClient *http.Client) *rpcClient {
+func newRPCClient(endpoint string, httpClient *http.Client) *rpcClient {
 	return &rpcClient{
 		endpoint: endpoint,
-		header:   header,
 		cl:       httpClient,
 	}
 }
@@ -132,6 +132,8 @@ func (rc *rpcClient) call(ctx context.Context, methodName string, request, resul
 		Method:  methodName,
 		Params:  bts,
 	}
+
+	ctx = appkit.NewCallerNameContext(ctx, name)
 
 	res, err := rc.Exec(ctx, req)
 	if err != nil {
@@ -159,7 +161,7 @@ func (rc *rpcClient) call(ctx context.Context, methodName string, request, resul
 
 // Exec makes http request to jsonrpc endpoint and returns json rpc response.
 func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.Response, error) {
-	if n, ok := ctx.Value("JSONRPC2-Notification").(bool); ok && n {
+	if appkit.NotificationFromContext(ctx) {
 		rpcReq.ID = nil
 	}
 
@@ -174,12 +176,8 @@ func (rc *rpcClient) Exec(ctx context.Context, rpcReq zenrpc.Request) (*zenrpc.R
 		return nil, fmt.Errorf("create request failed: %w", err)
 	}
 
-	req.Header = rc.header.Clone()
 	req.Header.Add("Content-Type", "application/json")
-
-	if xRequestID, ok := ctx.Value("X-Request-Id").(string); ok && req.Header.Get("X-Request-Id") == "" && xRequestID != "" {
-		req.Header.Add("X-Request-Id", xRequestID)
-	}
+	appkit.SetXRequestIDFromCtx(ctx, req)
 
 	// Do request
 	resp, err := rc.cl.Do(req)

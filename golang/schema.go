@@ -204,8 +204,10 @@ func (v *Value) GoType() string {
 		}
 
 		return fmt.Sprintf("[]%s", simpleGoType(v.ArrayItemType))
-	} else if v.Type == smd.Object {
+	} else if v.Type == smd.Object && v.ModelName != "" {
 		return v.LocalModelName()
+	} else if v.Type == smd.Object {
+		return "any"
 	}
 
 	return simpleGoType(v.Type)
@@ -293,11 +295,6 @@ func newMethod(service smd.Service, namespace, methodName string) Method {
 
 	if service.Returns.Type != "" {
 		method.Returns = newValuePointer(service.Returns, namespace, methodName)
-
-		// fix return model name
-		if method.Returns.Type == smd.Object && method.Returns.ModelName == "" {
-			method.Returns.ModelName = fmt.Sprintf("%s%sResponse", titleFirstLetter(namespace), titleFirstLetter(methodName))
-		}
 	}
 
 	return method
@@ -327,6 +324,8 @@ func newValue(in smd.JSONSchema, namespace, methodName string, isParam, isReturn
 			value.ModelName = in.TypeName
 		} else if in.Description != "" && smd.IsSMDTypeName(in.Description, in.Type) {
 			value.ModelName = in.Description
+		} else if len(in.Properties) == 0 && len(in.Definitions) == 0 && len(in.Items) == 0 {
+			value.ModelName = ""
 		} else if isParam {
 			value.ModelName = fmt.Sprintf("%s%s%sParam", titleFirstLetter(namespace), titleFirstLetter(methodName), titleFirstLetter(in.Name))
 		} else if isReturn {
@@ -400,7 +399,9 @@ func cleanModelList(models []Model, namespace, methodName string) (res []Model) 
 	for _, model := range models {
 		// fix empty model names
 		if model.Name == "" {
-			if model.IsParamModel {
+			if len(model.Fields) == 0 {
+				continue
+			} else if model.IsParamModel {
 				model.Name = fmt.Sprintf("%s%s%sParam", titleFirstLetter(namespace), titleFirstLetter(methodName), titleFirstLetter(model.ParamName))
 			} else if model.IsReturnModel {
 				model.Name = fmt.Sprintf("%s%sResponse", titleFirstLetter(namespace), titleFirstLetter(methodName))

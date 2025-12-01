@@ -5,7 +5,7 @@ go 1.24.0
 require (
 	github.com/vmkteam/meta-schema/v2 v2.0.1
 	github.com/vmkteam/zenrpc v1.1.1
-	github.com/vmkteam/zenrpc/v2 v2.3.0
+	github.com/vmkteam/zenrpc/v2 v2.3.1
 	golang.org/x/text v0.29.0
 )
 

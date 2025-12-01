@@ -14,6 +14,7 @@ func TestGenerateGoClient(t *testing.T) {
 	rpc.Register("catalogue", testdata.CatalogueService{})
 	rpc.Register("phonebook", testdata.PhoneBook{})
 	rpc.Register("arith", testdata.ArithService{})
+	rpc.Register("print", testdata.PrintService{})
 
 	cl := NewClient(rpc.SMD(), Settings{})
 

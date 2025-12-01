@@ -15,12 +15,16 @@ type ArithService struct{ zenrpc.Service }
 type Point struct {
 	X, Y            int       // coordinate
 	Z               int       `json:"-"`
+	CartId          string    `json:"cartOd"`          // version string id - 1
 	ID              int       `json:"id"`              // version id - 1
 	BaseID          int       `json:"baseId"`          // version id - 2
 	SecondID        int       `json:"secondID"`        // version id - 3
+	SecondIDs       []int     `json:"secondIDs"`       // version multi id
+	CartIDs         []string  `json:"cartIDs"`         // version multi string id
 	CreatedAt       string    `json:"createdAt"`       // version date - 1
 	UpdatedAt       string    `json:"updatedAt"`       // version date - 2
 	ManualChangedAt string    `json:"manualChangedAt"` // version date - 3
+	StartAt         string    `json:"startAt"`         // version date - 4
 	NewLat          float64   `json:"newLat"`          // version group geo coordinate № - 1
 	NewLon          float64   `json:"newLon"`          // version group geo coordinate № - 1
 	Lat             float64   `json:"lat"`             // version group geo coordinate № - 2
@@ -38,6 +42,18 @@ type Point struct {
 }
 
 type SecondPoint struct {
+}
+
+func (as ArithService) GetByID(ctx context.Context, cartId string, categoryId int, baseID int, id int) (*Point, error) {
+	return &Point{}, nil
+}
+
+func (as ArithService) GetByLatLong(ctx context.Context, categoryId int, baseID int, lat, lon float64) (*Point, error) {
+	return &Point{}, nil
+}
+
+func (as ArithService) GetByTime(ctx context.Context, createdAt string, updateAt string, startAt string) (*Point, error) {
+	return &Point{}, nil
 }
 
 // Sum sums two digits and returns error with error code as result and IP from context.

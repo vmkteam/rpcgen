@@ -2,6 +2,7 @@ package kotlin
 
 import (
 	"bytes"
+	"flag"
 	"os"
 	"testing"
 
@@ -12,12 +13,13 @@ import (
 const testDataPath = "./testdata/rpc.generated.kt"
 const testDataProtocolPath = "./testdata/protocol.generated.kt"
 
+var update = flag.Bool("update", false, "update .kt files")
+
 func TestGenerator_Generate(t *testing.T) {
 	type fields struct {
 		settings    Settings
 		servicesMap map[string]zenrpc.Invoker
 	}
-	var replace bool
 
 	tests := []struct {
 		name       string
@@ -62,7 +64,7 @@ func TestGenerator_Generate(t *testing.T) {
 				t.Fatalf("generate client: %v", err)
 			}
 
-			if replace {
+			if *update {
 				var f *os.File
 				f, err = os.Create(tt.outputFile)
 				if err != nil {
@@ -91,8 +93,6 @@ func TestGenerator_Generate(t *testing.T) {
 }
 
 func Test_kotlinTypeID(t *testing.T) {
-	type args struct {
-	}
 	tests := []struct {
 		name     string
 		typeName string
@@ -114,6 +114,11 @@ func Test_kotlinTypeID(t *testing.T) {
 			want:     true,
 		},
 		{
+			name:     "nameIDs",
+			typeName: "nameIDs",
+			want:     true,
+		},
+		{
 			name:     "ID",
 			typeName: "ID",
 			want:     true,
@@ -121,6 +126,11 @@ func Test_kotlinTypeID(t *testing.T) {
 		{
 			name:     "nameId",
 			typeName: "nameId",
+			want:     true,
+		},
+		{
+			name:     "nameID",
+			typeName: "nameID",
 			want:     true,
 		},
 	}

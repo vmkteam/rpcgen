@@ -2,6 +2,7 @@ package swift
 
 import (
 	"bytes"
+	"flag"
 	"os"
 	"testing"
 
@@ -11,6 +12,8 @@ import (
 
 const rpcGenFilePath = "./testdata/rpc.generated.swift"
 const protocolGenFilePath = "./testdata/protocol.generated.swift"
+
+var update = flag.Bool("update", false, "update .swift files")
 
 func TestGenerator_Generate(t *testing.T) {
 	type fields struct {
@@ -57,6 +60,20 @@ func TestGenerator_Generate(t *testing.T) {
 			if err != nil {
 				t.Fatalf("generate swift client: %v", err)
 			}
+
+			if *update {
+				var f *os.File
+				f, err = os.Create(tt.outputFile)
+				if err != nil {
+					t.Fatal(err)
+				}
+				_, err = f.Write(got)
+				if err != nil {
+					t.Fatal(err)
+				}
+				return
+			}
+
 			testData, err := os.ReadFile(tt.outputFile)
 			if err != nil {
 				t.Fatalf("open test data file: %v", err)

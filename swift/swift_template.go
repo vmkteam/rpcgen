@@ -30,7 +30,7 @@ extension {{ .Class }}: RPCParameters {
     }
 }
 
-public enum {{ .Class }} {
+public enum {{ .Class }}: Codable, Hashable {
     /// Make batch requests.
     case batch(requests: [{{ .Class }}])
 {{ range .Methods }}{{- $paramsLen := len .Parameters }}

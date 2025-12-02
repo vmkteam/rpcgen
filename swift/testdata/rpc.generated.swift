@@ -1,4 +1,4 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.5; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.7.0; DO NOT EDIT.
 
 import Foundation
 
@@ -30,7 +30,7 @@ extension RPCAPI: RPCParameters {
     }
 }
 
-public enum RPCAPI {
+public enum RPCAPI: Codable, Hashable {
     /// Make batch requests.
     case batch(requests: [RPCAPI])
 

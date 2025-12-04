@@ -76,37 +76,37 @@ public enum RPCAPI: Codable, Hashable {
 
     /// CheckError throws error is isErr true.
     /// TEST row 2
-case arithCheckError(isErr: Bool, requestId: String? = nil)
+	case arithCheckError(isErr: Bool, requestId: String? = nil)
     /// CheckZenRPCError throws zenrpc error is isErr true.
     /// Second description row
-case arithCheckZenRPCError(isErr: Bool, requestId: String? = nil)
+	case arithCheckZenRPCError(isErr: Bool, requestId: String? = nil)
     /// Divide divides two numbers.
     /// - Returns: Quotient?
-case arithDivide(a: Int, b: Int, requestId: String? = nil)
-case arithDoSomething
+	case arithDivide(a: Int, b: Int, requestId: String? = nil)
+	case arithDoSomething
     /// - Returns: ExternalData
-case arithDoSomethingV2
+	case arithDoSomethingV2
     /// - Returns: Point
-case arithDoSomethingWithPoint(p: Point, pp: [Point], requestId: String? = nil)
+	case arithDoSomethingWithPoint(p: Point, pp: [Point], requestId: String? = nil)
     /// - Returns: [Point]
-case arithGetPoints
+	case arithGetPoints
     /// Multiply multiples two digits and returns result.
     /// - Returns: Int
-case arithMultiply(a: Int, b: Int, requestId: String? = nil)
+	case arithMultiply(a: Int, b: Int, requestId: String? = nil)
     /// Pi returns math.Pi.
     /// - Returns: Double
-case arithPi
+	case arithPi
     /// - Returns: Bool
-case arithPositive
+	case arithPositive
     /// Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.
     /// - Returns: Double
-case arithPow(base: Double, exp: Double?, requestId: String? = nil)
+	case arithPow(base: Double, exp: Double?, requestId: String? = nil)
     /// Sum sums two digits and returns error with error code as result and IP from context.
     /// - Returns: Bool
-case arithSum(a: Int, b: Int, requestId: String? = nil)
+	case arithSum(a: Int, b: Int, requestId: String? = nil)
     /// SumArray returns sum all items from array
     /// - Returns: Double
-case arithSumArray(array: [Double]?, requestId: String? = nil)
+	case arithSumArray(array: [Double]?, requestId: String? = nil)
 }
 
 

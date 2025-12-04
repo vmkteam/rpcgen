@@ -22,7 +22,7 @@ extension {{ .Class }}: RPCParameters {
               return nil
 {{- $methodsLen := len .Methods }}
 {{- range $idx, $m := .Methods }}{{- $paramsLen := len .Parameters }}
-        case {{ if gt $paramsLen 0 }}let {{ end }}.{{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range $index, $item := .Parameters }}{{ .Name }}{{ if (notLast $index $paramsLen) }}, {{ end }}{{ end }}){{ end }}:
+        case {{ if gt $paramsLen 0 }}let {{ end }}.{{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range .Parameters }}{{ .Name }}, {{ end }}_){{ end }}:
             return {{ if eq $paramsLen 0 }}nil{{ else }}[{{ range $index, $item := .Parameters }}"{{ .Name }}": {{ .Name }}{{ if or .IsArray .IsObject }}.any{{ end }}{{ if (notLast $index $paramsLen) }}, {{ end }}{{ end }}]{{ end }}
 {{- if (notLast $idx $methodsLen) }}{{ print "\n" }}{{- end }}
 {{- end }}

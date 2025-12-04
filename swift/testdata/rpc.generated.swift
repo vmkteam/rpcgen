@@ -28,13 +28,13 @@ extension RPCAPI: RPCParameters {
         switch self {
         case .batch:
               return nil
-        case let .arithCheckError(isErr):
+        case let .arithCheckError(isErr, _):
             return ["isErr": isErr]
 
-        case let .arithCheckZenRPCError(isErr):
+        case let .arithCheckZenRPCError(isErr, _):
             return ["isErr": isErr]
 
-        case let .arithDivide(a, b):
+        case let .arithDivide(a, b, _):
             return ["a": a, "b": b]
 
         case .arithDoSomething:
@@ -43,13 +43,13 @@ extension RPCAPI: RPCParameters {
         case .arithDoSomethingV2:
             return nil
 
-        case let .arithDoSomethingWithPoint(p, pp):
+        case let .arithDoSomethingWithPoint(p, pp, _):
             return ["p": p.any, "pp": pp.any]
 
         case .arithGetPoints:
             return nil
 
-        case let .arithMultiply(a, b):
+        case let .arithMultiply(a, b, _):
             return ["a": a, "b": b]
 
         case .arithPi:
@@ -58,13 +58,13 @@ extension RPCAPI: RPCParameters {
         case .arithPositive:
             return nil
 
-        case let .arithPow(base, exp):
+        case let .arithPow(base, exp, _):
             return ["base": base, "exp": exp]
 
-        case let .arithSum(a, b):
+        case let .arithSum(a, b, _):
             return ["a": a, "b": b]
 
-        case let .arithSumArray(array):
+        case let .arithSumArray(array, _):
             return ["array": array.any]
         }
     }

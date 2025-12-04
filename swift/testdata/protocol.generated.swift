@@ -4,14 +4,17 @@ import Foundation
 
 protocol ArithNetworking {
     /// CheckError throws error is isErr true.
+    /// TEST row 2
     func arithCheckError(isErr: Bool) async -> RpcError?
     /// CheckZenRPCError throws zenrpc error is isErr true.
+    /// Second description row
     func arithCheckZenRPCError(isErr: Bool) async -> RpcError?
     /// Divide divides two numbers.
     func arithDivide(a: Int, b: Int) async -> Result<Quotient, RpcError>
     func arithDoSomething() async -> RpcError?
-    func arithDoSomethingWithPoint(p: ModelPoint) async -> Result<ModelPoint, RpcError>
-    func arithGetPoints() async -> Result<[model.Point], RpcError>
+    func arithDoSomethingV2() async -> Result<ExternalData, RpcError>
+    func arithDoSomethingWithPoint(p: Point, pp: [Point]) async -> Result<Point, RpcError>
+    func arithGetPoints() async -> Result<[Point], RpcError>
     /// Multiply multiples two digits and returns result.
     func arithMultiply(a: Int, b: Int) async -> Result<Int, RpcError>
     /// Pi returns math.Pi.
@@ -27,12 +30,14 @@ protocol ArithNetworking {
 
 extension Networking: ArithNetworking {
     /// CheckError throws error is isErr true.
+    /// TEST row 2
 	/// - Returns: Result<RpcError>
     func arithCheckError(isErr: Bool) async -> RpcError? {
         await request(.arithCheckError(isErr: isErr))
     }
 
     /// CheckZenRPCError throws zenrpc error is isErr true.
+    /// Second description row
 	/// - Returns: Result<RpcError>
     func arithCheckZenRPCError(isErr: Bool) async -> RpcError? {
         await request(.arithCheckZenRPCError(isErr: isErr))
@@ -52,13 +57,18 @@ extension Networking: ArithNetworking {
         await request(.arithDoSomething)
     }
 
-	/// - Returns: Result<ModelPoint, RpcError>
-    func arithDoSomethingWithPoint(p: ModelPoint) async -> Result<ModelPoint, RpcError> {
-        await request(.arithDoSomethingWithPoint(p: p))
+	/// - Returns: Result<ExternalData, RpcError>
+    func arithDoSomethingV2() async -> Result<ExternalData, RpcError> {
+        await request(.arithDoSomethingV2)
     }
 
-	/// - Returns: Result<[model.Point], RpcError>
-    func arithGetPoints() async -> Result<[model.Point], RpcError> {
+	/// - Returns: Result<Point, RpcError>
+    func arithDoSomethingWithPoint(p: Point, pp: [Point]) async -> Result<Point, RpcError> {
+        await request(.arithDoSomethingWithPoint(p: p, pp: pp))
+    }
+
+	/// - Returns: Result<[Point], RpcError>
+    func arithGetPoints() async -> Result<[Point], RpcError> {
         await request(.arithGetPoints)
     }
 
@@ -97,29 +107,5 @@ extension Networking: ArithNetworking {
 	/// - Returns: Result<Double, RpcError>
     func arithSumArray(array: [Double]? = nil) async -> Result<Double, RpcError> {
         await request(.arithSumArray(array: array))
-    }
-}
-
-
-protocol CatalogueNetworking {
-    func catalogueFirst(groups: [Group]) async -> Result<Bool, RpcError>
-    func catalogueSecond(campaigns: [Campaign]) async -> Result<Bool, RpcError>
-    func catalogueThird() async -> Result<Campaign, RpcError>
-}
-
-extension Networking: CatalogueNetworking {
-	/// - Returns: Result<Bool, RpcError>
-    func catalogueFirst(groups: [Group]) async -> Result<Bool, RpcError> {
-        await request(.catalogueFirst(groups: groups))
-    }
-
-	/// - Returns: Result<Bool, RpcError>
-    func catalogueSecond(campaigns: [Campaign]) async -> Result<Bool, RpcError> {
-        await request(.catalogueSecond(campaigns: campaigns))
-    }
-
-	/// - Returns: Result<Campaign, RpcError>
-    func catalogueThird() async -> Result<Campaign, RpcError> {
-        await request(.catalogueThird)
     }
 }

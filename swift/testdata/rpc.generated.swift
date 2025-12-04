@@ -6,19 +6,19 @@ extension RPCAPI: RPCMethod {
     public var rpcMethod: String {
         switch self {
         case .batch(let requests): return requests.compactMap { $0.rpcMethod }.joined(separator: ",")
-        case .catalogueCheckError: return "catalogue.CheckError"
-        case .catalogueCheckZenRPCError: return "catalogue.CheckZenRPCError"
-        case .catalogueDivide: return "catalogue.Divide"
-        case .catalogueDoSomething: return "catalogue.DoSomething"
-        case .catalogueDoSomethingV2: return "catalogue.DoSomethingV2"
-        case .catalogueDoSomethingWithPoint: return "catalogue.DoSomethingWithPoint"
-        case .catalogueGetPoints: return "catalogue.GetPoints"
-        case .catalogueMultiply: return "catalogue.Multiply"
-        case .cataloguePi: return "catalogue.Pi"
-        case .cataloguePositive: return "catalogue.Positive"
-        case .cataloguePow: return "catalogue.Pow"
-        case .catalogueSum: return "catalogue.Sum"
-        case .catalogueSumArray: return "catalogue.SumArray"
+        case .arithCheckError: return "arith.CheckError"
+        case .arithCheckZenRPCError: return "arith.CheckZenRPCError"
+        case .arithDivide: return "arith.Divide"
+        case .arithDoSomething: return "arith.DoSomething"
+        case .arithDoSomethingV2: return "arith.DoSomethingV2"
+        case .arithDoSomethingWithPoint: return "arith.DoSomethingWithPoint"
+        case .arithGetPoints: return "arith.GetPoints"
+        case .arithMultiply: return "arith.Multiply"
+        case .arithPi: return "arith.Pi"
+        case .arithPositive: return "arith.Positive"
+        case .arithPow: return "arith.Pow"
+        case .arithSum: return "arith.Sum"
+        case .arithSumArray: return "arith.SumArray"
         }
     }
 }
@@ -28,43 +28,43 @@ extension RPCAPI: RPCParameters {
         switch self {
         case .batch:
               return nil
-        case let .catalogueCheckError(isErr):
+        case let .arithCheckError(isErr):
             return ["isErr": isErr]
 
-        case let .catalogueCheckZenRPCError(isErr):
+        case let .arithCheckZenRPCError(isErr):
             return ["isErr": isErr]
 
-        case let .catalogueDivide(a, b):
+        case let .arithDivide(a, b):
             return ["a": a, "b": b]
 
-        case .catalogueDoSomething:
+        case .arithDoSomething:
             return nil
 
-        case .catalogueDoSomethingV2:
+        case .arithDoSomethingV2:
             return nil
 
-        case let .catalogueDoSomethingWithPoint(p, pp):
+        case let .arithDoSomethingWithPoint(p, pp):
             return ["p": p.any, "pp": pp.any]
 
-        case .catalogueGetPoints:
+        case .arithGetPoints:
             return nil
 
-        case let .catalogueMultiply(a, b):
+        case let .arithMultiply(a, b):
             return ["a": a, "b": b]
 
-        case .cataloguePi:
+        case .arithPi:
             return nil
 
-        case .cataloguePositive:
+        case .arithPositive:
             return nil
 
-        case let .cataloguePow(base, exp):
+        case let .arithPow(base, exp):
             return ["base": base, "exp": exp]
 
-        case let .catalogueSum(a, b):
+        case let .arithSum(a, b):
             return ["a": a, "b": b]
 
-        case let .catalogueSumArray(array):
+        case let .arithSumArray(array):
             return ["array": array.any]
         }
     }
@@ -76,37 +76,37 @@ public enum RPCAPI: Codable, Hashable {
 
     /// CheckError throws error is isErr true.
     /// TEST row 2
-case catalogueCheckError(isErr: Bool, requestId: String? = nil)
+case arithCheckError(isErr: Bool, requestId: String? = nil)
     /// CheckZenRPCError throws zenrpc error is isErr true.
     /// Second description row
-case catalogueCheckZenRPCError(isErr: Bool, requestId: String? = nil)
+case arithCheckZenRPCError(isErr: Bool, requestId: String? = nil)
     /// Divide divides two numbers.
     /// - Returns: Quotient?
-case catalogueDivide(a: Int, b: Int, requestId: String? = nil)
-case catalogueDoSomething
+case arithDivide(a: Int, b: Int, requestId: String? = nil)
+case arithDoSomething
     /// - Returns: ExternalData
-case catalogueDoSomethingV2
+case arithDoSomethingV2
     /// - Returns: Point
-case catalogueDoSomethingWithPoint(p: Point, pp: [Point], requestId: String? = nil)
+case arithDoSomethingWithPoint(p: Point, pp: [Point], requestId: String? = nil)
     /// - Returns: [Point]
-case catalogueGetPoints
+case arithGetPoints
     /// Multiply multiples two digits and returns result.
     /// - Returns: Int
-case catalogueMultiply(a: Int, b: Int, requestId: String? = nil)
+case arithMultiply(a: Int, b: Int, requestId: String? = nil)
     /// Pi returns math.Pi.
     /// - Returns: Double
-case cataloguePi
+case arithPi
     /// - Returns: Bool
-case cataloguePositive
+case arithPositive
     /// Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.
     /// - Returns: Double
-case cataloguePow(base: Double, exp: Double?, requestId: String? = nil)
+case arithPow(base: Double, exp: Double?, requestId: String? = nil)
     /// Sum sums two digits and returns error with error code as result and IP from context.
     /// - Returns: Bool
-case catalogueSum(a: Int, b: Int, requestId: String? = nil)
+case arithSum(a: Int, b: Int, requestId: String? = nil)
     /// SumArray returns sum all items from array
     /// - Returns: Double
-case catalogueSumArray(array: [Double]?, requestId: String? = nil)
+case arithSumArray(array: [Double]?, requestId: String? = nil)
 }
 
 

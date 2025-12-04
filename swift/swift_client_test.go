@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/vmkteam/rpcgen/v2/kotlin/testdata"
 	"github.com/vmkteam/zenrpc/v2"
-	"github.com/vmkteam/zenrpc/v2/testdata"
 )
 
 const rpcGenFilePath = "./testdata/rpc.generated.swift"
@@ -30,7 +30,7 @@ func TestGenerator_Generate(t *testing.T) {
 			name: "generate rpc",
 			fields: fields{
 				servicesMap: map[string]zenrpc.Invoker{
-					"catalogue": testdata.CatalogueService{},
+					"arith": testdata.ArithService{},
 				},
 				settings: Settings{},
 			},
@@ -40,8 +40,7 @@ func TestGenerator_Generate(t *testing.T) {
 			name: "generate multi protocol",
 			fields: fields{
 				servicesMap: map[string]zenrpc.Invoker{
-					"catalogue": testdata.CatalogueService{},
-					"arith":     testdata.ArithService{},
+					"arith": testdata.ArithService{},
 				},
 				settings: Settings{IsProtocol: true},
 			},

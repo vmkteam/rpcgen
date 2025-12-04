@@ -76,50 +76,37 @@ public enum RPCAPI: Codable, Hashable {
 
     /// CheckError throws error is isErr true.
     /// TEST row 2
-    case catalogueCheckError(isErr: Bool)
-
+case catalogueCheckError(isErr: Bool, requestId: String? = nil)
     /// CheckZenRPCError throws zenrpc error is isErr true.
     /// Second description row
-    case catalogueCheckZenRPCError(isErr: Bool)
-
+case catalogueCheckZenRPCError(isErr: Bool, requestId: String? = nil)
     /// Divide divides two numbers.
     /// - Returns: Quotient?
-    case catalogueDivide(a: Int, b: Int)
-
-    case catalogueDoSomething
-
+case catalogueDivide(a: Int, b: Int, requestId: String? = nil)
+case catalogueDoSomething
     /// - Returns: ExternalData
-    case catalogueDoSomethingV2
-
+case catalogueDoSomethingV2
     /// - Returns: Point
-    case catalogueDoSomethingWithPoint(p: Point, pp: [Point])
-
+case catalogueDoSomethingWithPoint(p: Point, pp: [Point], requestId: String? = nil)
     /// - Returns: [Point]
-    case catalogueGetPoints
-
+case catalogueGetPoints
     /// Multiply multiples two digits and returns result.
     /// - Returns: Int
-    case catalogueMultiply(a: Int, b: Int)
-
+case catalogueMultiply(a: Int, b: Int, requestId: String? = nil)
     /// Pi returns math.Pi.
     /// - Returns: Double
-    case cataloguePi
-
+case cataloguePi
     /// - Returns: Bool
-    case cataloguePositive
-
+case cataloguePositive
     /// Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.
     /// - Returns: Double
-    case cataloguePow(base: Double, exp: Double?)
-
+case cataloguePow(base: Double, exp: Double?, requestId: String? = nil)
     /// Sum sums two digits and returns error with error code as result and IP from context.
     /// - Returns: Bool
-    case catalogueSum(a: Int, b: Int)
-
+case catalogueSum(a: Int, b: Int, requestId: String? = nil)
     /// SumArray returns sum all items from array
     /// - Returns: Double
-    case catalogueSumArray(array: [Double]?)
-
+case catalogueSumArray(array: [Double]?, requestId: String? = nil)
 }
 
 

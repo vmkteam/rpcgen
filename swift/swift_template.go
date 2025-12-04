@@ -42,8 +42,7 @@ public enum {{ .Class }}: Codable, Hashable {
     {{- if ne .Returns.Type ""}}
     /// - Returns: {{ .Returns.Type }}{{ if .Returns.Optional }}?{{ end }}
     {{- end }}
-    case {{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range $index, $item := .Parameters }}{{ .Name }}: {{ .Type }}{{ if .Optional }}?{{ end }}{{ if (notLast $index $paramsLen) }}, {{ end }}{{ end }}){{ end }}
-{{ end }}
+case {{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range .Parameters }}{{ .Name }}: {{ .Type }}{{ if .Optional }}?{{ end }}, {{ end }}requestId: String? = nil){{ end }}{{ end }}
 }
 
 {{ range .Models }}

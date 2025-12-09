@@ -83,21 +83,21 @@ public enum RPCAPI: Codable, Hashable {
     /// Divide divides two numbers.
     /// - Returns: Quotient?
 	case arithDivide(a: Int, b: Int, requestId: String? = nil)
-	case arithDoSomething
+	case arithDoSomething(requestId: String? = nil)
     /// - Returns: ExternalData
-	case arithDoSomethingV2
+	case arithDoSomethingV2(requestId: String? = nil)
     /// - Returns: Point
 	case arithDoSomethingWithPoint(p: Point, pp: [Point], requestId: String? = nil)
     /// - Returns: [Point]
-	case arithGetPoints
+	case arithGetPoints(requestId: String? = nil)
     /// Multiply multiples two digits and returns result.
     /// - Returns: Int
 	case arithMultiply(a: Int, b: Int, requestId: String? = nil)
     /// Pi returns math.Pi.
     /// - Returns: Double
-	case arithPi
+	case arithPi(requestId: String? = nil)
     /// - Returns: Bool
-	case arithPositive
+	case arithPositive(requestId: String? = nil)
     /// Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.
     /// - Returns: Double
 	case arithPow(base: Double, exp: Double?, requestId: String? = nil)
@@ -230,3 +230,27 @@ public struct Quotient: Codable, Hashable {
     }
 }
 
+
+extension RPCAPI {
+  public var rpcId: String? {
+    switch self {
+    case .batch:
+      return nil
+
+    case.arithCheckError(_, let requestId),
+       .arithCheckZenRPCError(_, let requestId),
+       .arithDivide(_, _, let requestId),
+       .arithDoSomething(let requestId),
+       .arithDoSomethingV2(let requestId),
+       .arithDoSomethingWithPoint(_, _, let requestId),
+       .arithGetPoints(let requestId),
+       .arithMultiply(_, _, let requestId),
+       .arithPi(let requestId),
+       .arithPositive(let requestId),
+       .arithPow(_, _, let requestId),
+       .arithSum(_, _, let requestId),
+       .arithSumArray(_, let requestId):
+          return requestId
+    }
+  }
+}

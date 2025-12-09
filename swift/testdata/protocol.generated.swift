@@ -54,12 +54,12 @@ extension Networking: ArithNetworking {
 
 	/// - Returns: Result<RpcError>
     func arithDoSomething() async -> RpcError? {
-        await request(.arithDoSomething)
+        await request(.arithDoSomething())
     }
 
 	/// - Returns: Result<ExternalData, RpcError>
     func arithDoSomethingV2() async -> Result<ExternalData, RpcError> {
-        await request(.arithDoSomethingV2)
+        await request(.arithDoSomethingV2())
     }
 
 	/// - Returns: Result<Point, RpcError>
@@ -69,7 +69,7 @@ extension Networking: ArithNetworking {
 
 	/// - Returns: Result<[Point], RpcError>
     func arithGetPoints() async -> Result<[Point], RpcError> {
-        await request(.arithGetPoints)
+        await request(.arithGetPoints())
     }
 
     /// Multiply multiples two digits and returns result.
@@ -81,12 +81,12 @@ extension Networking: ArithNetworking {
     /// Pi returns math.Pi.
 	/// - Returns: Result<Double, RpcError>
     func arithPi() async -> Result<Double, RpcError> {
-        await request(.arithPi)
+        await request(.arithPi())
     }
 
 	/// - Returns: Result<Bool, RpcError>
     func arithPositive() async -> Result<Bool, RpcError> {
-        await request(.arithPositive)
+        await request(.arithPositive())
     }
 
     /// Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.

@@ -42,7 +42,7 @@ public enum {{ .Class }}: Codable, Hashable {
     {{- if ne .Returns.Type ""}}
     /// - Returns: {{ .Returns.Type }}{{ if .Returns.Optional }}?{{ end }}
     {{- end }}
-	case {{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range .Parameters }}{{ .Name }}: {{ .Type }}{{ if .Optional }}?{{ end }}, {{ end }}requestId: String? = nil){{ end }}{{ end }}
+	case {{ .SafeName }}({{ if gt $paramsLen 0 }}{{ range .Parameters }}{{ .Name }}: {{ .Type }}{{ if .Optional }}?{{ end }}, {{ end }}{{ end }}requestId: String? = nil){{ end }}
 }
 
 {{ range .Models }}
@@ -66,6 +66,23 @@ public struct {{ .Name }}: Codable, Hashable {
     }
 }
 {{ end }}
+
+extension {{ .Class }} {
+  public var rpcId: String? {
+    switch self {
+    case .batch:
+      return nil
+
+    case 
+    {{- range $i, $method := .Methods -}}
+        {{- if gt $i 0 }},
+       {{ end -}}
+        .{{ $method.SafeName }}({{ range $method.Parameters }}_, {{ end }}let requestId)
+    {{- end }}:
+          return requestId
+    }
+  }
+}
 `
 
 const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
@@ -105,7 +122,7 @@ extension Networking: {{ title $service.Namespace }}Networking {
             {{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}? = nil{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}
         {{- end -}}
     ) async -> {{ if $method.Returns.Type }}Result<{{ $method.Returns.Type }}, RpcError>{{ else }}RpcError?{{ end }} {
-        await request(.{{ $method.SafeName }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}{{ end }})
+        await request(.{{ $method.SafeName }}({{ if $method.Parameters }}{{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}{{ else }}{{ end }}))
     }
 {{- if (notLast $idx (len $service.Methods)) }}
 {{ end }}

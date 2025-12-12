@@ -11,6 +11,8 @@ import (
 )
 
 const version = "2.5.x"
+const baseLocalVersion = "1.0.0"
+const baseLang = "golang"
 
 const DefinitionsPrefix = "#/definitions/"
 
@@ -23,8 +25,8 @@ type GeneratorData struct {
 func DefaultGeneratorData() GeneratorData {
 	return GeneratorData{
 		Version:      version,
-		Lang:         "null",
-		LocalVersion: "1.0.0",
+		Lang:         baseLang,
+		LocalVersion: baseLocalVersion,
 	}
 }
 

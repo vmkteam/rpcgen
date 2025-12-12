@@ -1,6 +1,6 @@
 package swift
 
-const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 
 import Foundation
 
@@ -85,7 +85,7 @@ extension {{ .Class }} {
 }
 `
 
-const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 
 import Foundation
 {{- range $service := .Namespaces }}

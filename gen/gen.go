@@ -10,18 +10,32 @@ import (
 	"golang.org/x/text/language"
 )
 
-const version = "2.7.0"
+const version = "2.5.x"
 
 const DefinitionsPrefix = "#/definitions/"
 
 type GeneratorData struct {
-	Version string
+	Version      string
+	Lang         string
+	LocalVersion string
 }
 
 func DefaultGeneratorData() GeneratorData {
 	return GeneratorData{
-		Version: version,
+		Version:      version,
+		Lang:         "null",
+		LocalVersion: "1.0.0",
 	}
+}
+
+func (g GeneratorData) AddLanguage(lang string) GeneratorData {
+	g.Lang = lang
+	return g
+}
+
+func (g GeneratorData) AddLocalVersion(version string) GeneratorData {
+	g.LocalVersion = version
+	return g
 }
 
 // GetNamespaceNames return all namespace names from schema.

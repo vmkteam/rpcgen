@@ -1,6 +1,6 @@
 package dart
 
-const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:smd_annotations/annotations.dart';

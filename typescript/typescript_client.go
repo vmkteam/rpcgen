@@ -18,6 +18,7 @@ const (
 	voidResponse    = "void"
 	viewOps         = "viewOps"
 	numberType      = "number"
+	version         = "1.0.0"
 )
 
 type Generator struct {
@@ -42,7 +43,7 @@ type TypeMapper func(in smd.JSONSchema, tsType Type) Type
 // Generate returns generate TypeScript client
 func (g *Generator) Generate() ([]byte, error) {
 	tsModels := g.tsModels()
-	tsModels.GeneratorData = gen.DefaultGeneratorData()
+	tsModels.GeneratorData = gen.DefaultGeneratorData().AddLangAndLocalVersion(version, "typescript")
 
 	var fns = template.FuncMap{
 		"len": func(a interface{}) int {

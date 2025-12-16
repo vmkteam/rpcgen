@@ -13,6 +13,8 @@ import (
 )
 
 const (
+	version      = "1.0.0"
+	lang         = "swift"
 	defaultClass = "RPCAPI"
 
 	Bool   = "Bool"
@@ -100,7 +102,7 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 
 // Generate returns generated Swift client
 func (g *Generator) Generate() ([]byte, error) {
-	data := templateData{Class: defaultClass, GeneratorData: gen.DefaultGeneratorData()}
+	data := templateData{Class: defaultClass, GeneratorData: gen.DefaultGeneratorData().AddLangAndLocalVersion(version, lang)}
 	if g.settings.Class != "" {
 		data.Class = g.settings.Class
 	}

@@ -1,7 +1,7 @@
 package php
 
 const phpTpl = `<?php
-/** Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT. */
+/** Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT. */
 
 namespace {{.Namespace}};
 

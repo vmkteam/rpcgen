@@ -35,6 +35,8 @@ const (
 	DefaultList      = "emptyList()"
 	DefaultMap       = "emptyMap()"
 	DefaultLocalTime = "LocalTime.now()"
+
+	version = "1.0.0"
 )
 
 var (
@@ -134,7 +136,7 @@ func (g *Generator) prepareTemplateData() templateData {
 		g.settings.Class = BaseClass
 	}
 
-	data := templateData{GeneratorData: gen.DefaultGeneratorData(), PackageAPI: g.settings.PackageAPI, Imports: g.settings.Imports, Class: g.settings.Class}
+	data := templateData{GeneratorData: gen.DefaultGeneratorData().AddLangAndLocalVersion(version, "kotlin"), PackageAPI: g.settings.PackageAPI, Imports: g.settings.Imports, Class: g.settings.Class}
 
 	modelsMap := make(map[string]Model)
 	servicesMap := make(map[string][]Method)

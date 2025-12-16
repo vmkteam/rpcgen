@@ -14,6 +14,7 @@ import (
 
 const (
 	defaultPhpNamespace = "JsonRpcClient"
+	version             = "1.0.0"
 
 	phpBoolean = "bool"
 	phpInt     = "int"
@@ -41,7 +42,7 @@ func NewClient(schema smd.Schema, phpNamespace string) *Generator {
 // Generate returns generate PHP client
 func (g *Generator) Generate() ([]byte, error) {
 	m := g.PHPModels()
-	m.GeneratorData = gen.DefaultGeneratorData()
+	m.GeneratorData = gen.DefaultGeneratorData().AddLangAndLocalVersion(version, "php")
 
 	funcMap := template.FuncMap{
 		"now": time.Now,

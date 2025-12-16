@@ -1,7 +1,7 @@
 package golang
 
 // goTpl contains template for Go client
-const goTpl = `// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const goTpl = `// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 
 package {{ .Package }}
 

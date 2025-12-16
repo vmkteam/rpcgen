@@ -1,4 +1,4 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.8; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.5.x with kotlin v1.0.0; DO NOT EDIT.
 package api.model
 
 import java.time.LocalTime
@@ -30,6 +30,14 @@ data class Point(
      * version id - 2
      */
     val baseId: Long = 0,
+    /**
+     * version multi string id
+     */
+    val cartIDs: List<String> = emptyList(),
+    /**
+     * version string id - 1
+     */
+    val cartOd: String = "",
     val `class`: String = "",
     /**
      * version date - 1
@@ -43,19 +51,19 @@ data class Point(
     /**
      * version group geo coordinate № - 2
      */
-    val lat: Float = 0f,
+    val lat: Double = 0.0,
     /**
      * version group geo coordinate № - 3
      */
-    val latitude: Float = 0f,
+    val latitude: Double = 0.0,
     /**
      * version group geo coordinate № - 2
      */
-    val lon: Float = 0f,
+    val lon: Double = 0.0,
     /**
      * version group geo coordinate № - 3
      */
-    val longitude: Float = 0f,
+    val longitude: Double = 0.0,
     /**
      * version date - 3
      */
@@ -78,8 +86,16 @@ data class Point(
      * version id - 3
      */
     val secondID: Long = 0,
+    /**
+     * version multi id
+     */
+    val secondIDs: List<Long> = emptyList(),
     val secondPoints: List<Point> = emptyList(),
     val secondQuotient: Quotient? = null,
+    /**
+     * version date - 4
+     */
+    val startAt: ZonedDateTime = ZonedDateTime.now(),
     /**
      * version date - 2
      */

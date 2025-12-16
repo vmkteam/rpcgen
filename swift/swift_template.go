@@ -1,6 +1,6 @@
 package swift
 
-const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 
 import Foundation
 
@@ -22,7 +22,7 @@ extension {{ .Class }}: RPCParameters {
               return nil
 {{- $methodsLen := len .Methods }}
 {{- range $idx, $m := .Methods }}{{- $paramsLen := len .Parameters }}
-        case {{ if gt $paramsLen 0 }}let {{ end }}.{{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range $index, $item := .Parameters }}{{ .Name }}{{ if (notLast $index $paramsLen) }}, {{ end }}{{ end }}){{ end }}:
+        case {{ if gt $paramsLen 0 }}let {{ end }}.{{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range .Parameters }}{{ .Name }}, {{ end }}_){{ end }}:
             return {{ if eq $paramsLen 0 }}nil{{ else }}[{{ range $index, $item := .Parameters }}"{{ .Name }}": {{ .Name }}{{ if or .IsArray .IsObject }}.any{{ end }}{{ if (notLast $index $paramsLen) }}, {{ end }}{{ end }}]{{ end }}
 {{- if (notLast $idx $methodsLen) }}{{ print "\n" }}{{- end }}
 {{- end }}
@@ -30,7 +30,7 @@ extension {{ .Class }}: RPCParameters {
     }
 }
 
-public enum {{ .Class }} {
+public enum {{ .Class }}: Codable, Hashable {
     /// Make batch requests.
     case batch(requests: [{{ .Class }}])
 {{ range .Methods }}{{- $paramsLen := len .Parameters }}
@@ -42,8 +42,7 @@ public enum {{ .Class }} {
     {{- if ne .Returns.Type ""}}
     /// - Returns: {{ .Returns.Type }}{{ if .Returns.Optional }}?{{ end }}
     {{- end }}
-    case {{ .SafeName }}{{ if gt $paramsLen 0 }}({{ range $index, $item := .Parameters }}{{ .Name }}: {{ .Type }}{{ if .Optional }}?{{ end }}{{ if (notLast $index $paramsLen) }}, {{ end }}{{ end }}){{ end }}
-{{ end }}
+	case {{ .SafeName }}({{ if gt $paramsLen 0 }}{{ range .Parameters }}{{ .Name }}: {{ .Type }}{{ if .Optional }}?{{ end }}, {{ end }}{{ end }}requestId: String? = nil){{ end }}
 }
 
 {{ range .Models }}
@@ -67,9 +66,26 @@ public struct {{ .Name }}: Codable, Hashable {
     }
 }
 {{ end }}
+
+extension {{ .Class }} {
+  public var rpcId: String? {
+    switch self {
+    case .batch:
+      return nil
+
+    case 
+    {{- range $i, $method := .Methods -}}
+        {{- if gt $i 0 }},
+       {{ end -}}
+        .{{ $method.SafeName }}({{ range $method.Parameters }}_, {{ end }}let requestId)
+    {{- end }}:
+          return requestId
+    }
+  }
+}
 `
 
-const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 
 import Foundation
 {{- range $service := .Namespaces }}
@@ -106,7 +122,7 @@ extension Networking: {{ title $service.Namespace }}Networking {
             {{ $item.Name }}: {{ $item.Type }}{{ if $item.Optional }}? = nil{{ end }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}
         {{- end -}}
     ) async -> {{ if $method.Returns.Type }}Result<{{ $method.Returns.Type }}, RpcError>{{ else }}RpcError?{{ end }} {
-        await request(.{{ $method.SafeName }}{{ if $method.Parameters }}({{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}){{ else }}{{ end }})
+        await request(.{{ $method.SafeName }}({{ if $method.Parameters }}{{- range $index, $item := $method.Parameters }}{{ $item.Name }}: {{ $item.Name }}{{ if (notLast $index (len $method.Parameters)) }}, {{ end }}{{ end }}{{ else }}{{ end }}))
     }
 {{- if (notLast $idx (len $service.Methods)) }}
 {{ end }}

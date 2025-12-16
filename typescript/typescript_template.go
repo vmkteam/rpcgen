@@ -1,6 +1,6 @@
 package typescript
 
-const client = `/* Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT. */
+const client = `/* Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT. */
 /* eslint-disable */
 {{- range .Interfaces }}
 export interface {{ .Name }} {

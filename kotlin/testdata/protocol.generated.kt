@@ -1,4 +1,4 @@
-/// Code generated from jsonrpc schema by rpcgen v2.4.8; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.5.x with kotlin v1.0.0; DO NOT EDIT.
 package api
 
 import com.google.gson.reflect.TypeToken
@@ -106,6 +106,61 @@ interface Api : Transport {
         "arith.DoSomethingWithPoint",
         "p" to p,
         "pp" to pp,
+    )
+
+    /**
+     * @return 
+     */
+    fun arithGetByID(
+        cartId: String,
+        categoryId: Long,
+        baseID: Long,
+        id: Long,
+        vararg transportOptions: TransportOption,
+    ) = request(
+        transportOptions,
+        object : TypeToken<ApiResponse<Point>>() {},
+        "arith.GetByID",
+        "cartId" to cartId,
+        "categoryId" to categoryId,
+        "baseID" to baseID,
+        "id" to id,
+    )
+
+    /**
+     * @return 
+     */
+    fun arithGetByLatLong(
+        categoryId: Long,
+        baseID: Long,
+        lat: Double,
+        lon: Double,
+        vararg transportOptions: TransportOption,
+    ) = request(
+        transportOptions,
+        object : TypeToken<ApiResponse<Point>>() {},
+        "arith.GetByLatLong",
+        "categoryId" to categoryId,
+        "baseID" to baseID,
+        "lat" to lat,
+        "lon" to lon,
+    )
+
+    /**
+     * @return 
+     */
+    fun arithGetByTime(
+        createdAt: ZonedDateTime,
+        updateAt: ZonedDateTime,
+        startAt: ZonedDateTime,
+        vararg transportOptions: TransportOption,
+    ) = request(
+        transportOptions,
+        object : TypeToken<ApiResponse<Point>>() {},
+        "arith.GetByTime",
+        "createdAt" to createdAt,
+        "updateAt" to updateAt,
+        "startAt" to startAt,
     )
 
     fun arithGetPoints(

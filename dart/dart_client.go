@@ -14,6 +14,7 @@ import (
 
 const (
 	defaultPart = "generated_rpc_client"
+	version     = "1.0.0"
 
 	Bool   = "bool"
 	Int    = "int"
@@ -104,7 +105,7 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 
 // Generate returns generated Dart client
 func (g *Generator) Generate() ([]byte, error) {
-	data := templateData{Part: defaultPart, GeneratorData: gen.DefaultGeneratorData()}
+	data := templateData{Part: defaultPart, GeneratorData: gen.DefaultGeneratorData().AddLangAndLocalVersion(version, "dart")}
 
 	if g.settings.Part != "" {
 		data.Part = g.settings.Part

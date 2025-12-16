@@ -11,12 +11,9 @@ import (
 )
 
 var RPC = struct {
-	ArithService struct{ GetByID, GetByLatLong, GetByTime, Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }
+	ArithService struct{ Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }
 }{
-	ArithService: struct{ GetByID, GetByLatLong, GetByTime, Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }{
-		GetByID:              "getbyid",
-		GetByLatLong:         "getbylatlong",
-		GetByTime:            "getbytime",
+	ArithService: struct{ Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }{
 		Sum:                  "sum",
 		Positive:             "positive",
 		DoSomething:          "dosomething",
@@ -36,1040 +33,6 @@ var RPC = struct {
 func (ArithService) SMD() smd.ServiceInfo {
 	return smd.ServiceInfo{
 		Methods: map[string]smd.Service{
-			"GetByID": {
-				Parameters: []smd.JSONSchema{
-					{
-						Name: "cartId",
-						Type: smd.String,
-					},
-					{
-						Name: "categoryId",
-						Type: smd.Integer,
-					},
-					{
-						Name: "baseID",
-						Type: smd.Integer,
-					},
-					{
-						Name: "id",
-						Type: smd.Integer,
-					},
-				},
-				Returns: smd.JSONSchema{
-					Optional: true,
-					Type:     smd.Object,
-					TypeName: "Point",
-					Properties: smd.PropertyList{
-						{
-							Name:        "X",
-							Description: `coordinate`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "Y",
-							Description: `coordinate`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "cartOd",
-							Description: `version string id - 1`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "id",
-							Description: `version id - 1`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "baseId",
-							Description: `version id - 2`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "secondID",
-							Description: `version id - 3`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "secondIDs",
-							Description: `version multi id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.Integer,
-							},
-						},
-						{
-							Name:        "cartIDs",
-							Description: `version multi string id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.String,
-							},
-						},
-						{
-							Name:        "createdAt",
-							Description: `version date - 1`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "updatedAt",
-							Description: `version date - 2`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "manualChangedAt",
-							Description: `version date - 3`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "startAt",
-							Description: `version date - 4`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "newLat",
-							Description: `version group geo coordinate № - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "newLon",
-							Description: `version group geo coordinate № - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "lat",
-							Description: `version group geo coordinate № - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "lon",
-							Description: `version group geo coordinate № - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "latitude",
-							Description: `version group geo coordinate № - 3`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "longitude",
-							Description: `version group geo coordinate № - 3`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "baseFloat",
-							Description: `version group float - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "secondFloat",
-							Description: `version group float - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:     "emptyString",
-							Optional: true,
-							Type:     smd.String,
-						},
-						{
-							Name: "name",
-							Type: smd.String,
-						},
-						{
-							Name: "secondPoints",
-							Type: smd.Array,
-							Items: map[string]string{
-								"$ref": "#/definitions/Point",
-							},
-						},
-						{
-							Name: "nextQuotient",
-							Ref:  "#/definitions/Quotient",
-							Type: smd.Object,
-						},
-						{
-							Name:     "secondQuotient",
-							Optional: true,
-							Ref:      "#/definitions/Quotient",
-							Type:     smd.Object,
-						},
-						{
-							Name: "class",
-							Type: smd.String,
-						},
-					},
-					Definitions: map[string]smd.Definition{
-						"Point": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name:        "X",
-									Description: `coordinate`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "Y",
-									Description: `coordinate`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "cartOd",
-									Description: `version string id - 1`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "id",
-									Description: `version id - 1`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "baseId",
-									Description: `version id - 2`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "secondID",
-									Description: `version id - 3`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "secondIDs",
-									Description: `version multi id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.Integer,
-									},
-								},
-								{
-									Name:        "cartIDs",
-									Description: `version multi string id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.String,
-									},
-								},
-								{
-									Name:        "createdAt",
-									Description: `version date - 1`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "updatedAt",
-									Description: `version date - 2`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "manualChangedAt",
-									Description: `version date - 3`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "startAt",
-									Description: `version date - 4`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "newLat",
-									Description: `version group geo coordinate № - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "newLon",
-									Description: `version group geo coordinate № - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "lat",
-									Description: `version group geo coordinate № - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "lon",
-									Description: `version group geo coordinate № - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "latitude",
-									Description: `version group geo coordinate № - 3`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "longitude",
-									Description: `version group geo coordinate № - 3`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "baseFloat",
-									Description: `version group float - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "secondFloat",
-									Description: `version group float - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:     "emptyString",
-									Optional: true,
-									Type:     smd.String,
-								},
-								{
-									Name: "name",
-									Type: smd.String,
-								},
-								{
-									Name: "secondPoints",
-									Type: smd.Array,
-									Items: map[string]string{
-										"$ref": "#/definitions/Point",
-									},
-								},
-								{
-									Name: "nextQuotient",
-									Ref:  "#/definitions/Quotient",
-									Type: smd.Object,
-								},
-								{
-									Name:     "secondQuotient",
-									Optional: true,
-									Ref:      "#/definitions/Quotient",
-									Type:     smd.Object,
-								},
-								{
-									Name: "class",
-									Type: smd.String,
-								},
-							},
-						},
-						"Quotient": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name:        "Quo",
-									Description: `Quo docs`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "rem",
-									Description: `Rem docs`,
-									Type:        smd.Integer,
-								},
-								{
-									Name: "baseRow",
-									Type: smd.String,
-								},
-								{
-									Name:     "rowNil",
-									Optional: true,
-									Type:     smd.String,
-								},
-								{
-									Name: "data",
-									Ref:  "#/definitions/CycleInitStruct",
-									Type: smd.Object,
-								},
-							},
-						},
-						"CycleInitStruct": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name: "isCycleInit",
-									Type: smd.Boolean,
-								},
-							},
-						},
-					},
-				},
-			},
-			"GetByLatLong": {
-				Parameters: []smd.JSONSchema{
-					{
-						Name: "categoryId",
-						Type: smd.Integer,
-					},
-					{
-						Name: "baseID",
-						Type: smd.Integer,
-					},
-					{
-						Name: "lat",
-						Type: smd.Float,
-					},
-					{
-						Name: "lon",
-						Type: smd.Float,
-					},
-				},
-				Returns: smd.JSONSchema{
-					Optional: true,
-					Type:     smd.Object,
-					TypeName: "Point",
-					Properties: smd.PropertyList{
-						{
-							Name:        "X",
-							Description: `coordinate`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "Y",
-							Description: `coordinate`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "cartOd",
-							Description: `version string id - 1`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "id",
-							Description: `version id - 1`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "baseId",
-							Description: `version id - 2`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "secondID",
-							Description: `version id - 3`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "secondIDs",
-							Description: `version multi id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.Integer,
-							},
-						},
-						{
-							Name:        "cartIDs",
-							Description: `version multi string id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.String,
-							},
-						},
-						{
-							Name:        "createdAt",
-							Description: `version date - 1`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "updatedAt",
-							Description: `version date - 2`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "manualChangedAt",
-							Description: `version date - 3`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "startAt",
-							Description: `version date - 4`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "newLat",
-							Description: `version group geo coordinate № - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "newLon",
-							Description: `version group geo coordinate № - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "lat",
-							Description: `version group geo coordinate № - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "lon",
-							Description: `version group geo coordinate № - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "latitude",
-							Description: `version group geo coordinate № - 3`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "longitude",
-							Description: `version group geo coordinate № - 3`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "baseFloat",
-							Description: `version group float - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "secondFloat",
-							Description: `version group float - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:     "emptyString",
-							Optional: true,
-							Type:     smd.String,
-						},
-						{
-							Name: "name",
-							Type: smd.String,
-						},
-						{
-							Name: "secondPoints",
-							Type: smd.Array,
-							Items: map[string]string{
-								"$ref": "#/definitions/Point",
-							},
-						},
-						{
-							Name: "nextQuotient",
-							Ref:  "#/definitions/Quotient",
-							Type: smd.Object,
-						},
-						{
-							Name:     "secondQuotient",
-							Optional: true,
-							Ref:      "#/definitions/Quotient",
-							Type:     smd.Object,
-						},
-						{
-							Name: "class",
-							Type: smd.String,
-						},
-					},
-					Definitions: map[string]smd.Definition{
-						"Point": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name:        "X",
-									Description: `coordinate`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "Y",
-									Description: `coordinate`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "cartOd",
-									Description: `version string id - 1`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "id",
-									Description: `version id - 1`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "baseId",
-									Description: `version id - 2`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "secondID",
-									Description: `version id - 3`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "secondIDs",
-									Description: `version multi id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.Integer,
-									},
-								},
-								{
-									Name:        "cartIDs",
-									Description: `version multi string id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.String,
-									},
-								},
-								{
-									Name:        "createdAt",
-									Description: `version date - 1`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "updatedAt",
-									Description: `version date - 2`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "manualChangedAt",
-									Description: `version date - 3`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "startAt",
-									Description: `version date - 4`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "newLat",
-									Description: `version group geo coordinate № - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "newLon",
-									Description: `version group geo coordinate № - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "lat",
-									Description: `version group geo coordinate № - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "lon",
-									Description: `version group geo coordinate № - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "latitude",
-									Description: `version group geo coordinate № - 3`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "longitude",
-									Description: `version group geo coordinate № - 3`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "baseFloat",
-									Description: `version group float - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "secondFloat",
-									Description: `version group float - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:     "emptyString",
-									Optional: true,
-									Type:     smd.String,
-								},
-								{
-									Name: "name",
-									Type: smd.String,
-								},
-								{
-									Name: "secondPoints",
-									Type: smd.Array,
-									Items: map[string]string{
-										"$ref": "#/definitions/Point",
-									},
-								},
-								{
-									Name: "nextQuotient",
-									Ref:  "#/definitions/Quotient",
-									Type: smd.Object,
-								},
-								{
-									Name:     "secondQuotient",
-									Optional: true,
-									Ref:      "#/definitions/Quotient",
-									Type:     smd.Object,
-								},
-								{
-									Name: "class",
-									Type: smd.String,
-								},
-							},
-						},
-						"Quotient": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name:        "Quo",
-									Description: `Quo docs`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "rem",
-									Description: `Rem docs`,
-									Type:        smd.Integer,
-								},
-								{
-									Name: "baseRow",
-									Type: smd.String,
-								},
-								{
-									Name:     "rowNil",
-									Optional: true,
-									Type:     smd.String,
-								},
-								{
-									Name: "data",
-									Ref:  "#/definitions/CycleInitStruct",
-									Type: smd.Object,
-								},
-							},
-						},
-						"CycleInitStruct": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name: "isCycleInit",
-									Type: smd.Boolean,
-								},
-							},
-						},
-					},
-				},
-			},
-			"GetByTime": {
-				Parameters: []smd.JSONSchema{
-					{
-						Name: "createdAt",
-						Type: smd.String,
-					},
-					{
-						Name: "updateAt",
-						Type: smd.String,
-					},
-					{
-						Name: "startAt",
-						Type: smd.String,
-					},
-				},
-				Returns: smd.JSONSchema{
-					Optional: true,
-					Type:     smd.Object,
-					TypeName: "Point",
-					Properties: smd.PropertyList{
-						{
-							Name:        "X",
-							Description: `coordinate`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "Y",
-							Description: `coordinate`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "cartOd",
-							Description: `version string id - 1`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "id",
-							Description: `version id - 1`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "baseId",
-							Description: `version id - 2`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "secondID",
-							Description: `version id - 3`,
-							Type:        smd.Integer,
-						},
-						{
-							Name:        "secondIDs",
-							Description: `version multi id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.Integer,
-							},
-						},
-						{
-							Name:        "cartIDs",
-							Description: `version multi string id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.String,
-							},
-						},
-						{
-							Name:        "createdAt",
-							Description: `version date - 1`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "updatedAt",
-							Description: `version date - 2`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "manualChangedAt",
-							Description: `version date - 3`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "startAt",
-							Description: `version date - 4`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "newLat",
-							Description: `version group geo coordinate № - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "newLon",
-							Description: `version group geo coordinate № - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "lat",
-							Description: `version group geo coordinate № - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "lon",
-							Description: `version group geo coordinate № - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "latitude",
-							Description: `version group geo coordinate № - 3`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "longitude",
-							Description: `version group geo coordinate № - 3`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "baseFloat",
-							Description: `version group float - 1`,
-							Type:        smd.Float,
-						},
-						{
-							Name:        "secondFloat",
-							Description: `version group float - 2`,
-							Type:        smd.Float,
-						},
-						{
-							Name:     "emptyString",
-							Optional: true,
-							Type:     smd.String,
-						},
-						{
-							Name: "name",
-							Type: smd.String,
-						},
-						{
-							Name: "secondPoints",
-							Type: smd.Array,
-							Items: map[string]string{
-								"$ref": "#/definitions/Point",
-							},
-						},
-						{
-							Name: "nextQuotient",
-							Ref:  "#/definitions/Quotient",
-							Type: smd.Object,
-						},
-						{
-							Name:     "secondQuotient",
-							Optional: true,
-							Ref:      "#/definitions/Quotient",
-							Type:     smd.Object,
-						},
-						{
-							Name: "class",
-							Type: smd.String,
-						},
-					},
-					Definitions: map[string]smd.Definition{
-						"Point": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name:        "X",
-									Description: `coordinate`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "Y",
-									Description: `coordinate`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "cartOd",
-									Description: `version string id - 1`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "id",
-									Description: `version id - 1`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "baseId",
-									Description: `version id - 2`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "secondID",
-									Description: `version id - 3`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "secondIDs",
-									Description: `version multi id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.Integer,
-									},
-								},
-								{
-									Name:        "cartIDs",
-									Description: `version multi string id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.String,
-									},
-								},
-								{
-									Name:        "createdAt",
-									Description: `version date - 1`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "updatedAt",
-									Description: `version date - 2`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "manualChangedAt",
-									Description: `version date - 3`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "startAt",
-									Description: `version date - 4`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "newLat",
-									Description: `version group geo coordinate № - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "newLon",
-									Description: `version group geo coordinate № - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "lat",
-									Description: `version group geo coordinate № - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "lon",
-									Description: `version group geo coordinate № - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "latitude",
-									Description: `version group geo coordinate № - 3`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "longitude",
-									Description: `version group geo coordinate № - 3`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "baseFloat",
-									Description: `version group float - 1`,
-									Type:        smd.Float,
-								},
-								{
-									Name:        "secondFloat",
-									Description: `version group float - 2`,
-									Type:        smd.Float,
-								},
-								{
-									Name:     "emptyString",
-									Optional: true,
-									Type:     smd.String,
-								},
-								{
-									Name: "name",
-									Type: smd.String,
-								},
-								{
-									Name: "secondPoints",
-									Type: smd.Array,
-									Items: map[string]string{
-										"$ref": "#/definitions/Point",
-									},
-								},
-								{
-									Name: "nextQuotient",
-									Ref:  "#/definitions/Quotient",
-									Type: smd.Object,
-								},
-								{
-									Name:     "secondQuotient",
-									Optional: true,
-									Ref:      "#/definitions/Quotient",
-									Type:     smd.Object,
-								},
-								{
-									Name: "class",
-									Type: smd.String,
-								},
-							},
-						},
-						"Quotient": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name:        "Quo",
-									Description: `Quo docs`,
-									Type:        smd.Integer,
-								},
-								{
-									Name:        "rem",
-									Description: `Rem docs`,
-									Type:        smd.Integer,
-								},
-								{
-									Name: "baseRow",
-									Type: smd.String,
-								},
-								{
-									Name:     "rowNil",
-									Optional: true,
-									Type:     smd.String,
-								},
-								{
-									Name: "data",
-									Ref:  "#/definitions/CycleInitStruct",
-									Type: smd.Object,
-								},
-							},
-						},
-						"CycleInitStruct": {
-							Type: "object",
-							Properties: smd.PropertyList{
-								{
-									Name: "isCycleInit",
-									Type: smd.Boolean,
-								},
-							},
-						},
-					},
-				},
-			},
 			"Sum": {
 				Description: `Sum sums two digits and returns error with error code as result and IP from context.`,
 				Parameters: []smd.JSONSchema{
@@ -1131,11 +94,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 									Type:        smd.Integer,
 								},
 								{
-									Name:        "cartOd",
-									Description: `version string id - 1`,
-									Type:        smd.String,
-								},
-								{
 									Name:        "id",
 									Description: `version id - 1`,
 									Type:        smd.Integer,
@@ -1151,22 +109,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 									Type:        smd.Integer,
 								},
 								{
-									Name:        "secondIDs",
-									Description: `version multi id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.Integer,
-									},
-								},
-								{
-									Name:        "cartIDs",
-									Description: `version multi string id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.String,
-									},
-								},
-								{
 									Name:        "createdAt",
 									Description: `version date - 1`,
 									Type:        smd.String,
@@ -1179,11 +121,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 								{
 									Name:        "manualChangedAt",
 									Description: `version date - 3`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "startAt",
-									Description: `version date - 4`,
 									Type:        smd.String,
 								},
 								{
@@ -1318,11 +255,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 								Type:        smd.Integer,
 							},
 							{
-								Name:        "cartOd",
-								Description: `version string id - 1`,
-								Type:        smd.String,
-							},
-							{
 								Name:        "id",
 								Description: `version id - 1`,
 								Type:        smd.Integer,
@@ -1338,22 +270,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 								Type:        smd.Integer,
 							},
 							{
-								Name:        "secondIDs",
-								Description: `version multi id`,
-								Type:        smd.Array,
-								Items: map[string]string{
-									"type": smd.Integer,
-								},
-							},
-							{
-								Name:        "cartIDs",
-								Description: `version multi string id`,
-								Type:        smd.Array,
-								Items: map[string]string{
-									"type": smd.String,
-								},
-							},
-							{
 								Name:        "createdAt",
 								Description: `version date - 1`,
 								Type:        smd.String,
@@ -1366,11 +282,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 							{
 								Name:        "manualChangedAt",
 								Description: `version date - 3`,
-								Type:        smd.String,
-							},
-							{
-								Name:        "startAt",
-								Description: `version date - 4`,
 								Type:        smd.String,
 							},
 							{
@@ -1460,11 +371,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 										Type:        smd.Integer,
 									},
 									{
-										Name:        "cartOd",
-										Description: `version string id - 1`,
-										Type:        smd.String,
-									},
-									{
 										Name:        "id",
 										Description: `version id - 1`,
 										Type:        smd.Integer,
@@ -1480,22 +386,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 										Type:        smd.Integer,
 									},
 									{
-										Name:        "secondIDs",
-										Description: `version multi id`,
-										Type:        smd.Array,
-										Items: map[string]string{
-											"type": smd.Integer,
-										},
-									},
-									{
-										Name:        "cartIDs",
-										Description: `version multi string id`,
-										Type:        smd.Array,
-										Items: map[string]string{
-											"type": smd.String,
-										},
-									},
-									{
 										Name:        "createdAt",
 										Description: `version date - 1`,
 										Type:        smd.String,
@@ -1508,11 +398,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 									{
 										Name:        "manualChangedAt",
 										Description: `version date - 3`,
-										Type:        smd.String,
-									},
-									{
-										Name:        "startAt",
-										Description: `version date - 4`,
 										Type:        smd.String,
 									},
 									{
@@ -1650,11 +535,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 										Type:        smd.Integer,
 									},
 									{
-										Name:        "cartOd",
-										Description: `version string id - 1`,
-										Type:        smd.String,
-									},
-									{
 										Name:        "id",
 										Description: `version id - 1`,
 										Type:        smd.Integer,
@@ -1670,22 +550,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 										Type:        smd.Integer,
 									},
 									{
-										Name:        "secondIDs",
-										Description: `version multi id`,
-										Type:        smd.Array,
-										Items: map[string]string{
-											"type": smd.Integer,
-										},
-									},
-									{
-										Name:        "cartIDs",
-										Description: `version multi string id`,
-										Type:        smd.Array,
-										Items: map[string]string{
-											"type": smd.String,
-										},
-									},
-									{
 										Name:        "createdAt",
 										Description: `version date - 1`,
 										Type:        smd.String,
@@ -1698,11 +562,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 									{
 										Name:        "manualChangedAt",
 										Description: `version date - 3`,
-										Type:        smd.String,
-									},
-									{
-										Name:        "startAt",
-										Description: `version date - 4`,
 										Type:        smd.String,
 									},
 									{
@@ -1835,11 +694,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 							Type:        smd.Integer,
 						},
 						{
-							Name:        "cartOd",
-							Description: `version string id - 1`,
-							Type:        smd.String,
-						},
-						{
 							Name:        "id",
 							Description: `version id - 1`,
 							Type:        smd.Integer,
@@ -1855,22 +709,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 							Type:        smd.Integer,
 						},
 						{
-							Name:        "secondIDs",
-							Description: `version multi id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.Integer,
-							},
-						},
-						{
-							Name:        "cartIDs",
-							Description: `version multi string id`,
-							Type:        smd.Array,
-							Items: map[string]string{
-								"type": smd.String,
-							},
-						},
-						{
 							Name:        "createdAt",
 							Description: `version date - 1`,
 							Type:        smd.String,
@@ -1883,11 +721,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 						{
 							Name:        "manualChangedAt",
 							Description: `version date - 3`,
-							Type:        smd.String,
-						},
-						{
-							Name:        "startAt",
-							Description: `version date - 4`,
 							Type:        smd.String,
 						},
 						{
@@ -1977,11 +810,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 									Type:        smd.Integer,
 								},
 								{
-									Name:        "cartOd",
-									Description: `version string id - 1`,
-									Type:        smd.String,
-								},
-								{
 									Name:        "id",
 									Description: `version id - 1`,
 									Type:        smd.Integer,
@@ -1997,22 +825,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 									Type:        smd.Integer,
 								},
 								{
-									Name:        "secondIDs",
-									Description: `version multi id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.Integer,
-									},
-								},
-								{
-									Name:        "cartIDs",
-									Description: `version multi string id`,
-									Type:        smd.Array,
-									Items: map[string]string{
-										"type": smd.String,
-									},
-								},
-								{
 									Name:        "createdAt",
 									Description: `version date - 1`,
 									Type:        smd.String,
@@ -2025,11 +837,6 @@ func (ArithService) SMD() smd.ServiceInfo {
 								{
 									Name:        "manualChangedAt",
 									Description: `version date - 3`,
-									Type:        smd.String,
-								},
-								{
-									Name:        "startAt",
-									Description: `version date - 4`,
 									Type:        smd.String,
 								},
 								{
@@ -2300,71 +1107,6 @@ func (s ArithService) Invoke(ctx context.Context, method string, params json.Raw
 	var err error
 
 	switch method {
-	case RPC.ArithService.GetByID:
-		var args = struct {
-			CartId     string `json:"cartId"`
-			CategoryId int    `json:"categoryId"`
-			BaseID     int    `json:"baseID"`
-			Id         int    `json:"id"`
-		}{}
-
-		if zenrpc.IsArray(params) {
-			if params, err = zenrpc.ConvertToObject([]string{"cartId", "categoryId", "baseID", "id"}, params); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		if len(params) > 0 {
-			if err := json.Unmarshal(params, &args); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		resp.Set(s.GetByID(ctx, args.CartId, args.CategoryId, args.BaseID, args.Id))
-
-	case RPC.ArithService.GetByLatLong:
-		var args = struct {
-			CategoryId int     `json:"categoryId"`
-			BaseID     int     `json:"baseID"`
-			Lat        float64 `json:"lat"`
-			Lon        float64 `json:"lon"`
-		}{}
-
-		if zenrpc.IsArray(params) {
-			if params, err = zenrpc.ConvertToObject([]string{"categoryId", "baseID", "lat", "lon"}, params); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		if len(params) > 0 {
-			if err := json.Unmarshal(params, &args); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		resp.Set(s.GetByLatLong(ctx, args.CategoryId, args.BaseID, args.Lat, args.Lon))
-
-	case RPC.ArithService.GetByTime:
-		var args = struct {
-			CreatedAt string `json:"createdAt"`
-			UpdateAt  string `json:"updateAt"`
-			StartAt   string `json:"startAt"`
-		}{}
-
-		if zenrpc.IsArray(params) {
-			if params, err = zenrpc.ConvertToObject([]string{"createdAt", "updateAt", "startAt"}, params); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		if len(params) > 0 {
-			if err := json.Unmarshal(params, &args); err != nil {
-				return zenrpc.NewResponseError(nil, zenrpc.InvalidParams, "", err.Error())
-			}
-		}
-
-		resp.Set(s.GetByTime(ctx, args.CreatedAt, args.UpdateAt, args.StartAt))
-
 	case RPC.ArithService.Sum:
 		var args = struct {
 			A int `json:"a"`

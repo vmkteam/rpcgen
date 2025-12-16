@@ -35,6 +35,8 @@ const (
 	DefaultList      = "emptyList()"
 	DefaultMap       = "emptyMap()"
 	DefaultLocalTime = "LocalTime.now()"
+
+	version = "1.0.0"
 )
 
 var (
@@ -50,10 +52,10 @@ var (
 		Long:      DefaultInteger,
 	}
 	doubleSuffixes = map[string]struct{}{
-		"Lat":       {},
-		"Lon":       {},
-		"Latitude":  {},
-		"Longitude": {},
+		"lat":       {},
+		"lon":       {},
+		"latitude":  {},
+		"longitude": {},
 	}
 	reservedKeywords = []string{"as", "as?", "break", "class", "continue", "do", "else", "false", "for", "fun", "if",
 		"in", "!in", "interface", "is", "!is", "null", "object", "package", "return", "super", "this", "throw", "true",
@@ -134,7 +136,7 @@ func (g *Generator) prepareTemplateData() templateData {
 		g.settings.Class = BaseClass
 	}
 
-	data := templateData{GeneratorData: gen.DefaultGeneratorData(), PackageAPI: g.settings.PackageAPI, Imports: g.settings.Imports, Class: g.settings.Class}
+	data := templateData{GeneratorData: gen.DefaultGeneratorData().AddLangAndLocalVersion(version, "kotlin"), PackageAPI: g.settings.PackageAPI, Imports: g.settings.Imports, Class: g.settings.Class}
 
 	modelsMap := make(map[string]Model)
 	servicesMap := make(map[string][]Method)
@@ -182,6 +184,7 @@ func (g *Generator) prepareTemplateData() templateData {
 	g.sortTemplateData(&data)
 	g.prepareModelFieldName(&data)
 
+	g.resolveTypes(&data)
 	return data
 }
 
@@ -286,6 +289,44 @@ func (g *Generator) executeTemplate(data templateData) ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+// resolveTypes last check and update params in methods
+func (g *Generator) resolveTypes(data *templateData) {
+	for i := range data.Methods {
+		method := &data.Methods[i]
+		for j := range method.Parameters {
+			param := &method.Parameters[j]
+			if newType, ok := inferKotlinType(param.Type, param.Name); ok {
+				param.setType(newType)
+			}
+		}
+	}
+}
+
+func inferKotlinType(valType, name string) (string, bool) {
+	switch valType {
+	case Int:
+		if kotlinTypeID(name) {
+			return Long, true
+		}
+	case Float:
+		if kotlinTypeDouble(name) {
+			return Double, true
+		}
+	case String:
+		if kotlinTypeTimestamp(name) {
+			return Timestamp, true
+		}
+	}
+	return "", false
+}
+
+// setType update all types
+func (p *Parameter) setType(t string) {
+	p.Type = t
+	p.BaseType = t
+	p.ReturnType = t
 }
 
 // propertiesToParams convert smd.PropertyList to []Parameter
@@ -435,6 +476,7 @@ func kotlinDefault(smdType string) string {
 
 // kotlinTypeDouble check if property need set type Double
 func kotlinTypeDouble(name string) bool {
+	name = strings.ToLower(name)
 	if _, ok := doubleSuffixes[name]; ok {
 		return true
 	}
@@ -448,17 +490,18 @@ func kotlinTypeDouble(name string) bool {
 	return false
 }
 
-// kotlinTypeID check if property is ID set type Long
+// kotlinTypeID check if property is ID or IDs set type Long
 func kotlinTypeID(name string) bool {
 	return name == id ||
 		strings.HasSuffix(name, strings.ToUpper(id)) ||
 		strings.HasSuffix(name, "Id") ||
-		strings.HasSuffix(name, "Ids")
+		strings.HasSuffix(name, "Id"+"s") ||
+		strings.HasSuffix(name, strings.ToUpper(id)+"s")
 }
 
 // kotlinTypeTimestamp check if is time property set Timestamp
 func kotlinTypeTimestamp(name string) bool {
-	return strings.HasSuffix(name, "edAt")
+	return strings.HasSuffix(name, "At")
 }
 
 func arrayType(items map[string]string, isReturnType bool) string {

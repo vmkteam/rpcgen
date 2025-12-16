@@ -1,6 +1,6 @@
 package kotlin
 
-const model = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const model = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 package {{ .PackageAPI }}.model
 
 import java.time.LocalTime
@@ -26,7 +26,7 @@ data class {{ $model.Name }}(
 )
 {{ end }}
 `
-const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}; DO NOT EDIT.
+const protocolTemplate = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }} with {{ .Lang }} v{{ .LocalVersion }}; DO NOT EDIT.
 package {{ .PackageAPI }}
 
 import com.google.gson.reflect.TypeToken

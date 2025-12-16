@@ -2,12 +2,21 @@ package typescript
 
 import (
 	"bytes"
+	"flag"
 	"os"
 	"testing"
 
 	"github.com/vmkteam/zenrpc/v2"
 	"github.com/vmkteam/zenrpc/v2/testdata"
 )
+
+const (
+	clientTS = "./testdata/catalogue_client.ts"
+	classes  = "./testdata/catalogue_with_classes.ts"
+	typeOnly = "./testdata/catalogue_with_types_only.ts"
+)
+
+var update = flag.Bool("update", false, "update .ts files")
 
 func TestGenerateTypeScriptClient(t *testing.T) {
 	rpc := zenrpc.NewServer(zenrpc.Options{})
@@ -20,7 +29,20 @@ func TestGenerateTypeScriptClient(t *testing.T) {
 		t.Fatalf("generate typescript client: %v", err)
 	}
 
-	testData, err := os.ReadFile("./testdata/catalogue_client.ts")
+	if *update {
+		var f *os.File
+		f, err = os.Create(clientTS)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = f.Write(generated)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return
+	}
+
+	testData, err := os.ReadFile(clientTS)
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}
@@ -45,7 +67,20 @@ func TestGenerateTypeScriptClasses(t *testing.T) {
 		t.Fatalf("generate typescript client: %v", err)
 	}
 
-	testData, err := os.ReadFile("./testdata/catalogue_with_classes.ts")
+	if *update {
+		var f *os.File
+		f, err = os.Create(classes)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = f.Write(generated)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return
+	}
+
+	testData, err := os.ReadFile(classes)
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}
@@ -70,7 +105,20 @@ func TestGenerateTypeScriptTypesOnly(t *testing.T) {
 		t.Fatalf("generate typescript client: %v", err)
 	}
 
-	testData, err := os.ReadFile("./testdata/catalogue_with_types_only.ts")
+	if *update {
+		var f *os.File
+		f, err = os.Create(typeOnly)
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = f.Write(generated)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return
+	}
+
+	testData, err := os.ReadFile(typeOnly)
 	if err != nil {
 		t.Fatalf("open test data file: %v", err)
 	}

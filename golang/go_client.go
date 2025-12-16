@@ -11,6 +11,11 @@ import (
 	"github.com/vmkteam/zenrpc/v2/smd"
 )
 
+const (
+	version = "1.1.0"
+	lang    = "golang"
+)
+
 type Settings struct {
 	Package string
 }
@@ -31,7 +36,7 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 
 // Generate returns generated Go client.
 func (g *Generator) Generate() ([]byte, error) {
-	g.schema.GeneratorData = gen.DefaultGeneratorData()
+	g.schema.GeneratorData = gen.DefaultGeneratorData().AddLangAndLocalVersion(version, lang)
 	g.schema.Package = g.settings.Package
 
 	tmpl, err := template.New("golang client").Funcs(templateFuncs).Parse(goTpl)

@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/vmkteam/rpcgen/v2/kotlin/testdata"
+	"github.com/vmkteam/rpcgen/v2/swift/testdata"
 	"github.com/vmkteam/zenrpc/v2"
 )
 

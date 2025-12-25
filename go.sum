@@ -34,8 +34,8 @@ github.com/vmkteam/meta-schema/v2 v2.0.1 h1:7eoImKpnCs2wiCcBB8AUCtfVVhGa6L6DDqih
 github.com/vmkteam/meta-schema/v2 v2.0.1/go.mod h1:GQzU4Rid0Q9dDIz/OeSDyL/aB/QG7tD0gOUt5nQ4JMk=
 github.com/vmkteam/zenrpc v1.1.1 h1:WmModRVCwgs7XEkeJcVvmDOwEtAQk0TuYV91wdpAaCw=
 github.com/vmkteam/zenrpc v1.1.1/go.mod h1:x3fCkb9HHOpqwqC7TKXf8pyXWdPxEt2Zrndl50YxexM=
-github.com/vmkteam/zenrpc/v2 v2.3.0 h1:C3jBi0FkseKmVVh2WTvdMuG0THdL84jOut4Xsqx5NeM=
-github.com/vmkteam/zenrpc/v2 v2.3.0/go.mod h1:HSnsZXbtiRDdnga3YjG8x2lQsQha7Jy/pZSFnNN+XeM=
+github.com/vmkteam/zenrpc/v2 v2.3.1 h1:JbQXzlYJWNdMXL2xClItf5bK0aLZFozTbqKXJZRyfGo=
+github.com/vmkteam/zenrpc/v2 v2.3.1/go.mod h1:HSnsZXbtiRDdnga3YjG8x2lQsQha7Jy/pZSFnNN+XeM=
 go.uber.org/goleak v1.3.0 h1:2K3zAYmnTNqV73imy9J1T3WC+gmCePx2hEGkimedGto=
 go.uber.org/goleak v1.3.0/go.mod h1:CoHD4mav9JJNrW/WLlf7HGZPjdw8EucARQHekz1X6bE=
 go.yaml.in/yaml/v2 v2.4.3 h1:6gvOSjQoTB3vt1l+CU+tSyi/HOjfOjRLJ4YwYZGwRO0=

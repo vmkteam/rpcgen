@@ -379,6 +379,46 @@ func TestConvertJSONSchema(t *testing.T) {
 				},
 			},
 		},
+		// object param with no properties/definitions should result in "any"
+		{
+			in: smd.Schema{
+				Services: map[string]smd.Service{
+					"simple.anyParam": {
+						Parameters: []smd.JSONSchema{
+							{
+								Name: "data",
+								Type: "object",
+							},
+						},
+						Returns: smd.JSONSchema{
+							Type: smd.Object,
+						},
+					},
+				},
+			},
+			out: Schema{
+				Namespaces: []Namespace{
+					{
+						Name: "simple",
+						Methods: []Method{
+							{
+								Name: "anyParam",
+								Params: []Value{
+									{
+										Name:      "data",
+										Type:      "object",
+										ModelName: "",
+									},
+								},
+								Returns: &Value{
+									Type: "object",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
 	}
 
 	for _, tt := range tc {

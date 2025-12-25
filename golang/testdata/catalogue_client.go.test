@@ -1,4 +1,4 @@
-// Code generated from jsonrpc schema by rpcgen v2.5.x with golang v1.0.0; DO NOT EDIT.
+// Code generated from jsonrpc schema by rpcgen v2.5.x with golang v1.1.0; DO NOT EDIT.
 
 package client
 
@@ -30,6 +30,7 @@ type Client struct {
 	Arith     *svcArith
 	Catalogue *svcCatalogue
 	Phonebook *svcPhonebook
+	Print     *svcPrint
 }
 
 func NewClient(endpoint string, httpClient *http.Client) *Client {
@@ -43,6 +44,7 @@ func NewClient(endpoint string, httpClient *http.Client) *Client {
 	c.Arith = newClientArith(c.rpcClient)
 	c.Catalogue = newClientCatalogue(c.rpcClient)
 	c.Phonebook = newClientPhonebook(c.rpcClient)
+	c.Print = newClientPrint(c.rpcClient)
 
 	return c
 }
@@ -458,6 +460,76 @@ func (c *svcPhonebook) ValidateSearch(ctx context.Context, search *PersonSearch)
 	}
 
 	err = c.client.call(ctx, "phonebook.ValidateSearch", _req, &res)
+
+	return
+}
+
+type svcPrint struct {
+	client *rpcClient
+}
+
+func newClientPrint(client *rpcClient) *svcPrint {
+	return &svcPrint{
+		client: client,
+	}
+}
+
+func (c *svcPrint) PrintAnything(ctx context.Context, s any) (res any, err error) {
+	_req := struct {
+		S any
+	}{
+		S: s,
+	}
+
+	err = c.client.call(ctx, "print.PrintAnything", _req, &res)
+
+	return
+}
+
+func (c *svcPrint) PrintOptional(ctx context.Context, s *string) (res string, err error) {
+	_req := struct {
+		S *string
+	}{
+		S: s,
+	}
+
+	err = c.client.call(ctx, "print.PrintOptional", _req, &res)
+
+	return
+}
+
+func (c *svcPrint) PrintOptionalWithDefault(ctx context.Context, s *string) (res string, err error) {
+	_req := struct {
+		S *string
+	}{
+		S: s,
+	}
+
+	err = c.client.call(ctx, "print.PrintOptionalWithDefault", _req, &res)
+
+	return
+}
+
+func (c *svcPrint) PrintRequired(ctx context.Context, s string) (res string, err error) {
+	_req := struct {
+		S string
+	}{
+		S: s,
+	}
+
+	err = c.client.call(ctx, "print.PrintRequired", _req, &res)
+
+	return
+}
+
+func (c *svcPrint) PrintRequiredDefault(ctx context.Context, s *string) (res string, err error) {
+	_req := struct {
+		S *string
+	}{
+		S: s,
+	}
+
+	err = c.client.call(ctx, "print.PrintRequiredDefault", _req, &res)
 
 	return
 }

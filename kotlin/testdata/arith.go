@@ -17,8 +17,8 @@ type Point struct {
 	Z               int       `json:"-"`
 	CartId          string    `json:"cartOd"`          // version string id - 1
 	ID              int       `json:"id"`              // version id - 1
-	BaseID          int       `json:"baseId"`          // version id - 2
-	SecondID        int       `json:"secondID"`        // version id - 3
+	BaseID          int64     `json:"baseId"`          // version id - 2
+	SecondID        int32     `json:"secondID"`        // version id - 3
 	SecondIDs       []int     `json:"secondIDs"`       // version multi id
 	CartIDs         []string  `json:"cartIDs"`         // version multi string id
 	CreatedAt       string    `json:"createdAt"`       // version date - 1
@@ -46,6 +46,10 @@ type SecondPoint struct {
 
 func (as ArithService) GetByID(ctx context.Context, cartId string, categoryId int, baseID int, id int) (*Point, error) {
 	return &Point{}, nil
+}
+
+func (as ArithService) GetSecondIds(ctx context.Context) []int {
+	return nil
 }
 
 func (as ArithService) GetByLatLong(ctx context.Context, categoryId int, baseID int, lat, lon float64) (*Point, error) {

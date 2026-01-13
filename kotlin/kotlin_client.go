@@ -36,7 +36,7 @@ const (
 	DefaultMap       = "emptyMap()"
 	DefaultLocalTime = "LocalTime.now()"
 
-	version = "1.0.0"
+	version = "1.0.1"
 )
 
 var (
@@ -139,7 +139,6 @@ func (g *Generator) prepareTemplateData() templateData {
 	data := templateData{GeneratorData: gen.DefaultGeneratorData().AddLangAndLocalVersion(version, "kotlin"), PackageAPI: g.settings.PackageAPI, Imports: g.settings.Imports, Class: g.settings.Class}
 
 	modelsMap := make(map[string]Model)
-	servicesMap := make(map[string][]Method)
 
 	for serviceName, service := range g.schema.Services {
 		var (
@@ -166,14 +165,8 @@ func (g *Generator) prepareTemplateData() templateData {
 			params = append(params, p)
 		}
 		method.Parameters = params
+		normalizeMethodReturnType(&method)
 		data.Methods = append(data.Methods, method)
-		if g.settings.IsProtocol {
-			parts := strings.SplitN(method.Name, ".", 2)
-			if len(parts) != 2 {
-				continue
-			}
-			servicesMap[parts[0]] = append(servicesMap[parts[0]], method)
-		}
 	}
 
 	for _, v := range modelsMap {
@@ -186,6 +179,13 @@ func (g *Generator) prepareTemplateData() templateData {
 
 	g.resolveTypes(&data)
 	return data
+}
+
+// normalizeMethodReturnType check suffix ids and type list convert to List<Long>
+func normalizeMethodReturnType(method *Method) {
+	if strings.HasSuffix(strings.ToLower(method.Name), "ids") && method.Returns.Type == "List<Int>" {
+		method.Returns.Type = "List<Long>"
+	}
 }
 
 func (g *Generator) fillIsInitial(data *templateData) {
@@ -468,7 +468,7 @@ func kotlinDefault(smdType string) string {
 	}
 
 	if strings.HasPrefix(smdType, Map) {
-		return DefaultList
+		return DefaultMap
 	}
 
 	return smdType

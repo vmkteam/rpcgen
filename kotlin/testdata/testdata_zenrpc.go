@@ -11,10 +11,11 @@ import (
 )
 
 var RPC = struct {
-	ArithService struct{ GetByID, GetByLatLong, GetByTime, Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }
+	ArithService struct{ GetByID, GetSecondIds, GetByLatLong, GetByTime, Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }
 }{
-	ArithService: struct{ GetByID, GetByLatLong, GetByTime, Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }{
+	ArithService: struct{ GetByID, GetSecondIds, GetByLatLong, GetByTime, Sum, Positive, DoSomething, DoSomethingV2, GetPoints, DoSomethingWithPoint, Multiply, CheckError, CheckZenRPCError, Divide, Pow, Pi, SumArray string }{
 		GetByID:              "getbyid",
+		GetSecondIds:         "getsecondids",
 		GetByLatLong:         "getbylatlong",
 		GetByTime:            "getbytime",
 		Sum:                  "sum",
@@ -379,6 +380,16 @@ func (ArithService) SMD() smd.ServiceInfo {
 								},
 							},
 						},
+					},
+				},
+			},
+			"GetSecondIds": {
+				Parameters: []smd.JSONSchema{},
+				Returns: smd.JSONSchema{
+					Type:     smd.Array,
+					TypeName: "[]",
+					Items: map[string]string{
+						"type": smd.Integer,
 					},
 				},
 			},
@@ -2321,6 +2332,9 @@ func (s ArithService) Invoke(ctx context.Context, method string, params json.Raw
 		}
 
 		resp.Set(s.GetByID(ctx, args.CartId, args.CategoryId, args.BaseID, args.Id))
+
+	case RPC.ArithService.GetSecondIds:
+		resp.Set(s.GetSecondIds(ctx))
 
 	case RPC.ArithService.GetByLatLong:
 		var args = struct {

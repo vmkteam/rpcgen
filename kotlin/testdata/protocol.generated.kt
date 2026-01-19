@@ -1,4 +1,4 @@
-/// Code generated from jsonrpc schema by rpcgen v2.5.x with kotlin v1.0.1; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.5.x with kotlin v1.0.2; DO NOT EDIT.
 package api
 
 import com.google.gson.reflect.TypeToken
@@ -109,6 +109,18 @@ interface Api : Transport {
     )
 
     /**
+     *
+     * Коды ошибок:
+     *
+     *    "404": "was not found",
+     *    "501": "example",
+     *    "502": "given example is different from user's",
+     *    "503": "failed to create new example",
+     *    "504": "failed to send example",
+     *    "505": "given example is invalid",
+     *    "506": "given example is blocked",
+     *
+     *
      * @return 
      */
     fun arithGetByID(

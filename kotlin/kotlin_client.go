@@ -36,7 +36,7 @@ const (
 	DefaultMap       = "emptyMap()"
 	DefaultLocalTime = "LocalTime.now()"
 
-	version = "1.0.1"
+	version = "1.0.2"
 )
 
 var (
@@ -258,6 +258,21 @@ func (g *Generator) sortTemplateData(data *templateData) {
 	sort.Slice(data.Methods, func(i, j int) bool {
 		return data.Methods[i].Name < data.Methods[j].Name
 	})
+
+	// sort errs by erName (it's  a number) because they was located in map
+	for _, m := range data.Methods {
+		sort.Slice(m.Errors, func(i, j int) bool {
+			iNum, err := strconv.Atoi(m.Errors[i].Name)
+			if err != nil {
+				return m.Errors[i].Name < m.Errors[j].Name
+			}
+			jNum, err := strconv.Atoi(m.Errors[j].Name)
+			if err != nil {
+				return m.Errors[i].Name < m.Errors[j].Name
+			}
+			return iNum < jNum
+		})
+	}
 
 	sort.Slice(data.Models, func(i, j int) bool {
 		return data.Models[i].Name < data.Models[j].Name

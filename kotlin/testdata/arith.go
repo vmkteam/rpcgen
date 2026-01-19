@@ -44,6 +44,13 @@ type Point struct {
 type SecondPoint struct {
 }
 
+//zenrpc:404 was not found
+//zenrpc:501 example
+//zenrpc:502 given example is different from user's
+//zenrpc:503 failed to create new example
+//zenrpc:504 failed to send example
+//zenrpc:505 given example is invalid
+//zenrpc:506 given example is blocked
 func (as ArithService) GetByID(ctx context.Context, cartId string, categoryId int, baseID int, id int) (*Point, error) {
 	return &Point{}, nil
 }

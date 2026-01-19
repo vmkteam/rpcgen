@@ -20,7 +20,7 @@ import (
 	"github.com/vmkteam/zenrpc/v2"
 )
 
-const name = "{{ .Package }}"
+const name = "{{ .CallerName }}"
 
 var (
 	// Always import time package. Generated models can contain time.Time fields.

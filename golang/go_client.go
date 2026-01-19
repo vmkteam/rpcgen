@@ -2,6 +2,7 @@ package golang
 
 import (
 	"bytes"
+	"fmt"
 	"go/format"
 	"strings"
 	"text/template"
@@ -12,12 +13,13 @@ import (
 )
 
 const (
-	version = "1.1.0"
+	version = "1.1.1"
 	lang    = "golang"
 )
 
 type Settings struct {
-	Package string
+	Package         string
+	CallerNamespace string
 }
 
 // Generator main package structure
@@ -38,6 +40,10 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 func (g *Generator) Generate() ([]byte, error) {
 	g.schema.GeneratorData = gen.DefaultGeneratorData().AddLangAndLocalVersion(version, lang)
 	g.schema.Package = g.settings.Package
+	g.schema.CallerName = g.settings.Package
+	if g.settings.CallerNamespace != "" {
+		g.schema.CallerName = fmt.Sprintf("%s-%s", g.settings.CallerNamespace, g.settings.Package)
+	}
 
 	tmpl, err := template.New("golang client").Funcs(templateFuncs).Parse(goTpl)
 	if err != nil {

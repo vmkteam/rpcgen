@@ -31,6 +31,7 @@ func NewSchema(schema smd.Schema) Schema {
 type Schema struct {
 	gen.GeneratorData
 	Package    string
+	CallerName string
 	Namespaces []Namespace
 }
 

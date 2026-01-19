@@ -109,6 +109,18 @@ interface Api : Transport {
     )
 
     /**
+     *
+     * Коды ошибок:
+     *
+     *    "404": "phone was not found",
+     *    "501": "no phone or apiKey provided",
+     *    "502": "given phone is different from user's",
+     *    "503": "failed to create new user",
+     *    "504": "failed to send sms",
+     *    "505": "given phone number is invalid",
+     *    "506": "given phone number is blocked",
+     *
+     *
      * @return 
      */
     fun arithGetByID(

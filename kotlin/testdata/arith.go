@@ -44,16 +44,13 @@ type Point struct {
 type SecondPoint struct {
 }
 
-//zenrpc:mustExist=false
-//zenrpc:sendRealSms=false
-//zenrpc:withCascade=false
-//zenrpc:404 phone was not found
-//zenrpc:501 no phone or apiKey provided
-//zenrpc:502 given phone is different from user's
-//zenrpc:503 failed to create new user
-//zenrpc:504 failed to send sms
-//zenrpc:505 given phone number is invalid
-//zenrpc:506 given phone number is blocked
+//zenrpc:404 was not found
+//zenrpc:501 example
+//zenrpc:502 given example is different from user's
+//zenrpc:503 failed to create new example
+//zenrpc:504 failed to send example
+//zenrpc:505 given example is invalid
+//zenrpc:506 given example is blocked
 func (as ArithService) GetByID(ctx context.Context, cartId string, categoryId int, baseID int, id int) (*Point, error) {
 	return &Point{}, nil
 }

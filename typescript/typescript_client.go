@@ -74,7 +74,7 @@ type Type struct {
 	Name       string
 	Comment    string
 	Type       string
-	Optional   bool
+	Nullable   bool
 	HasDefault bool
 	Default    *string
 }
@@ -145,6 +145,10 @@ func (t Type) DefaultTmpl() string {
 		case "Array<boolean>":
 			result = "[false]"
 		}
+	}
+
+	if result == "null" && !t.Nullable {
+		result = "null!"
 	}
 
 	return result
@@ -298,7 +302,7 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 		Name:     in.Name,
 		Comment:  comment,
 		Type:     convertTSScalar(in.Type),
-		Optional: in.Optional,
+		Nullable: in.Optional,
 	}
 
 	// detect array sub type
@@ -337,6 +341,12 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 			Type:        d.Type,
 			Properties:  d.Properties,
 		}, typeMapper)
+	}
+
+	// Append `| null` for nullable fields so the type reflects what the API actually
+	// sends (Go marshals nil pointers/slices as JSON null, not as an absent key).
+	if result.Nullable {
+		result.Type += " | null"
 	}
 
 	// apply hook

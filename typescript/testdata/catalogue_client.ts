@@ -18,7 +18,7 @@ export interface IGroup {
   title: string,
   nodes: Array<IGroup>,
   groups: Array<IGroup>,
-  child?: IGroup,
+  child: IGroup | null,
   sub: ISubGroup
 }
 

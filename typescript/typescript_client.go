@@ -343,8 +343,6 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 		}, typeMapper)
 	}
 
-	// Append `| null` for nullable fields so the type reflects what the API actually
-	// sends (Go marshals nil pointers/slices as JSON null, not as an absent key).
 	if result.Nullable {
 		result.Type += " | null"
 	}

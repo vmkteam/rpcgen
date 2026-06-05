@@ -18,7 +18,7 @@ export interface IGroup {
   title: string,
   nodes: Array<IGroup>,
   groups: Array<IGroup>,
-  child: IGroup | null,
+  child?: IGroup | null,
   sub: ISubGroup
 }
 
@@ -54,7 +54,7 @@ export class Group implements IGroup {
   title: string = null!;
   nodes: Array<IGroup> = null!;
   groups: Array<IGroup> = null!;
-  child: IGroup | null = null;
+  child?: IGroup | null = null;
   sub: ISubGroup = null!;
 }
 

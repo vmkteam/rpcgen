@@ -74,7 +74,7 @@ type Type struct {
 	Name       string
 	Comment    string
 	Type       string
-	Nullable   bool
+	Optional   bool
 	HasDefault bool
 	Default    *string
 }
@@ -147,7 +147,7 @@ func (t Type) DefaultTmpl() string {
 		}
 	}
 
-	if result == "null" && !t.Nullable {
+	if result == "null" && !t.Optional {
 		result = "null!"
 	}
 
@@ -302,7 +302,7 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 		Name:     in.Name,
 		Comment:  comment,
 		Type:     convertTSScalar(in.Type),
-		Nullable: in.Optional,
+		Optional: in.Optional,
 	}
 
 	// detect array sub type
@@ -343,7 +343,7 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 		}, typeMapper)
 	}
 
-	if result.Nullable {
+	if result.Optional {
 		result.Type += " | null"
 	}
 

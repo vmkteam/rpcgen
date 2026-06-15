@@ -6,7 +6,7 @@ const client = `/* Code generated from jsonrpc schema by rpcgen v{{ .Version }} 
 export interface {{ .Name }} {
 {{- $len := len .Parameters }}
 {{- range $i, $e := .Parameters }}
-  {{ .Name }}{{ if .Nullable }}?{{ end }}: {{ .Type }}{{ if ne $i $len }},{{ end }}{{ if ne .Comment "" }} // {{ .Comment }}
+  {{ .Name }}{{ if .Optional }}?{{ end }}: {{ .Type }}{{ if ne $i $len }},{{ end }}{{ if ne .Comment "" }} // {{ .Comment }}
 {{- end }}
 {{- end }}
 }
@@ -18,7 +18,7 @@ export class {{ .ModelName }} implements {{ .Name }} {
   static entityName = "{{ .EntityNameTmpl }}";
 {{ $len := len .Parameters }}
 {{- range $i,$e := .Parameters }}
-  {{ .Name }}{{ if .Nullable }}?{{ end }}: {{ .Type }} = {{ .DefaultTmpl }};
+  {{ .Name }}{{ if .Optional }}?{{ end }}: {{ .Type }} = {{ .DefaultTmpl }};
 {{- end }}
 }
 {{ end }}

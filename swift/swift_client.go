@@ -13,7 +13,7 @@ import (
 )
 
 const (
-	version      = "1.0.0"
+	version      = "1.0.1"
 	lang         = "swift"
 	defaultClass = "RPCAPI"
 
@@ -77,6 +77,7 @@ type templateData struct {
 	Methods    []Method
 	Models     []Model
 	Namespaces []NamespaceData
+	IsPublic   bool
 }
 
 type NamespaceData struct {
@@ -94,6 +95,7 @@ type Settings struct {
 	Class      string
 	TypeMapper TypeMapper
 	IsProtocol bool
+	IsPublic   bool
 }
 
 func NewClient(schema smd.Schema, settings Settings) *Generator {
@@ -102,7 +104,7 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 
 // Generate returns generated Swift client
 func (g *Generator) Generate() ([]byte, error) {
-	data := templateData{Class: defaultClass, GeneratorData: gen.DefaultGeneratorData().AddLangAndLocalVersion(version, lang)}
+	data := templateData{Class: defaultClass, IsPublic: g.settings.IsPublic, GeneratorData: gen.DefaultGeneratorData().AddLangAndLocalVersion(version, lang)}
 	if g.settings.Class != "" {
 		data.Class = g.settings.Class
 	}

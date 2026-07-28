@@ -3,7 +3,7 @@
 import Foundation
 
 extension RPCAPI: RPCMethod {
-    var rpcMethod: String {
+    public var rpcMethod: String {
         switch self {
         case .batch(let requests): return requests.compactMap { $0.rpcMethod }.joined(separator: ",")
         case .arithCheckError: return "arith.CheckError"
@@ -24,7 +24,7 @@ extension RPCAPI: RPCMethod {
 }
 
 extension RPCAPI: RPCParameters {
-    var rpcParameters: [String: Any?]? {
+    public var rpcParameters: [String: Any?]? {
         switch self {
         case .batch:
               return nil
@@ -70,7 +70,7 @@ extension RPCAPI: RPCParameters {
     }
 }
 
-enum RPCAPI: Codable, Hashable {
+public enum RPCAPI: Codable, Hashable {
     /// Make batch requests.
     case batch(requests: [RPCAPI])
 
@@ -110,7 +110,7 @@ enum RPCAPI: Codable, Hashable {
 }
 
 
-struct CycleInitStruct: Codable, Hashable {
+public struct CycleInitStruct: Codable, Hashable {
     @DecodableDefault.False
     var isCycleInit: Bool
     init(isCycleInit: Bool) {
@@ -118,7 +118,7 @@ struct CycleInitStruct: Codable, Hashable {
     }
 }
 
-struct ExternalData: Codable, Hashable {
+public struct ExternalData: Codable, Hashable {
     @DecodableDefault.EmptyString
     var name: String
     init(name: String) {
@@ -126,7 +126,7 @@ struct ExternalData: Codable, Hashable {
     }
 }
 
-struct Point: Codable, Hashable {
+public struct Point: Codable, Hashable {
     /// coordinate
     @DecodableDefault.IntegerZero
     var X: Int
@@ -210,7 +210,7 @@ struct Point: Codable, Hashable {
     }
 }
 
-struct Quotient: Codable, Hashable {
+public struct Quotient: Codable, Hashable {
     /// Quo docs
     @DecodableDefault.IntegerZero
     var Quo: Int
@@ -232,7 +232,7 @@ struct Quotient: Codable, Hashable {
 
 
 extension RPCAPI {
-  var rpcId: String? {
+  public var rpcId: String? {
     switch self {
     case .batch:
       return nil

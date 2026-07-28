@@ -11,6 +11,7 @@ import (
 )
 
 const rpcGenFilePath = "./testdata/rpc.generated.swift"
+const rpcPublicGenFilePath = "./testdata/rpc.public.generated.swift"
 const protocolGenFilePath = "./testdata/protocol.generated.swift"
 
 var update = flag.Bool("update", false, "update .swift files")
@@ -35,6 +36,16 @@ func TestGenerator_Generate(t *testing.T) {
 				settings: Settings{},
 			},
 			outputFile: rpcGenFilePath,
+		},
+		{
+			name: "generate public rpc",
+			fields: fields{
+				servicesMap: map[string]zenrpc.Invoker{
+					"arith": testdata.ArithService{},
+				},
+				settings: Settings{IsPublic: true},
+			},
+			outputFile: rpcPublicGenFilePath,
 		},
 		{
 			name: "generate multi protocol",

@@ -5,7 +5,7 @@ const client = `/// Code generated from jsonrpc schema by rpcgen v{{ .Version }}
 import Foundation
 
 extension {{ .Class }}: RPCMethod {
-    public var rpcMethod: String {
+    {{ if .IsPublic }}public {{ end }}var rpcMethod: String {
         switch self {
         case .batch(let requests): return requests.compactMap { $0.rpcMethod }.joined(separator: ",")
        	{{- range .Methods }}
@@ -16,7 +16,7 @@ extension {{ .Class }}: RPCMethod {
 }
 
 extension {{ .Class }}: RPCParameters {
-    public var rpcParameters: [String: Any?]? {
+    {{ if .IsPublic }}public {{ end }}var rpcParameters: [String: Any?]? {
         switch self {
         case .batch:
               return nil
@@ -30,7 +30,7 @@ extension {{ .Class }}: RPCParameters {
     }
 }
 
-public enum {{ .Class }}: Codable, Hashable {
+{{ if .IsPublic }}public {{ end }}enum {{ .Class }}: Codable, Hashable {
     /// Make batch requests.
     case batch(requests: [{{ .Class }}])
 {{ range .Methods }}{{- $paramsLen := len .Parameters }}
@@ -49,7 +49,7 @@ public enum {{ .Class }}: Codable, Hashable {
 {{- if .Description }}
 /// {{ .Description }}
 {{- end }}
-public struct {{ .Name }}: Codable, Hashable {
+{{ if $.IsPublic }}public {{ end }}struct {{ .Name }}: Codable, Hashable {
     {{- $fieldsLen := len .Fields }}{{- range .Fields }}
     {{- if .Description }}
     /// {{ .Description }}
@@ -68,7 +68,7 @@ public struct {{ .Name }}: Codable, Hashable {
 {{ end }}
 
 extension {{ .Class }} {
-  public var rpcId: String? {
+  {{ if .IsPublic }}public {{ end }}var rpcId: String? {
     switch self {
     case .batch:
       return nil

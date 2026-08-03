@@ -1,4 +1,4 @@
-/// Code generated from jsonrpc schema by rpcgen v2.5.x with swift v1.0.0; DO NOT EDIT.
+/// Code generated from jsonrpc schema by rpcgen v2.5.x with swift v1.0.1; DO NOT EDIT.
 
 import Foundation
 

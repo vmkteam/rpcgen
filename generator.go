@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/vmkteam/rpcgen/v2/asyncapi"
 	"github.com/vmkteam/rpcgen/v2/dart"
 	"github.com/vmkteam/rpcgen/v2/golang"
 	"github.com/vmkteam/rpcgen/v2/kotlin"
@@ -54,6 +55,10 @@ func (g RPCGen) DartClient(settings dart.Settings) Generator {
 
 func (g RPCGen) OpenRPC(title, host string) Generator {
 	return openrpc.NewClient(g.schema, title, host)
+}
+
+func (g RPCGen) AsyncAPI(settings asyncapi.Settings) Generator {
+	return asyncapi.NewClient(g.schema, settings)
 }
 
 // FromSMD create Generator from smd schema

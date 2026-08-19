@@ -1,0 +1,2009 @@
+{
+  "asyncapi": "3.0.0",
+  "info": {
+    "title": "test",
+    "version": "1.0.0",
+    "description": "Test websocket api."
+  },
+  "servers": {
+    "local": {
+      "host": "localhost:8080",
+      "protocol": "ws",
+      "description": "local server"
+    }
+  },
+  "channels": {
+    "main": {
+      "address": "/ws",
+      "title": "/ws",
+      "description": "Test channel.",
+      "servers": [
+        {
+          "$ref": "#/servers/local"
+        }
+      ],
+      "bindings": {
+        "ws": {
+          "method": "GET",
+          "query": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              }
+            },
+            "required": [
+              "id"
+            ]
+          },
+          "headers": {
+            "type": "object",
+            "properties": {
+              "Authorization": {
+                "type": "string"
+              }
+            }
+          },
+          "bindingVersion": "0.1.0"
+        }
+      },
+      "messages": {
+        "arith_CheckError": {
+          "name": "arith.CheckError",
+          "title": "arith.CheckError request",
+          "description": "CheckError throws error is isErr true.",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithCheckErrorRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.CheckError"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithCheckErrorParams",
+                "properties": {
+                  "isErr": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "isErr"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_CheckError_response": {
+          "name": "arith.CheckError.response",
+          "title": "arith.CheckError response",
+          "description": "Method errors:\n\n| code | message |\n|---|---|\n| `500` | test error |",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithCheckErrorResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "null",
+                "description": "the method returns nothing"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_CheckZenRPCError": {
+          "name": "arith.CheckZenRPCError",
+          "title": "arith.CheckZenRPCError request",
+          "description": "CheckZenRPCError throws zenrpc error is isErr true.",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithCheckZenRPCErrorRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.CheckZenRPCError"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithCheckZenRPCErrorParams",
+                "properties": {
+                  "isErr": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "isErr"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_CheckZenRPCError_response": {
+          "name": "arith.CheckZenRPCError.response",
+          "title": "arith.CheckZenRPCError response",
+          "description": "Method errors:\n\n| code | message |\n|---|---|\n| `500` | test error |",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithCheckZenRPCErrorResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "null",
+                "description": "the method returns nothing"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Divide": {
+          "name": "arith.Divide",
+          "title": "arith.Divide request",
+          "description": "Divide divides two numbers.",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithDivideRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.Divide"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithDivideParams",
+                "properties": {
+                  "a": {
+                    "type": "integer",
+                    "description": "the a"
+                  },
+                  "b": {
+                    "type": "integer",
+                    "description": "the b"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Divide_response": {
+          "name": "arith.Divide.response",
+          "title": "arith.Divide response",
+          "description": "Method errors:\n\n| code | message |\n|---|---|\n| `401` | we do not serve 1 |",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithDivideResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": [
+                  "object",
+                  "null"
+                ],
+                "title": "Quotient",
+                "properties": {
+                  "Quo": {
+                    "type": "integer",
+                    "description": "Quo docs"
+                  },
+                  "rem": {
+                    "type": "integer",
+                    "description": "Rem docs"
+                  }
+                },
+                "required": [
+                  "Quo",
+                  "rem"
+                ]
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_DoSomething": {
+          "name": "arith.DoSomething",
+          "title": "arith.DoSomething request",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithDoSomethingRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.DoSomething"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_DoSomethingWithPoint": {
+          "name": "arith.DoSomethingWithPoint",
+          "title": "arith.DoSomethingWithPoint request",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithDoSomethingWithPointRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.DoSomethingWithPoint"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithDoSomethingWithPointParams",
+                "properties": {
+                  "p": {
+                    "type": "object",
+                    "title": "ModelPoint",
+                    "properties": {
+                      "X": {
+                        "type": "integer",
+                        "description": "coordinate"
+                      },
+                      "Y": {
+                        "type": "integer",
+                        "description": "coordinate"
+                      },
+                      "ConnectedObject": {
+                        "$ref": "#/components/schemas/objects.AbstractObject"
+                      }
+                    },
+                    "required": [
+                      "X",
+                      "Y",
+                      "ConnectedObject"
+                    ]
+                  }
+                },
+                "required": [
+                  "p"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_DoSomethingWithPoint_response": {
+          "name": "arith.DoSomethingWithPoint.response",
+          "title": "arith.DoSomethingWithPoint response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithDoSomethingWithPointResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "object",
+                "title": "ModelPoint",
+                "properties": {
+                  "X": {
+                    "type": "integer",
+                    "description": "coordinate"
+                  },
+                  "Y": {
+                    "type": "integer",
+                    "description": "coordinate"
+                  },
+                  "ConnectedObject": {
+                    "$ref": "#/components/schemas/objects.AbstractObject"
+                  }
+                },
+                "required": [
+                  "X",
+                  "Y",
+                  "ConnectedObject"
+                ]
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_DoSomething_response": {
+          "name": "arith.DoSomething.response",
+          "title": "arith.DoSomething response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithDoSomethingResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "null",
+                "description": "the method returns nothing"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_GetPoints": {
+          "name": "arith.GetPoints",
+          "title": "arith.GetPoints request",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithGetPointsRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.GetPoints"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_GetPoints_response": {
+          "name": "arith.GetPoints.response",
+          "title": "arith.GetPoints response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithGetPointsResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/model.Point"
+                }
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Multiply": {
+          "name": "arith.Multiply",
+          "title": "arith.Multiply request",
+          "description": "Multiply multiples two digits and returns result.",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithMultiplyRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.Multiply"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithMultiplyParams",
+                "properties": {
+                  "a": {
+                    "type": "integer"
+                  },
+                  "b": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Multiply_response": {
+          "name": "arith.Multiply.response",
+          "title": "arith.Multiply response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithMultiplyResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "integer"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Pi": {
+          "name": "arith.Pi",
+          "title": "arith.Pi request",
+          "description": "Pi returns math.Pi.",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithPiRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.Pi"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Pi_response": {
+          "name": "arith.Pi.response",
+          "title": "arith.Pi response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithPiResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "number"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Positive": {
+          "name": "arith.Positive",
+          "title": "arith.Positive request",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithPositiveRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.Positive"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Positive_response": {
+          "name": "arith.Positive.response",
+          "title": "arith.Positive response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithPositiveResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "boolean"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Pow": {
+          "name": "arith.Pow",
+          "title": "arith.Pow request",
+          "description": "Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithPowRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.Pow"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithPowParams",
+                "properties": {
+                  "base": {
+                    "type": "number"
+                  },
+                  "exp": {
+                    "type": [
+                      "number",
+                      "null"
+                    ],
+                    "description": "exponent could be empty"
+                  }
+                },
+                "required": [
+                  "base"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Pow_response": {
+          "name": "arith.Pow.response",
+          "title": "arith.Pow response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithPowResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "number"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Sum": {
+          "name": "arith.Sum",
+          "title": "arith.Sum request",
+          "description": "Sum sums two digits and returns error with error code as result and IP from context.",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithSumRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.Sum"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithSumParams",
+                "properties": {
+                  "a": {
+                    "type": "integer"
+                  },
+                  "b": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "a",
+                  "b"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_SumArray": {
+          "name": "arith.SumArray",
+          "title": "arith.SumArray request",
+          "description": "SumArray returns sum all items from array",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithSumArrayRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "arith.SumArray"
+              },
+              "params": {
+                "type": "object",
+                "title": "ArithSumArrayParams",
+                "properties": {
+                  "array": {
+                    "type": [
+                      "array",
+                      "null"
+                    ],
+                    "items": {
+                      "type": "number"
+                    }
+                  }
+                }
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_SumArray_response": {
+          "name": "arith.SumArray.response",
+          "title": "arith.SumArray response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithSumArrayResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "number"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "arith_Sum_response": {
+          "name": "arith.Sum.response",
+          "title": "arith.Sum response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "ArithSumResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "boolean"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "catalogue_First": {
+          "name": "catalogue.First",
+          "title": "catalogue.First request",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "CatalogueFirstRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "catalogue.First"
+              },
+              "params": {
+                "type": "object",
+                "title": "CatalogueFirstParams",
+                "properties": {
+                  "groups": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Group"
+                    }
+                  }
+                },
+                "required": [
+                  "groups"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "catalogue_First_response": {
+          "name": "catalogue.First.response",
+          "title": "catalogue.First response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "CatalogueFirstResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "boolean"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "catalogue_Second": {
+          "name": "catalogue.Second",
+          "title": "catalogue.Second request",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "CatalogueSecondRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "catalogue.Second"
+              },
+              "params": {
+                "type": "object",
+                "title": "CatalogueSecondParams",
+                "properties": {
+                  "campaigns": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Campaign"
+                    }
+                  }
+                },
+                "required": [
+                  "campaigns"
+                ]
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "catalogue_Second_response": {
+          "name": "catalogue.Second.response",
+          "title": "catalogue.Second response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "CatalogueSecondResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "type": "boolean"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "catalogue_Third": {
+          "name": "catalogue.Third",
+          "title": "catalogue.Third request",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "CatalogueThirdRequest",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "method": {
+                "type": "string",
+                "const": "catalogue.Third"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id",
+              "method"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "catalogue_Third_response": {
+          "name": "catalogue.Third.response",
+          "title": "catalogue.Third response",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "CatalogueThirdResponse",
+            "description": "Exactly one of `result` and `error` is present in the frame.",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "id": {
+                "type": [
+                  "integer",
+                  "string"
+                ],
+                "description": "request id; the reply arrives in a separate frame with the same id"
+              },
+              "result": {
+                "$ref": "#/components/schemas/Campaign"
+              },
+              "error": {
+                "$ref": "#/components/schemas/JsonRpcError"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ws_printAnything": {
+          "name": "ws.printAnything",
+          "title": "ws.printAnything",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "WsPrintAnythingFrame",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "method": {
+                "type": "string",
+                "const": "ws.printAnything"
+              },
+              "params": {
+                "$ref": "#/components/schemas/WsPrintAnythingParams"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ws_printOptional": {
+          "name": "ws.printOptional",
+          "title": "ws.printOptional",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "WsPrintOptionalFrame",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "method": {
+                "type": "string",
+                "const": "ws.printOptional"
+              },
+              "params": {
+                "$ref": "#/components/schemas/WsPrintOptionalParams"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ws_printOptionalWithDefault": {
+          "name": "ws.printOptionalWithDefault",
+          "title": "ws.printOptionalWithDefault",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "WsPrintOptionalWithDefaultFrame",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "method": {
+                "type": "string",
+                "const": "ws.printOptionalWithDefault"
+              },
+              "params": {
+                "$ref": "#/components/schemas/WsPrintOptionalWithDefaultParams"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ws_printRequired": {
+          "name": "ws.printRequired",
+          "title": "ws.printRequired",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "WsPrintRequiredFrame",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "method": {
+                "type": "string",
+                "const": "ws.printRequired"
+              },
+              "params": {
+                "$ref": "#/components/schemas/WsPrintRequiredParams"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "ws_printRequiredDefault": {
+          "name": "ws.printRequiredDefault",
+          "title": "ws.printRequiredDefault",
+          "contentType": "application/json",
+          "payload": {
+            "type": "object",
+            "title": "WsPrintRequiredDefaultFrame",
+            "properties": {
+              "jsonrpc": {
+                "type": "string",
+                "const": "2.0"
+              },
+              "method": {
+                "type": "string",
+                "const": "ws.printRequiredDefault"
+              },
+              "params": {
+                "$ref": "#/components/schemas/WsPrintRequiredDefaultParams"
+              }
+            },
+            "required": [
+              "jsonrpc",
+              "method",
+              "params"
+            ],
+            "additionalProperties": false
+          }
+        }
+      }
+    }
+  },
+  "operations": {
+    "receive_ws_printAnything": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "ws.printAnything",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/ws_printAnything"
+        }
+      ]
+    },
+    "receive_ws_printOptional": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "ws.printOptional",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/ws_printOptional"
+        }
+      ]
+    },
+    "receive_ws_printOptionalWithDefault": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "ws.printOptionalWithDefault",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/ws_printOptionalWithDefault"
+        }
+      ]
+    },
+    "receive_ws_printRequired": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "ws.printRequired",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/ws_printRequired"
+        }
+      ]
+    },
+    "receive_ws_printRequiredDefault": {
+      "action": "receive",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "ws.printRequiredDefault",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/ws_printRequiredDefault"
+        }
+      ]
+    },
+    "send_arith_CheckError": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.CheckError",
+      "summary": "CheckError throws error is isErr true.",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_CheckError"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_CheckError_response"
+          }
+        ]
+      }
+    },
+    "send_arith_CheckZenRPCError": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.CheckZenRPCError",
+      "summary": "CheckZenRPCError throws zenrpc error is isErr true.",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_CheckZenRPCError"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_CheckZenRPCError_response"
+          }
+        ]
+      }
+    },
+    "send_arith_Divide": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.Divide",
+      "summary": "Divide divides two numbers.",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_Divide"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_Divide_response"
+          }
+        ]
+      }
+    },
+    "send_arith_DoSomething": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.DoSomething",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_DoSomething"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_DoSomething_response"
+          }
+        ]
+      }
+    },
+    "send_arith_DoSomethingWithPoint": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.DoSomethingWithPoint",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_DoSomethingWithPoint"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_DoSomethingWithPoint_response"
+          }
+        ]
+      }
+    },
+    "send_arith_GetPoints": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.GetPoints",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_GetPoints"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_GetPoints_response"
+          }
+        ]
+      }
+    },
+    "send_arith_Multiply": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.Multiply",
+      "summary": "Multiply multiples two digits and returns result.",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_Multiply"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_Multiply_response"
+          }
+        ]
+      }
+    },
+    "send_arith_Pi": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.Pi",
+      "summary": "Pi returns math.Pi.",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_Pi"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_Pi_response"
+          }
+        ]
+      }
+    },
+    "send_arith_Positive": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.Positive",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_Positive"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_Positive_response"
+          }
+        ]
+      }
+    },
+    "send_arith_Pow": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.Pow",
+      "summary": "Pow returns x**y, the base-x exponential of y. If Exp is not set then default value is 2.",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_Pow"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_Pow_response"
+          }
+        ]
+      }
+    },
+    "send_arith_Sum": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.Sum",
+      "summary": "Sum sums two digits and returns error with error code as result and IP from context.",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_Sum"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_Sum_response"
+          }
+        ]
+      }
+    },
+    "send_arith_SumArray": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "arith.SumArray",
+      "summary": "SumArray returns sum all items from array",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/arith_SumArray"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/arith_SumArray_response"
+          }
+        ]
+      }
+    },
+    "send_catalogue_First": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "catalogue.First",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/catalogue_First"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/catalogue_First_response"
+          }
+        ]
+      }
+    },
+    "send_catalogue_Second": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "catalogue.Second",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/catalogue_Second"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/catalogue_Second_response"
+          }
+        ]
+      }
+    },
+    "send_catalogue_Third": {
+      "action": "send",
+      "channel": {
+        "$ref": "#/channels/main"
+      },
+      "title": "catalogue.Third",
+      "messages": [
+        {
+          "$ref": "#/channels/main/messages/catalogue_Third"
+        }
+      ],
+      "reply": {
+        "channel": {
+          "$ref": "#/channels/main"
+        },
+        "messages": [
+          {
+            "$ref": "#/channels/main/messages/catalogue_Third_response"
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Campaign": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "groups"
+        ]
+      },
+      "Group": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          },
+          "child": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/Group"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sub": {
+            "$ref": "#/components/schemas/SubGroup"
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "nodes",
+          "groups",
+          "sub"
+        ]
+      },
+      "JsonRpcError": {
+        "type": "object",
+        "title": "JsonRpcError",
+        "description": "JSON-RPC 2.0 error. Method specific codes are listed in the reply description.",
+        "properties": {
+          "code": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "description": "optional error details"
+          }
+        },
+        "required": [
+          "code",
+          "message"
+        ]
+      },
+      "SubGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Group"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "title",
+          "nodes"
+        ]
+      },
+      "WsPrintAnythingParams": {
+        "type": "object",
+        "title": "WsPrintAnythingParams",
+        "properties": {
+          "s": {
+            "type": "object",
+            "title": "WsPrintAnythingParamsS"
+          }
+        },
+        "required": [
+          "s"
+        ]
+      },
+      "WsPrintOptionalParams": {
+        "type": "object",
+        "title": "WsPrintOptionalParams",
+        "properties": {
+          "s": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "WsPrintOptionalWithDefaultParams": {
+        "type": "object",
+        "title": "WsPrintOptionalWithDefaultParams",
+        "properties": {
+          "s": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "WsPrintRequiredDefaultParams": {
+        "type": "object",
+        "title": "WsPrintRequiredDefaultParams",
+        "properties": {
+          "s": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      },
+      "WsPrintRequiredParams": {
+        "type": "object",
+        "title": "WsPrintRequiredParams",
+        "properties": {
+          "s": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "s"
+        ]
+      },
+      "model.Point": {
+        "type": "object",
+        "properties": {
+          "X": {
+            "type": "integer",
+            "description": "coordinate"
+          },
+          "Y": {
+            "type": "integer",
+            "description": "coordinate"
+          },
+          "ConnectedObject": {
+            "$ref": "#/components/schemas/objects.AbstractObject"
+          }
+        },
+        "required": [
+          "X",
+          "Y",
+          "ConnectedObject"
+        ]
+      },
+      "objects.AbstractObject": {
+        "type": "object"
+      }
+    }
+  }
+}

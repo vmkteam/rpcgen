@@ -10,6 +10,7 @@
 - Swift
 - Kotlin
 - OpenRPC schema
+- AsyncAPI schema (JSON-RPC 2.0 over WebSocket)
 
 ## Examples
 
@@ -242,3 +243,65 @@ func main() {
 	http.HandleFunc("/client.dart", rpcgen.Handler(gen.DartClient(dart.Settings{Part: "client", TypeMapper: typeMapper})))
 }
 ```
+
+### Generate AsyncAPI schema for a WebSocket endpoint
+
+If a zenrpc server is also served over WebSocket, `asyncapi` describes both directions of the
+exchange: every SMD method becomes a `send` operation with a `reply`, and server to client
+notifications become `receive` operations.
+
+Notifications are not a part of SMD, so they are passed as a separate schema. A convenient way to
+build one without exposing anything to clients is a documentation-only server: register a service
+with a method per event and typed parameters, and take its SMD.
+
+```go
+package main
+
+import (
+	"net/http"
+
+	"github.com/vmkteam/rpcgen/v2"
+	"github.com/vmkteam/rpcgen/v2/asyncapi"
+	"github.com/vmkteam/zenrpc/v2"
+	"github.com/vmkteam/zenrpc/v2/smd"
+)
+
+func main() {
+	rpc := zenrpc.NewServer(zenrpc.Options{})
+	rpc.Register("catalogue", CatalogueService{})
+
+	// events are never registered on the real server: the schema is built only to be documented
+	events := zenrpc.NewServer(zenrpc.Options{})
+	events.Register("ws", WsService{}) // NewMessage(...) is documented as ws.newMessage
+
+	eventsSchema := events.SMD()
+	gen := rpcgen.FromSMD(rpc.SMD())
+
+	http.HandleFunc("/asyncapi.json", rpcgen.Handler(gen.AsyncAPI(asyncapi.Settings{
+		Title:       "catalogue websocket api",
+		Description: "JSON-RPC 2.0 over WebSocket.",
+		Servers: map[string]asyncapi.Server{
+			"local": {Host: "localhost:8080", Protocol: "ws"},
+		},
+		Channel: asyncapi.ChannelSettings{
+			Name:    "main",
+			Address: "/ws",
+			Query: &asyncapi.Schema{
+				Type:       smd.Object,
+				Required:   []string{"id"},
+				Properties: asyncapi.Schemas{{Name: "id", Schema: &asyncapi.Schema{Type: smd.Integer}}},
+			},
+		},
+		Events: &eventsSchema,
+	})))
+}
+```
+
+Notes:
+
+* SMD keeps Go method names, so `ws.NewMessage` is documented as `ws.newMessage`
+  (`Settings.EventMethodName` overrides the rule).
+* An optional value in zenrpc is a Go pointer serialized as `null`, so optional fields are both
+  absent in `required` and nullable in the generated schemas.
+* The same type name with a different shape in two methods fails the generation instead of silently
+  landing in the document once.

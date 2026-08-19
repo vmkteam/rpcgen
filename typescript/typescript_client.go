@@ -38,7 +38,7 @@ func NewClient(schema smd.Schema, settings Settings) *Generator {
 	return &Generator{schema: schema, settings: settings}
 }
 
-type TypeMapper func(in smd.JSONSchema, tsType Type) Type
+type TypeMapper func(typeName string, in smd.JSONSchema, tsType Type) Type
 
 // Generate returns generate TypeScript client
 func (g *Generator) Generate() ([]byte, error) {
@@ -182,7 +182,7 @@ skipNS:
 		if len(service.Parameters) > 0 {
 			tsTypes := make([]Type, len(service.Parameters))
 			for i := range service.Parameters {
-				tsTypes[i] = convertTSType(&models, interfacesCache, service.Parameters[i], "", g.settings.TypeMapper)
+				tsTypes[i] = convertTSType(&models, interfacesCache, service.Parameters[i], "", g.settings.TypeMapper, interfaceName)
 			}
 			addTSInterface(&models, interfacesCache, tsInterface{
 				Name:       interfaceName,
@@ -191,7 +191,7 @@ skipNS:
 		}
 
 		// add service "returns" as TypeScript interface
-		respType := convertTSType(&models, interfacesCache, service.Returns, "", g.settings.TypeMapper)
+		respType := convertTSType(&models, interfacesCache, service.Returns, "", g.settings.TypeMapper, "")
 
 		// add namespace to TypeScript services
 		nIdx := -1
@@ -297,7 +297,7 @@ func convertTSScalar(t string) string {
 }
 
 // convertTSType converts smd.JSONSchema to Type.
-func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in smd.JSONSchema, comment string, typeMapper TypeMapper) Type {
+func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in smd.JSONSchema, comment string, typeMapper TypeMapper, typeName string) Type {
 	result := Type{
 		Name:     in.Name,
 		Comment:  comment,
@@ -349,16 +349,17 @@ func convertTSType(models *tsModels, interfacesCache map[string]interface{}, in 
 
 	// apply hook
 	if typeMapper != nil {
-		result = typeMapper(in, result)
+		result = typeMapper(typeName, in, result)
 	}
 
 	return result
 }
 
 // addTSComplexInterface converts complex type stored in smd1.JSONSchema to tsInterface and adds it to client.
-func addTSComplexInterface(models *tsModels, interfacesCache map[string]interface{}, in smd.JSONSchema, typeMapper func(in smd.JSONSchema, tsType Type) Type) {
+func addTSComplexInterface(models *tsModels, interfacesCache map[string]interface{}, in smd.JSONSchema, typeMapper TypeMapper) {
 	var tsTypes []Type
 
+	typeName := interfacePrefix + in.TypeName
 	for _, p := range in.Properties {
 		tsTypes = append(tsTypes, convertTSType(models, interfacesCache, smd.JSONSchema{
 			Name:        p.Name,
@@ -366,7 +367,7 @@ func addTSComplexInterface(models *tsModels, interfacesCache map[string]interfac
 			Description: strings.TrimPrefix(p.Ref, gen.DefinitionsPrefix),
 			Type:        p.Type,
 			Items:       p.Items,
-		}, p.Description, typeMapper))
+		}, p.Description, typeMapper, typeName))
 	}
 
 	addTSInterface(models, interfacesCache, tsInterface{
